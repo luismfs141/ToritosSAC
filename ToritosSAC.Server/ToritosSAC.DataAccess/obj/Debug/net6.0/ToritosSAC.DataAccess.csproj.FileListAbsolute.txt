@@ -1,0 +1,17 @@
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\bin\Debug\net6.0\ToritosSAC.DataAccess.deps.json
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\bin\Debug\net6.0\ToritosSAC.DataAccess.runtimeconfig.json
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\bin\Debug\net6.0\ToritosSAC.DataAccess.dll
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\bin\Debug\net6.0\ToritosSAC.DataAccess.pdb
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\obj\Debug\net6.0\ToritosSAC.DataAccess.csproj.AssemblyReference.cache
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\obj\Debug\net6.0\ToritosSAC.DataAccess.GeneratedMSBuildEditorConfig.editorconfig
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\obj\Debug\net6.0\ToritosSAC.DataAccess.AssemblyInfoInputs.cache
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\obj\Debug\net6.0\ToritosSAC.DataAccess.AssemblyInfo.cs
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\obj\Debug\net6.0\ToritosSAC.DataAccess.csproj.CoreCompileInputs.cache
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\obj\Debug\net6.0\ToritosSAC.DataAccess.dll
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\obj\Debug\net6.0\refint\ToritosSAC.DataAccess.dll
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\obj\Debug\net6.0\ToritosSAC.DataAccess.pdb
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\obj\Debug\net6.0\ToritosSAC.DataAccess.genruntimeconfig.cache
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\obj\Debug\net6.0\ref\ToritosSAC.DataAccess.dll
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\bin\Debug\net6.0\ToritosSAC.Entities.dll
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\bin\Debug\net6.0\ToritosSAC.Entities.pdb
+D:\Cursos\6 Semestre\Sistema Distribuidos\ToritosSAC\ToritosSAC.Server\ToritosSAC.DataAccess\obj\Debug\net6.0\ToritosSAC.DataAccess.csproj.CopyComplete
