@@ -1,12 +1,15 @@
 =======
-# Ignorar archivos generados por Visual Studio
-.vs/
 
-# Ignorar carpetas de compilación y dependencias de .NET
+# Archivos y carpetas de Visual Studio
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.dbmdl
 bin/
 obj/
-
-# Otros archivos comunes de sistema
 Thumbs.db
 .DS_Store
 
