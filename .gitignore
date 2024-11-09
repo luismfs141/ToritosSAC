@@ -1,0 +1,11 @@
+# Ignorar archivos generados por Visual Studio
+.vs/
+
+# Ignorar carpetas de compilación y dependencias de .NET
+bin/
+obj/
+
+# Otros archivos comunes de sistema
+Thumbs.db
+.DS_Store
+
