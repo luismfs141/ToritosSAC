@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "jiwLjYvkcN0WHLMCIL1kbBB3+DNYbIO91WNB7QnAYUk=",
+  "Source": "ToritosSAC.Server",
+  "BasePath": "_content/ToritosSAC.Server",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

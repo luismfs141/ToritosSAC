@@ -1,0 +1,9 @@
+create-react-app toritosweb
+
+cd toritosweb
+code .
+
+<<<<<Codigo React>>>>>
+npm install --save bootstrap
+
+npm i react-router-dom
