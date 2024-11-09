@@ -23,7 +23,6 @@ namespace ToritosSAC.DataAccess
 
         public Cliente DACLIE_LoginCliente(string x_usuario, string x_password)
         {
-            //Login de clientes
             try
             {
                 ToritosDbContext ctx = new ToritosDbContext();
