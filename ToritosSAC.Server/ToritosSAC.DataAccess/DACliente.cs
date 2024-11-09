@@ -27,7 +27,7 @@ namespace ToritosSAC.DataAccess
             {
                 ToritosDbContext ctx = new ToritosDbContext();
 
-                //Codificacion de password 4444
+                //Codificacion de password 4444cc
                 byte[] passwordBytes = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(x_password));
 
                 var cliente = ctx.Clientes
