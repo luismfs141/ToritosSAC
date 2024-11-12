@@ -16,6 +16,7 @@ namespace ToritosSAC.Server.Controllers
 
             return dACliente.DACLIE_ObtenerClientes();
         }
+
         [Route("LoginCliente")]
         [HttpPost]
         public ApiResponse<Cliente> LoginCliente(string x_usuario, string x_password)
