@@ -1,11 +1,7 @@
 import React from "react";
-//CSS
 import '../assetss/css/Login.css';
-//Imagenes
 import logo from '../assetss/img/User.png';
-//Services
 import {Apiurl} from '../services/apirest';
-//librerias
 import axios from 'axios';
 
 class Login extends React.Component{
