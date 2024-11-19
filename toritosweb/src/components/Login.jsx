@@ -1,71 +1,51 @@
-import React from "react";
-//CSS
-import '../assetss/css/Login.css';
-//Imagenes
-import logo from '../assetss/img/User.png';
-//Services
-import {Apiurl} from '../services/apirest';
-//librerias
-import axios from 'axios';
+import React, { useState } from 'react';
+import { useCliente } from '../hooks/useCliente';
 
-class Login extends React.Component{
+const LoginForm = () => {
+  const [usuario, setUsuario] = useState('');
+  const [password, setPassword] = useState('');
+  const { loginCliente, loading, error } = useCliente();
 
-    manejadorSubmit(e){
-        e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const data = await loginCliente(usuario, password);
+      console.log('Login Exitoso:', data);
+      // Aquí puedes redirigir al usuario a otra página si es necesario
+    } catch (err) {
+      console.error('Error de login:', err);
     }
+  };
 
-    manejadorChange = async e=>{
-        await this.setState ({
-            form:{
-                ...this.state.form,
-                [e.target.name] : e.target.value
-            }
-        });
-        console.log(this.state.form)
-    }
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Usuario</label>
+          <input 
+            type="text" 
+            value={usuario} 
+            onChange={(e) => setUsuario(e.target.value)} 
+            required 
+          />
+        </div>
+        <div>
+          <label>Contraseña</label>
+          <input 
+            type="password" 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)} 
+            required 
+          />
+        </div>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Cargando...' : 'Iniciar Sesión'}
+        </button>
+        {error && <div style={{ color: 'red' }}>{error}</div>}
+      </form>
+    </div>
+  );
+};
 
-    manejadorBoton(){
-        let url = Apiurl + "Cliente/LoginCliente";
-        axios.post(url)
-        .then(response =>{
-            console.log(response);
-        })
-    }
-
-    state={
-        form:{
-            "usuario:":"",
-            "password:":""
-        },
-        error:false,
-        errorMsg:""
-    }
-
-    render(){
-        return(
-            <React.Fragment>
-                <div className="wrapper fadeInDown">
-                    <div id="formContent">
-                        <div className="fadeIn first">
-                        <img src={logo} width="100px" alt="User Icon" />
-                        </div>
-
-
-                        <form onSubmit={this.manejadorSubmit}>
-                        <input type="text" className="fadeIn second" name="usuario" placeholder="Usuario" onChange={this.manejadorChange}/>
-                        <input type="password" className="fadeIn third" name="password" placeholder="Password" onChange={this.manejadorChange}/>
-                        <input type="submit" className="fadeIn fourth" value="Log In" onClick={this.manejadorBoton}/>
-                        </form>
-
-                        <div id="formFooter">
-                        <a className="underlineHover" href="#">Forgot Password?</a>
-                        </div>
-
-                    </div>
-                </div>
-            </React.Fragment>
-        );
-    }
-}
-
-export default Login
+export default LoginForm;
