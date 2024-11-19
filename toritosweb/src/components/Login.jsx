@@ -12,7 +12,7 @@ const LoginForm = () => {
     try {
       const data = await loginCliente(usuario, password);
       console.log('Login Exitoso:', data);
-      // Aquí puedes redirigir al usuario a otra página si es necesario
+      // Aqu� puedes redirigir al usuario a otra p�gina si es necesario
     } catch (err) {
       console.error('Error de login:', err);
     }
@@ -31,7 +31,7 @@ const LoginForm = () => {
           />
         </div>
         <div>
-          <label>Contraseña</label>
+          <label>Contrase�a</label>
           <input 
             type="password" 
             value={password} 
@@ -40,7 +40,7 @@ const LoginForm = () => {
           />
         </div>
         <button type="submit" disabled={loading}>
-          {loading ? 'Cargando...' : 'Iniciar Sesión'}
+          {loading ? 'Cargando...' : 'Iniciar Sesi�n'}
         </button>
         {error && <div style={{ color: 'red' }}>{error}</div>}
       </form>
