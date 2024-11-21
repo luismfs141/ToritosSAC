@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useCliente } from '../hooks/useCliente';
 
-const LoginForm = () => {
+const LoginForm = ({ onLogin }) => {
   const [usuario, setUsuario] = useState('');
   const [password, setPassword] = useState('');
   const { loginCliente, loading, error } = useCliente();
@@ -12,7 +12,9 @@ const LoginForm = () => {
     try {
       const data = await loginCliente(usuario, password);
       console.log('Login Exitoso:', data);
-      // Aqu� puedes redirigir al usuario a otra p�gina si es necesario
+
+      // Llamamos a la función onLogin para cambiar el estado de autenticación
+      onLogin();
     } catch (err) {
       console.error('Error de login:', err);
     }
@@ -31,7 +33,7 @@ const LoginForm = () => {
           />
         </div>
         <div>
-          <label>Contrase�a</label>
+          <label>Contraseña</label>
           <input 
             type="password" 
             value={password} 
@@ -40,7 +42,7 @@ const LoginForm = () => {
           />
         </div>
         <button type="submit" disabled={loading}>
-          {loading ? 'Cargando...' : 'Iniciar Sesi�n'}
+          {loading ? 'Cargando...' : 'Iniciar Sesión'}
         </button>
         {error && <div style={{ color: 'red' }}>{error}</div>}
       </form>
