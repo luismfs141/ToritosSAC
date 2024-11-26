@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../assetss/css/Modal.css';
 
 const Grupos = () => {
   const [data, setData] = useState([]);
@@ -7,20 +8,9 @@ const Grupos = () => {
   const [editId, setEditId] = useState(null);
   const [filterOption, setFilterOption] = useState('');
   const [modalContent, setModalContent] = useState(null);
-
-  const handleAddOrUpdate = () => {
-    if (editId) {
-      setData(
-        data.map((item) =>
-          item.id === editId ? { ...item, ...newEntry } : item
-        )
-      );
-      setEditId(null);
-    } else {
-      setData([...data, { ...newEntry, id: Date.now() }]);
-    }
-    setNewEntry({ code: '', status: '', startDate: '', fee: '', period: '' });
-  };
+  const [showCreateJoinModal, setShowCreateJoinModal] = useState(false);
+  const [showCreateUModal, setShowCreateUModal] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('');
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
@@ -41,10 +31,6 @@ const Grupos = () => {
     setSearchTerm(searchTerm.trim());
   };
 
-  const handleFilter = () => {
-    setFilterOption(filterOption.trim());
-  };
-
   const filteredData = data
     .filter((item) => item.code.toLowerCase().includes(searchTerm.toLowerCase()))
     .filter((item) => (filterOption ? item.status === filterOption : true));
@@ -55,6 +41,20 @@ const Grupos = () => {
 
   const handleCloseModal = () => {
     setModalContent(null);
+    setShowCreateJoinModal(false);
+    setShowCreateUModal(false);
+  };
+
+  const toggleCreateJoinModal = () => {
+    setShowCreateJoinModal(!showCreateJoinModal);
+  };
+
+  const toggleCreateUModal = () => {
+    setShowCreateUModal(!showCreateUModal);
+  };
+
+  const handleOptionChange = (e) => {
+    setSelectedOption(e.target.value);
   };
 
   return (
@@ -62,106 +62,133 @@ const Grupos = () => {
       <h3 className="mb-4">Grupos</h3>
 
       {/* Sección de búsqueda */}
-      <div className="input-group mb-3">
-        <input
-          type="text"
-          className="form-control me-2"
-          placeholder="Buscar por código"
-          onChange={(e) => setSearchTerm(e.target.value)}
-          value={searchTerm}
-        />
-        <button className="btn btn-secondary" onClick={handleSearch}>
+      <div className="d-flex flex-column flex-sm-row align-items-center mb-3">
+        <label htmlFor="searchDropdown" className="form-label me-2">
+          Buscar Grupo:
+        </label>
+        <select
+          id="searchDropdown"
+          className="form-select me-2 mb-2 mb-sm-0"
+          style={{ width: '250px' }}
+          value={selectedOption}
+          onChange={handleOptionChange}
+        >
+          <option value="">Seleccione un Grupo</option>
+          <option value="nombre1">Nombre 1</option>
+          <option value="nombre2">Nombre 2</option>
+          <option value="nombre3">Nombre 3</option>
+        </select>
+        <button className="btn btn-primary me-2">
           Buscar
         </button>
       </div>
 
-      {/* Formulario para agregar o actualizar registro */}
-      <form className="mb-4" onSubmit={(e) => e.preventDefault()}>
-        <div className="row mb-3">
-          <div className="col-md-3">
-            <div className="form-group">
-              <label>Código</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Código"
-                value={newEntry.code}
-                onChange={(e) =>
-                  setNewEntry({ ...newEntry, code: e.target.value })
-                }
-              />
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="form-group">
-              <label>Estado</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Estado"
-                value={newEntry.status}
-                onChange={(e) =>
-                  setNewEntry({ ...newEntry, status: e.target.value })
-                }
-              />
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="form-group">
-              <label>Fecha de Inicio</label>
-              <input
-                type="date"
-                className="form-control"
-                value={newEntry.startDate}
-                onChange={(e) =>
-                  setNewEntry({ ...newEntry, startDate: e.target.value })
-                }
-              />
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="form-group">
-              <label>Cuota</label>
-              <input
-                type="number"
-                className="form-control"
-                placeholder="Cuota"
-                value={newEntry.fee}
-                onChange={(e) =>
-                  setNewEntry({ ...newEntry, fee: e.target.value })
-                }
-              />
-            </div>
-          </div>
-          <div className="col-md-3">
-            <div className="form-group">
-              <label>Periodo</label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Periodo"
-                value={newEntry.period}
-                onChange={(e) =>
-                  setNewEntry({ ...newEntry, period: e.target.value })
-                }
-              />
-            </div>
+      {/* Botones Crear y Unirse a Grupo */}
+      <div className="mb-3 d-flex flex-column flex-sm-row">
+        <button className="btn btn-primary me-2 mb-2 mb-sm-0" onClick={() => toggleCreateJoinModal(false)}>
+          Crear Grupo
+        </button>
+        <button className="btn btn-secondary" onClick={() => toggleCreateUModal(true)}>
+          Unirse a Grupo
+        </button>
+      </div>
+
+      {showCreateJoinModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h5>Configuración</h5>
+            <form className="mb-4" onSubmit={(e) => e.preventDefault()}>
+              <div className="mb-3 d-flex flex-column flex-sm-row align-items-center">
+                <label className="me-2 w-25">Modelo de Vehículo</label>
+                <select className="form-control w-75">
+                  <option value="">Seleccione un modelo</option>
+                  <option value="modelo1">Modelo 1</option>
+                  <option value="modelo2">Modelo 2</option>
+                  <option value="modelo3">Modelo 3</option>
+                </select>
+              </div>
+
+              <div className="mb-3 d-flex flex-column flex-sm-row align-items-center">
+                <label className="me-2 w-25">Precio</label>
+                <input
+                  type="number"
+                  className="form-control w-75"
+                  placeholder="Precio"
+                  readOnly
+                />
+              </div>
+
+              <div className="mb-3 d-flex flex-column flex-sm-row align-items-center">
+                <label className="me-2 w-25">Cantidad de Integrantes</label>
+                <select className="form-control w-75">
+                  <option value="">Seleccione cantidad</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                </select>
+              </div>
+
+              <div className="mb-3 d-flex flex-column flex-sm-row align-items-center">
+                <label className="me-2 w-25">Número de Cuotas</label>
+                <select className="form-control w-75">
+                  <option value="">Seleccione cuotas</option>
+                  <option value="3">3</option>
+                  <option value="6">6</option>
+                  <option value="12">12</option>
+                </select>
+              </div>
+
+              <div className="mb-3 d-flex flex-column flex-sm-row align-items-center">
+                <label className="me-2 w-25">Periodo</label>
+                <select className="form-control w-75">
+                  <option value="">Seleccione periodo</option>
+                  <option value="mensual">Mensual</option>
+                  <option value="semestral">Semestral</option>
+                  <option value="anual">Anual</option>
+                </select>
+              </div>
+
+              <div className="mb-3">
+                <button className="btn btn-primary me-2">
+                  Crear Grupo
+                </button>
+                <button className="btn btn-secondary" onClick={handleCloseModal}>
+                  Cancelar
+                </button>
+              </div>
+            </form>
           </div>
         </div>
+      )}
 
-        {/* Botón para agregar o actualizar */}
-        <button
-          type="button"
-          className="btn btn-primary"
-          onClick={handleAddOrUpdate}
-        >
-          {editId ? 'Actualizar' : 'Agregar'}
-        </button>
-      </form>
+      {showCreateUModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h5>Ingrese Código de Invitación</h5>
+            <form className="mb-4" onSubmit={(e) => e.preventDefault()}>
+              <div className="mb-3 d-flex justify-content-center">
+                <input
+                  type="text"
+                  className="form-control w-75 text-center"
+                  placeholder="Código"
+                />
+              </div>
+              <div className="mb-3">
+                <button className="btn btn-primary me-2">
+                  Unirse
+                </button>
+                <button className="btn btn-secondary" onClick={handleCloseModal}>
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
-      {/* Tabla de registros */}
+      {/* Tabla de grupos */}
       <div className="table-responsive">
-        <table className="table table-striped table-bordered">
+        <table className="table table-bordered">
           <thead>
             <tr>
               <th>Código</th>
@@ -200,7 +227,7 @@ const Grupos = () => {
                 </td>
                 <td>
                   <button
-                    className="btn btn-warning me-2"
+                    className="btn btn-warning"
                     onClick={() => handleEdit(item)}
                   >
                     Editar
@@ -218,9 +245,9 @@ const Grupos = () => {
         </table>
       </div>
 
-      {/* Modal para mostrar detalles o integrantes */}
+      {/* Modal de detalles */}
       {modalContent && (
-        <div className="modal-overlay" onClick={handleCloseModal}>
+        <div className="modal-overlay">
           <div className="modal-content">
             <h5>{modalContent}</h5>
             <button className="btn btn-secondary" onClick={handleCloseModal}>
@@ -229,30 +256,6 @@ const Grupos = () => {
           </div>
         </div>
       )}
-
-      {/* Estilos para el modal */}
-      <style jsx>{`
-        .modal-overlay {
-          position: fixed;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          background: rgba(0, 0, 0, 0.7);
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          z-index: 999;
-        }
-        .modal-content {
-          background: white;
-          padding: 20px;
-          border-radius: 8px;
-          text-align: center;
-          max-width: 500px;
-          width: 90%;
-        }
-      `}</style>
     </div>
   );
 };

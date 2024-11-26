@@ -10,16 +10,8 @@ function Navbar() {
 
       <form action="#">
         <div className="form-group">
-          <input type="text" placeholder="Buscar..." />
-          <i className='bx bx-search icon'></i>
         </div>
-      </form>
-
-      <a href="#" className="nav-link text-decoration-none">
-        <i className='bx bxs-bell icon'></i>
-        <span className="badge">1</span>
-      </a>
-      
+      </form>   
       <a href="#" className="nav-link text-decoration-none">nombre</a>
       <span className="divider"></span>
 

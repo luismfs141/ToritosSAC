@@ -23,7 +23,7 @@ function App() {
   };
 
   return (
-    <div>
+    <div>/
       {/* Mostrar el LoginForm solo si no está autenticado */}
       {!isAuthenticated ? (
         <LoginForm onLogin={handleLogin} />
