@@ -40,7 +40,35 @@ namespace ToritosSAC.DataAccess
             {
                 throw ex;
             }
-            
+        }
+
+        public List<Cliente> DACLIE_ObtenerClientesPorGrupo(int idCliente)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+                DAGrupo dAGrupo = new DAGrupo();
+
+                Grupo grupo = dAGrupo.DAGRUP_ObtenerGrupoPorCliente(idCliente);
+
+                if (grupo == null)
+                {
+                    return new List<Cliente>();
+                }
+
+                var clientes = (from c in ctx.Clientes
+                                join dg in ctx.DetalleGrupos on c.IdClienteI equals dg.IdClienteI
+                                where dg.IdGrupoI == grupo.IdGrupoI
+                                select c).ToList();
+
+                List<Cliente> x = clientes;
+
+                return clientes;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener los clientes para el grupo", ex);
+            }
         }
     }
 }

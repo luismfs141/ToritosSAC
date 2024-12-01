@@ -48,5 +48,47 @@ namespace ToritosSAC.Server.Controllers
 
             return apiResponse;
         }
+
+        [HttpGet("GetClientesPorGrupo")]
+        public ApiResponse<List<Cliente>> GetClientesPorGrupo(int idCliente)
+        {
+            DACliente dACliente = new DACliente();
+            ApiResponse<List<Cliente>> apiResponse;
+
+            try
+            {
+                List<Cliente> clientes = dACliente.DACLIE_ObtenerClientesPorGrupo(idCliente);
+
+                if (clientes == null || clientes.Count == 0)
+                {
+                    apiResponse = new ApiResponse<List<Cliente>>
+                    {
+                        Estado = "Error",
+                        Mensaje = "No se encontraron clientes para el grupo",
+                        Data = null
+                    };
+                }
+                else
+                {
+                    apiResponse = new ApiResponse<List<Cliente>>
+                    {
+                        Estado = "Exito",
+                        Mensaje = "Clientes obtenidos con éxito",
+                        Data = clientes
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                apiResponse = new ApiResponse<List<Cliente>>
+                {
+                    Estado = "Error",
+                    Mensaje = "Error al obtener clientes por grupo: " + ex.Message,
+                    Data = null
+                };
+            }
+
+            return apiResponse;
+        }
     }
 }
