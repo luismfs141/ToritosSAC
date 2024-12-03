@@ -37,5 +37,69 @@ namespace ToritosSAC.DataAccess
                 throw new Exception("Ocurrió un error al obtener el grupo del cliente.", ex);
             }
         }
+
+        public Grupo DAGRUP_GuardarGrupo(Grupo x_grupo)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+
+                if (x_grupo.IdGrupoI == 0)
+                {
+                    ctx.Grupos.Add(x_grupo);
+                }
+                else
+                {
+                    Grupo grupoOriginal = ctx.Grupos.SingleOrDefault(g => g.IdGrupoI == x_grupo.IdGrupoI);
+
+                    if (grupoOriginal != null)
+                    {
+                        ctx.Entry(grupoOriginal).CurrentValues.SetValues(x_grupo);
+                    }
+                }
+
+                ctx.SaveChanges();
+                return ctx.Grupos.SingleOrDefault(g => g.IdGrupoI == x_grupo.IdGrupoI);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+            
+        }
+
+        public Grupo DAGRUP_BuscarGrupoPorCodigo(string x_codigo)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+
+                Grupo grupo = ctx.Grupos.SingleOrDefault(g => g.CodigoC == x_codigo);
+
+                return grupo;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public bool DAGRUP_UnirseGrupo(Grupo x_grupo)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }
