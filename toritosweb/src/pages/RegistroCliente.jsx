@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCliente } from '../hooks/useCliente';
+import { useUbigeo } from '../hooks/useUbigeo';
 
 const RegistroCliente = () => {
+
   const navigate = useNavigate();
+  const { getDepartamentos, departamentos, getProvincias, provincias, getDistritos, distritos } = useUbigeo();
+  const { registrarCliente, loading } = useCliente();
 
   const [nombre, setNombre] = useState('');
   const [apellidoPaterno, setApellidoPaterno] = useState('');
@@ -23,7 +27,34 @@ const RegistroCliente = () => {
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
 
-  const { registrarCliente, loading } = useCliente();
+  const [departamentosLoaded, setDepartamentosLoaded] = useState(false);
+
+  const handleFocus = async () => {
+    if (!departamentosLoaded) {
+      // Obtener los departamentos solo si no se han cargado aún
+      try {
+        await getDepartamentos(); // Llama a tu API para obtener los departamentos
+        setDepartamentosLoaded(true); // Marca como cargado
+      } catch (err) {
+        console.error("Error al obtener departamentos", err);
+      }
+    }
+  };
+
+  const handleDepartamentoChange = (e) => {
+    const idDepartamento = e.target.value;
+    setDepartamento(idDepartamento);
+    setProvincia(""); // Limpiar la provincia seleccionada al cambiar el departamento
+    setDistrito("");
+    getProvincias(idDepartamento); // Llamamos a la API para obtener las provincias
+  };
+
+  const handleProvinciaChange = (e) =>{
+    const idProvincia = e.target.value;
+    setProvincia(idProvincia);
+    setDistrito(""); // Limpiar la provincia seleccionada al cambiar el departamento
+    getDistritos(idProvincia); // Llamamos a la API para obtener las provincias
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -138,6 +169,8 @@ const RegistroCliente = () => {
                   onChange={(e) => setNroDocumento(e.target.value)}
                   required
                   className="form-control"
+                  maxLength={8}
+                  minLength={8}
                 />
               </div>
               <div className="col-md-3">
@@ -193,6 +226,8 @@ const RegistroCliente = () => {
                   onChange={(e) => setNroContacto(e.target.value)}
                   required
                   className="form-control"
+                  maxLength={9} 
+                  minLength={9}
                 />
               </div>
             </div>
@@ -207,12 +242,16 @@ const RegistroCliente = () => {
                 <select
                   id="departamento"
                   value={departamento}
-                  onChange={(e) => setDepartamento(e.target.value)}
+                  onChange={handleDepartamentoChange}
+                  onFocus={handleFocus}
                   required
                   className="form-select"
                 >
                   <option value="">Selecciona el departamento</option>
-                  <option value="01">Amazonas</option>
+                  {/* Renderizamos los departamentos aquí */}
+                  {departamentos.map((dep) => (
+                    <option key={dep.idDepartamentoC} value={dep.idDepartamentoC}>{dep.nombreNv}</option>
+                  ))}
                 </select>
               </div>
               <div className="col-md-3">
@@ -220,12 +259,14 @@ const RegistroCliente = () => {
                 <select
                   id="provincia"
                   value={provincia}
-                  onChange={(e) => setProvincia(e.target.value)}
+                  onChange={handleProvinciaChange}
                   required
                   className="form-select"
                 >
                   <option value="">Selecciona la provincia</option>
-                  <option value="0101">Chachapoyas</option>
+                  {provincias.map((prov) => (
+                    <option key={prov.idProvinciaC} value={prov.idProvinciaC}>{prov.nombreNv}</option>
+                  ))}
                 </select>
               </div>
               <div className="col-md-3">
@@ -238,7 +279,9 @@ const RegistroCliente = () => {
                   className="form-select"
                 >
                   <option value="">Selecciona el distrito</option>
-                  <option value="010101">Chachapoyas</option>
+                  {distritos.map((dis) => (
+                    <option key={dis.idDistritoC} value={dis.idDistritoC}>{dis.nombreNv}</option>
+                  ))}
                 </select>
               </div>
             </div>

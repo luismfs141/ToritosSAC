@@ -10,6 +10,8 @@ export const useCliente = () => {
     setError(''); // Limpiar el error antes de hacer la llamada
   
     try {
+      console.log(usuario);
+      console.log(password);
       const response = await api.get(`/Cliente/LoginCliente?x_usuario=${usuario}&x_password=${password}`);
       //console.log(response.data.estado); // verificacion del response
 

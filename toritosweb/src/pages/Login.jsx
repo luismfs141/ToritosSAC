@@ -11,7 +11,7 @@ const LoginForm = ({ onLogin }) => {
     event.preventDefault();
 
     try {
-      const data = await loginCliente(usuario, password);
+      const data = await loginCliente(usuario, btoa(password));
       console.log('Login Exitoso:', data);
       onLogin(); // Cambia el estado de autenticación
     } catch (err) {

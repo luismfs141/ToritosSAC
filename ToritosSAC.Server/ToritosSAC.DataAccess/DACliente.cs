@@ -28,7 +28,9 @@ namespace ToritosSAC.DataAccess
                 ToritosDbContext ctx = new ToritosDbContext();
 
                 //Codificacion de password
-                byte[] passwordBytes = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(x_password));
+                string decodedPassword = Encoding.UTF8.GetString(Convert.FromBase64String(x_password));
+
+                byte[] passwordBytes = SHA256.Create().ComputeHash(Encoding.UTF8.GetBytes(decodedPassword));
 
                 var cliente = ctx.Clientes
                     .Where(x => x.CorreoNv == x_correo && x.PasswordBi == passwordBytes)
@@ -50,6 +52,8 @@ namespace ToritosSAC.DataAccess
             {
                 int totalClientes = ctx.Clientes.Count() +1;
                 x_cliente.CodigoC = "C" + totalClientes.ToString("D6");
+                byte[] passwordBytes = SHA256.Create().ComputeHash(x_cliente.PasswordBi);
+                x_cliente.PasswordBi = passwordBytes; 
                 ctx.Clientes.Add(x_cliente);
             }
             else
