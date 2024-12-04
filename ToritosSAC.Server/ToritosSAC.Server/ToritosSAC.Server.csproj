@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ToritosSAC.BusinessLogic\ToritosSAC.BusinessLogic.csproj" />
     <ProjectReference Include="..\ToritosSAC.DataAccess\ToritosSAC.DataAccess.csproj" />
   </ItemGroup>
 

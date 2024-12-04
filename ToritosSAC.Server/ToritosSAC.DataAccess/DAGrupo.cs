@@ -10,27 +10,27 @@ namespace ToritosSAC.DataAccess
 {
     public class DAGrupo
     {
-        public Grupo DAGRUP_ObtenerGrupoPorCliente(int idCliente)
+        public List<Grupo> DAGRUP_ObtenerGruposPorCliente(int idCliente)
         {
             try
             {
                 ToritosDbContext ctx = new ToritosDbContext();
 
-                int? idGrupoCliente = ctx.DetalleGrupos
-                    .Where(dg => dg.IdClienteI == idCliente)
-                    .Select(dg => dg.IdGrupoI)
-                    .FirstOrDefault();
+                var idGruposCliente = ctx.DetalleGrupos
+                .Where(dg => dg.IdClienteI == idCliente)
+                .Select(dg => dg.IdGrupoI)
+                .ToList();
 
-                if (!idGrupoCliente.HasValue)
+                if (idGruposCliente.Count == 0)
                 {
-                    return null;
+                    return new List<Grupo>();
                 }
 
-                var grupo = ctx.Grupos
-                    .Where(g => g.IdGrupoI == idGrupoCliente.Value)
-                    .FirstOrDefault();
+                var grupos = ctx.Grupos
+                    .Where(g => idGruposCliente.Contains(g.IdGrupoI) && g.EstadoC != "F")
+                    .ToList();
 
-                return grupo;
+                return grupos;
             }
             catch (Exception ex)
             {
@@ -38,7 +38,7 @@ namespace ToritosSAC.DataAccess
             }
         }
 
-        public Grupo DAGRUP_GuardarGrupo(Grupo x_grupo)
+        public Grupo DAGRUP_CrearGrupo(Grupo x_grupo)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace ToritosSAC.DataAccess
             
         }
 
-        public Grupo DAGRUP_BuscarGrupoPorCodigo(string x_codigo)
+        public Grupo DAGRUP_ObtenerGrupoPorCodigo(string x_codigo)
         {
             try
             {
@@ -86,18 +86,43 @@ namespace ToritosSAC.DataAccess
             }
         }
 
-        public bool DAGRUP_UnirseGrupo(Grupo x_grupo)
+        public bool DAGRUP_UnirseGrupo(Grupo x_grupo, Cliente x_cliente, Documento x_documento)
         {
             try
             {
                 ToritosDbContext ctx = new ToritosDbContext();
+                bool proceso = false;
 
-                return true;
+                DetalleGrupo detalleGrupo = new DetalleGrupo{
+                    IdGrupoI = x_grupo.IdGrupoI,
+                    IdClienteI = x_cliente.IdClienteI,
+                    IdDocumentosI = x_documento.IdDocumentoI,
+                    IdAsignacionI = null,
+                    ClienteAdminBo = false,
+                    AdmisionC = "P"
+                };
+
+                DetalleGrupo detalleOriginal = ctx.DetalleGrupos.SingleOrDefault(d => d.IdGrupoI == x_grupo.IdGrupoI &&
+                                                d.IdClienteI == x_cliente.IdClienteI);
+
+                if(detalleOriginal == null)
+                {
+                    ctx.DetalleGrupos.Add(detalleGrupo);
+                    proceso = true;
+                }
+                else
+                {
+                    ctx.Entry(detalleOriginal).CurrentValues.SetValues(detalleGrupo);
+                    proceso = true;
+                }
+                
+                ctx.SaveChanges();
+
+                return proceso;
 
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
         }

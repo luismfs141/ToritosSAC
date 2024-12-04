@@ -28,5 +28,29 @@ export const useCliente = () => {
     }
   };
 
-  return { loginCliente, loading, error };
+  const registrarCliente = async (ClienteData) => {
+    setLoading(true);
+    setError(''); // Limpiar el error antes de hacer la llamada
+  
+    try {
+      // Asegúrate de usar POST en lugar de GET
+      console.log(ClienteData);
+      const response = await api.post('/Cliente/GuardarCliente', ClienteData); 
+      
+      if (response.data.estado === 'Exito') {
+        return response.data;
+      } else {
+        setError(response.data.Mensaje);
+        throw new Error(response.data.Mensaje);
+      }
+    } catch (error) {
+      console.error('Error de registro:', error);
+      setError(error.response?.data?.Mensaje || 'Hubo un error al intentar registrar el cliente');
+      throw error;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { loginCliente, registrarCliente,loading, error };
 };

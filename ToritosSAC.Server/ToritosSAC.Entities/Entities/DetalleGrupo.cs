@@ -17,6 +17,8 @@ public partial class DetalleGrupo
 
     public bool ClienteAdminBo { get; set; }
 
+    public string? AdmisionC { get; set; }
+
     public virtual ICollection<DetalleEstadoCuentum> DetalleEstadoCuenta { get; } = new List<DetalleEstadoCuentum>();
 
     public virtual Asignacion? IdAsignacionINavigation { get; set; }
