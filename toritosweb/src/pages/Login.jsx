@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
+import '../assetss/css/Generalbar.css';
 import { useCliente } from '../hooks/useCliente';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = ({ onLogin }) => {
   const [usuario, setUsuario] = useState('');
   const [password, setPassword] = useState('');
   const { loginCliente, loading, error } = useCliente();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
-      const data = await loginCliente(usuario, btoa(password));
-      console.log('Login Exitoso:', data);
-      onLogin(); // Cambia el estado de autenticación
+      const data = await loginCliente(usuario, btoa(password)); // Enviar las credenciales
+      localStorage.setItem('cliente', JSON.stringify(data.cliente)); // Guardar los datos del cliente
+      onLogin(); // Cambiar el estado de autenticación
+      navigate("/Menu"); // Redirigir a la página principal
     } catch (err) {
       console.error('Error de login:', err);
     }
@@ -59,7 +62,7 @@ const LoginForm = ({ onLogin }) => {
           {error && <div className="alert alert-danger text-center">{error}</div>}
         </form>
         <div className="text-center">
-          <p>¿No tienes cuenta? <Link to="/RegistroCliente">Crea una cuenta aquí</Link></p>
+          <p>¿No tienes cuenta? <a href="/RegistroCliente">Crea una cuenta aquí</a></p>
         </div>
       </div>
     </div>
