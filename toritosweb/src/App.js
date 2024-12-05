@@ -11,6 +11,7 @@ import Sorteos from './pages/Sorteos';
 import Cronograma from './pages/Cronograma';
 import Soporte from './pages/Soporte';
 import LoginForm from './pages/Login';
+import RegistroCliente from './pages/RegistroCliente';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -26,7 +27,13 @@ function App() {
     <div>/
       {/* Mostrar el LoginForm solo si no está autenticado */}
       {!isAuthenticated ? (
-        <LoginForm onLogin={handleLogin} />
+        <>
+          <Routes>
+            <Route path="/Login" element={<LoginForm onLogin={handleLogin}/>} />
+            <Route path="/RegistroCliente" element={<RegistroCliente />} />
+          </Routes>
+        </>
+        
       ) : (
         <>
           <Sidebar />
