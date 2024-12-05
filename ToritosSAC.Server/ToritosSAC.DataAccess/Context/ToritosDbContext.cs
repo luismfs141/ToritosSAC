@@ -36,7 +36,7 @@ public partial class ToritosDbContext : DbContext
 
     public virtual DbSet<Modelo> Modelos { get; set; }
 
-    public virtual DbSet<Pai> Pais { get; set; }
+    public virtual DbSet<Pais> Pais { get; set; }
 
     public virtual DbSet<Proveedor> Proveedors { get; set; }
 
@@ -403,7 +403,7 @@ public partial class ToritosDbContext : DbContext
                 .HasConstraintName("FK_Modelo_Marca");
         });
 
-        modelBuilder.Entity<Pai>(entity =>
+        modelBuilder.Entity<Pais>(entity =>
         {
             entity.HasKey(e => e.IdPaisI).HasName("PK__Pais__2A47731C0E23ADBB");
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ToritosSAC.Entities;
 
-public partial class Pai
+public partial class Pais
 {
     public string IdPaisI { get; set; } = null!;
 

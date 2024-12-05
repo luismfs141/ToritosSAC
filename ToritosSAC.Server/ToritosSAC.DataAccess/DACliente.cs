@@ -70,5 +70,21 @@ namespace ToritosSAC.DataAccess
                 throw new Exception("Error al obtener los clientes para el grupo", ex);
             }
         }
+
+        public Cliente DACLIE_ObtenerClientePorId(int idCliente)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+                var cliente = ctx.Clientes
+                    .Where(x => x.IdClienteI == idCliente)
+                    .SingleOrDefault();
+                return cliente;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener el cliente", ex);
+            }
+        }
     }
 }
