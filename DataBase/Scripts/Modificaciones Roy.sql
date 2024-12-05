@@ -1,0 +1,26 @@
+--03/12/2024
+USE ToritosDB;
+GO
+
+ALTER TABLE Proveedor
+ALTER COLUMN Nombre_nv VARCHAR(80) NOT NULL;
+
+ALTER TABLE Proveedor
+ALTER COLUMN CargoContacto_nv VARCHAR(15) NOT NULL;
+
+ALTER TABLE Proveedor
+ALTER COLUMN Direccion_nv VARCHAR(120) NOT NULL;
+
+ALTER TABLE Proveedor
+ADD Estado_c CHAR(1) NOT NULL DEFAULT 'A';
+
+ALTER TABLE Proveedor
+ADD CONSTRAINT CHK_Proveedor_Estado CHECK (Estado_c IN ('A', 'I'));
+
+
+
+
+
+
+
+--04/12/2024

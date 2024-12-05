@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ToritosSAC.DataAccess\ToritosSAC.DataAccess.csproj" />
+    <ProjectReference Include="..\ToritosSAC.Entities\ToritosSAC.Entities.csproj" />
   </ItemGroup>
 
 </Project>
