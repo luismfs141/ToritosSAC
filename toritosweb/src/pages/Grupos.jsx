@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import '../assetss/css/Modal.css';
+import { useCliente } from '../hooks/useCliente';
+import { useGrupo } from '../hooks/useGrupo';
 
 const Grupos = () => {
   const [data, setData] = useState([]);
@@ -11,6 +13,23 @@ const Grupos = () => {
   const [showCreateJoinModal, setShowCreateJoinModal] = useState(false);
   const [showCreateUModal, setShowCreateUModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
+  const [gruposCliente, setGruposCliente] = useState([]);
+  const { getClienteFromLocalStorage } = useCliente();
+  const { getGruposPorCliente } = useGrupo();
+  const [isInitialized, setIsInitialized] = useState(false); // Nuevo estado para evitar el ciclo infinito
+
+  useEffect(() => {
+    if (!isInitialized) {
+      const clienteData = getClienteFromLocalStorage();
+      if (clienteData) {
+        const listaGrupo = getGruposPorCliente(clienteData);
+        listaGrupo.then(grupos => {
+          setGruposCliente(grupos); 
+        });
+      }
+      setIsInitialized(true); // Cambiar el estado de isInitialized para que no se actualice nuevamente
+    }
+  }, [isInitialized, getClienteFromLocalStorage]); 
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
@@ -188,62 +207,69 @@ const Grupos = () => {
 
       {/* Tabla de grupos */}
       <div className="table-responsive">
-        <table className="table table-bordered">
-          <thead>
-            <tr>
-              <th>Código</th>
-              <th>Estado</th>
-              <th>Fecha de Inicio</th>
-              <th>Cuota</th>
-              <th>Periodo</th>
-              <th>Detalles</th>
-              <th>Integrantes</th>
-              <th>Acciones</th>
+      <table className="table table-bordered">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Estado</th>
+            <th>Fecha de Inicio</th>
+            <th>Cuota</th>
+            <th>Periodo</th>
+            <th>Detalles</th>
+            <th>Integrantes</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {gruposCliente.map((item) => (
+            <tr key={item.idGrupoI}>
+              <td>{item.codigoC}</td>
+              <td>
+                {({
+                  'A': 'Abierto',
+                  'C': 'Cerrado',
+                  'F': 'Funcionando',
+                  'T': 'Terminado'
+                })[item.estadoC] || 'En Espera'}
+              </td>
+              <td>{new Date(item.fechaInicioPanderoD).toLocaleDateString()}</td>
+              <td>{item.precioUnidadVehiculoM}</td>
+              <td>{item.tipoPeriodoPagoC}</td>
+              <td>
+                <button
+                  className="btn btn-info"
+                  onClick={() => handleShowDetails('Detalles del grupo')}
+                >
+                  Ver
+                </button>
+              </td>
+              <td>
+                <button
+                  className="btn btn-info"
+                  onClick={() => handleShowDetails('Integrantes del grupo')}
+                >
+                  Ver
+                </button>
+              </td>
+              <td>
+                <button
+                  className="btn btn-warning"
+                  onClick={() => handleEdit(item)}
+                >
+                  Editar
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleDelete(item.idGrupoI)}
+                >
+                  Eliminar
+                </button>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {filteredData.map((item) => (
-              <tr key={item.id}>
-                <td>{item.code}</td>
-                <td>{item.status}</td>
-                <td>{item.startDate}</td>
-                <td>{item.fee}</td>
-                <td>{item.period}</td>
-                <td>
-                  <button
-                    className="btn btn-info"
-                    onClick={() => handleShowDetails('Detalles del grupo')}
-                  >
-                    Ver
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="btn btn-info"
-                    onClick={() => handleShowDetails('Integrantes del grupo')}
-                  >
-                    Ver
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="btn btn-warning"
-                    onClick={() => handleEdit(item)}
-                  >
-                    Editar
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleDelete(item.id)}
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
+    </div>
 
       {/* Modal de detalles */}
       {modalContent && (

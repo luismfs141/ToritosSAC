@@ -33,7 +33,7 @@ namespace ToritosSAC.DataAccess
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new Exception("Ocurrió un error al guardar el documento.", ex);
             }
         }
     }

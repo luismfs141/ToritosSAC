@@ -27,5 +27,5 @@ public partial class DetalleGrupo
 
     public virtual Documento? IdDocumentosINavigation { get; set; }
 
-    public virtual Grupo IdGrupoINavigation { get; set; } = null!;
+    public virtual Grupo? IdGrupoINavigation { get; set; } = null!;
 }
