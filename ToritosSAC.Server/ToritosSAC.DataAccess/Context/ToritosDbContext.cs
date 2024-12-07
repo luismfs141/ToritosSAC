@@ -36,7 +36,7 @@ public partial class ToritosDbContext : DbContext
 
     public virtual DbSet<Modelo> Modelos { get; set; }
 
-    public virtual DbSet<Pais> Pais { get; set; }
+    public virtual DbSet<Pai> Pais { get; set; }
 
     public virtual DbSet<Proveedor> Proveedors { get; set; }
 
@@ -45,8 +45,8 @@ public partial class ToritosDbContext : DbContext
     public virtual DbSet<Vehiculo> Vehiculos { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-           => optionsBuilder.UseSqlServer("Server=localhost;Database=ToritosDB;Trusted_Connection=True;TrustServerCertificate=True;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+         => optionsBuilder.UseSqlServer("Server=localhost;Database=ToritosDB;Trusted_Connection=True;TrustServerCertificate=True;");
     //optionsBuilder.UseSqlServer("server=localhost; initial catalog=ToritosDB; user id=sa; password=1342; TrustServerCertificate=True");
     //optionsBuilder.UseSqlServer("Server=DESKTOP-Q9NGHHL\\SQL2022;Initial Catalog=ToritosDB;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;");
 
@@ -408,7 +408,7 @@ public partial class ToritosDbContext : DbContext
                 .HasConstraintName("FK_Modelo_Marca");
         });
 
-        modelBuilder.Entity<Pais>(entity =>
+        modelBuilder.Entity<Pai>(entity =>
         {
             entity.HasKey(e => e.IdPaisI).HasName("PK__Pais__2A47731C0E23ADBB");
 
@@ -439,6 +439,12 @@ public partial class ToritosDbContext : DbContext
             entity.Property(e => e.DireccionNv)
                 .HasMaxLength(120)
                 .HasColumnName("Direccion_nv");
+            entity.Property(e => e.EstadoC)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('A')")
+                .IsFixedLength()
+                .HasColumnName("Estado_c");
             entity.Property(e => e.IdPaisI)
                 .HasMaxLength(3)
                 .IsUnicode(false)
