@@ -43,6 +43,7 @@ function App() {
       {/* Mostrar el LoginForm solo si no está autenticado */}
       {!isAuthenticated ? (
         <Routes>
+          <Route path="/" element={<LoginForm onLogin={handleLogin} />} />
           <Route path="/Login" element={<LoginForm onLogin={handleLogin} />} />
           <Route path="/RegistroCliente" element={<RegistroCliente />} />
         </Routes>

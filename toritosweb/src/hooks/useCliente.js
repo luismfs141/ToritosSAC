@@ -7,7 +7,30 @@ export const useCliente = () => {
 
   // Función para obtener el cliente de localStorage
   const getClienteFromLocalStorage = () => {
-    return JSON.parse(localStorage.getItem('usuario'));
+    const loginCliente = JSON.parse(localStorage.getItem('usuario'));
+    
+    const clienteData = {
+      idClienteI: loginCliente.idClienteI,
+      codigoC: loginCliente.codigoC,
+      nombreNv: loginCliente.nombreNv,
+      apellidoPaternoNv: loginCliente.apellidoPaternoNv,
+      apellidoMaternoNv: loginCliente.apellidoMaternoNv,
+      tipoDocumentoC: loginCliente.tipoDocumentoC,
+      nroDocumentoV: loginCliente.nroDocumentoV,
+      sexoC: loginCliente.sexoC,
+      fechaNacimientoD: loginCliente.fechaNacimientoD,
+      estadoCivilC: loginCliente.estadoCivilC,
+      nroContactoC: loginCliente.nroContactoC,
+      correoNv: loginCliente.correoNv,
+      correoAutenticadoBo: loginCliente.correoAutenticadoBo,
+      direccionNv: loginCliente.direccionNv,
+      direccionRefNv: loginCliente.direccionRefNv,
+      idDistritoC: loginCliente.idDistritoC,
+      passwordBi: loginCliente.passwordBi,
+      estadoC: loginCliente.estadoC,
+      fechaInscripcionD: loginCliente.fechaInscripcionD
+    };
+    return clienteData;
   };
 
   // Función de login del cliente

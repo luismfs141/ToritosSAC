@@ -12,7 +12,24 @@ export const useGrupo = () => {
             return [];
         }
     };
+
+    const guardarGrupo = async (clienteData,grupoData) =>{
+        try {
+            const request = {'Cliente':clienteData,'Grupo':grupoData};
+            const response = await api.post('/Grupo/GuardarGrupo',request);
+
+            if (response.data.exito) {
+                return response.data;
+              } else {
+                throw new Error(response.data.Mensaje);
+              }
+        } catch (error) {
+            console.error("Error al obtener los grupos:", error);
+        }
+    };
+
     return{
-        getGruposPorCliente
+        getGruposPorCliente,
+        guardarGrupo
     };
 };

@@ -60,6 +60,8 @@ namespace ToritosSAC.DataAccess
 
                 if (x_grupo.IdGrupoI == 0)
                 {
+                    int totalGrupos = ctx.Grupos.Count() + 1;
+                    x_grupo.CodigoC = "G" + totalGrupos.ToString("D6");
                     x_grupo.EstadoC = "E";
                     ctx.Grupos.Add(x_grupo);
                     nuevoGrupo = true;
@@ -92,6 +94,7 @@ namespace ToritosSAC.DataAccess
                     ctx.DetalleGrupos.Add(detalleGrupo);
                 }
 
+                ctx.SaveChanges();
                 return grupo;
             }
             catch (Exception ex)
