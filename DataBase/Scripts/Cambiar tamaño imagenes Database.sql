@@ -1,0 +1,11 @@
+ALTER TABLE Documento
+ALTER COLUMN FileDocIdentidad_by VARBINARY(MAX);
+
+ALTER TABLE Documento
+ALTER COLUMN FileAntecedentesPenales_by VARBINARY(MAX);
+
+ALTER TABLE Documento
+ALTER COLUMN FileReciboLuzAgua_by VARBINARY(MAX);
+
+ALTER TABLE Documento
+ALTER COLUMN FileEquifax_by VARBINARY(MAX);

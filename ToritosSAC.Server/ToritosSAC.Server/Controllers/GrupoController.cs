@@ -99,9 +99,4 @@ namespace ToritosSAC.Server.Controllers
             return bLGrupo.BLGRUP_ListarClientesAdmitidosGrupo(x_grupo);
         }
     }
-    public class GrupoClienteRequest
-    {
-        public Grupo Grupo { get; set; }
-        public Cliente Cliente { get; set; }
-    }
 }

@@ -3,12 +3,13 @@ import React, { useState } from 'react';
 const ModalGuardarDocumento = ({ show, onClose, onSave }) => {
   // Estado para los archivos y datos del documento
   const [documentos, setDocumentos] = useState({
-    fileDocIdentidad: null,
-    fileAntecedentesPenales: null,
-    fileReciboLuzAgua: null,
-    fileEquifax: null,
-    estado: '',
-    fechaAprobacion: '',
+    idDocumento: 0,
+    documentoIdentidad: '',
+    antecedentesPenales: '',
+    reciboAguaLuz: '',
+    docFax: '',
+    estado: 'P',
+    fechaAprovacion: null,
   });
 
   // Maneja el cambio de archivos
@@ -48,39 +49,39 @@ const ModalGuardarDocumento = ({ show, onClose, onSave }) => {
           <div className="modal-body">
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
-                <label htmlFor="fileDocIdentidad" className="form-label">Documento de Identidad</label>
+                <label htmlFor="documentoIdentidad" className="form-label">Documento de Identidad</label>
                 <input
                   type="file"
                   className="form-control"
-                  id="fileDocIdentidad"
-                  onChange={(e) => handleFileChange(e, 'fileDocIdentidad')}
+                  id="documentoIdentidad"
+                  onChange={(e) => handleFileChange(e, 'documentoIdentidad')}
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="fileAntecedentesPenales" className="form-label">Antecedentes Penales</label>
+                <label htmlFor="antecedentesPenales" className="form-label">Antecedentes Penales</label>
                 <input
                   type="file"
                   className="form-control"
-                  id="fileAntecedentesPenales"
-                  onChange={(e) => handleFileChange(e, 'fileAntecedentesPenales')}
+                  id="antecedentesPenales"
+                  onChange={(e) => handleFileChange(e, 'antecedentesPenales')}
                 />
               </div>
               <div className="mb-3">
-                <label htmlFor="fileReciboLuzAgua" className="form-label">Recibo de Luz o Agua</label>
+                <label htmlFor="reciboAguaLuz" className="form-label">Recibo de Luz o Agua</label>
                 <input
                   type="file"
                   className="form-control"
-                  id="fileReciboLuzAgua"
-                  onChange={(e) => handleFileChange(e, 'fileReciboLuzAgua')}
+                  id="reciboAguaLuz"
+                  onChange={(e) => handleFileChange(e, 'reciboAguaLuz')}
                 />
               </div>
               {/* <div className="mb-3">
-                <label htmlFor="fileEquifax" className="form-label">Equifax</label>
+                <label htmlFor="docFax" className="form-label">Equifax</label>
                 <input
                   type="file"
                   className="form-control"
-                  id="fileEquifax"
-                  onChange={(e) => handleFileChange(e, 'fileEquifax')}
+                  id="docFax"
+                  onChange={(e) => handleFileChange(e, 'docFax')}
                 />
               </div> */}
               <div className="mb-3">
@@ -100,13 +101,13 @@ const ModalGuardarDocumento = ({ show, onClose, onSave }) => {
                 </select>
               </div>
               <div className="mb-3">
-                <label htmlFor="fechaAprobacion" className="form-label">Fecha de Aprobación</label>
+                <label htmlFor="fechaAprovacion" className="form-label">Fecha de Aprobación</label>
                 <input
                   type="date"
                   className="form-control"
-                  id="fechaAprobacion"
-                  name="fechaAprobacion"
-                  value={documentos.fechaAprobacion}
+                  id="fechaAprovacion"
+                  name="fechaAprovacion"
+                  value={documentos.fechaAprovacion}
                   onChange={handleInputChange}
                   disabled
                 />

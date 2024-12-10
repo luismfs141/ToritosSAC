@@ -11,11 +11,11 @@ namespace ToritosSAC.Server.Controllers
     {
         [Route("GuardarDocumento")]
         [HttpPost]
-        public Resultado<Documento> GuardarDocumento([FromBody] GrupoClienteRequest request)
+        public Resultado<DocumentoBase64> GuardarDocumento([FromBody] DocumentoClienteController request)
         {
             Grupo grupo = request.Grupo;
             Cliente cliente = request.Cliente;
-            Documento documento = request.Documento();
+            DocumentoBase64 documento = request.Documento;
 
             BLDocumento bLDocumento = new BLDocumento();
             return bLDocumento.BLDOCU_GuardarDocumento(documento,cliente,grupo);
@@ -23,7 +23,7 @@ namespace ToritosSAC.Server.Controllers
 
         [Route("ObtenerDocumentoPorClienteGrupo")]
         [HttpPost]
-        public Resultado<Documento> ObtenerDocumentoPorClienteGrupo([FromBody] GrupoClienteRequest request)
+        public Resultado<DocumentoBase64> ObtenerDocumentoPorClienteGrupo([FromBody] GrupoClienteRequest request)
         {
             Grupo grupo = request.Grupo;
             Cliente cliente = request.Cliente;

@@ -39,6 +39,7 @@ const Grupos = () => {
   const [tipoPeriodoPago, setTipoPeriodoPago] = useState('');
   const [modeloVehiculo, setModeloVehiculo] = useState('');
   const [precioVehiculo, setPrecioVehiculo] = useState('');
+  const [documentosDisponibles, setDocumentosDisponibles] = useState({});
 
   //Message Box
   const [message, setMessage] = useState("");
@@ -58,6 +59,22 @@ const Grupos = () => {
       setIsInitialized(true); // Cambiar el estado de isInitialized para que no se actualice nuevamente
     }
   }, [isInitialized, getClienteFromLocalStorage,getGruposPorCliente]); 
+
+  //useEffect para tabla de grupos
+  useEffect(() => {
+    // Función para obtener los documentos por cliente y grupo
+    const checkDocumentosDisponibles = async () => {
+      const documentos = {};
+      for (const item of gruposCliente) {
+        const resultado = await getDocumentoPorClienteGrupo(clienteData, item);
+        
+        documentos[item.idGrupoI] = resultado; // Guardamos el resultado en el objeto
+      }
+      setDocumentosDisponibles(documentos); // Actualizamos el estado con los resultados
+    };
+
+    checkDocumentosDisponibles();
+  }, [gruposCliente, clienteData]);
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
@@ -172,14 +189,17 @@ const Grupos = () => {
   };
 
 
-  const handleSaveDocumentos = (documentos) => {
-    // Lógica para enviar los documentos al servidor
-    console.log('Documentos a guardar:', documentos);
-    console.log(grupoSeleccionado);
-    console.log(clienteData);
-    // Aquí puedes enviar los datos al servidor usando una solicitud HTTP, por ejemplo con fetch o axios
-    // Luego, cerramos el modal
-    handleCloseModal();
+  const handleSaveDocumentos = async (documentos) => {
+    try {
+      const response = await guardarDocumento(documentos, clienteData, grupoSeleccionado);
+      const listaGrupo = getGruposPorCliente(clienteData);
+      listaGrupo.then(grupos => {
+        setGruposCliente(grupos); 
+      });
+      handleCloseModal();
+    } catch (error) {
+        console.error('Error al guardar documento:', error);
+    }
   };
 
   //Funcion de mensajes
@@ -356,12 +376,6 @@ const Grupos = () => {
           </div>
         </div>
       )}
-      {/* Modal para guardar documentos */}
-      <ModalGuardarDocumento
-        show={showModal}
-        onClose={handleCloseModal}
-        onSave={handleSaveDocumentos}
-      />
 
       {showCreateUModal && (
         <div className="modal-overlay">
@@ -423,77 +437,67 @@ const Grupos = () => {
               <td>{new Date(item.fechaInicioPanderoD).toLocaleDateString()}</td>
               <td>{item.precioUnidadVehiculoM}</td>
               <td>{item.tipoPeriodoPagoC}</td>
-
-            {/* Verificamos si getDocumentoPorClienteGrupo devuelve algo */}
-            {
-            getDocumentoPorClienteGrupo(clienteData, item) ? (
-              <>
-                <td>
+              <td>
                 <button
-                  className="btn btn-secondary"
+                  className={documentosDisponibles[item.idGrupoI]?.estado !== 'A'?"btn btn-secondary":"btn btn-primary"}
                   onClick={() => handleShowDetails('Detalles del grupo')}
-                  disabled={true}
+                  disabled={documentosDisponibles[item.idGrupoI]?.estado !== 'A'}
                 >
                   Ver
                 </button>
               </td>
               <td>
                 <button
-                  className="btn btn-secondary"
+                  className={documentosDisponibles[item.idGrupoI]?.estado !== 'A'?"btn btn-secondary":"btn btn-primary"}
                   onClick={() => handleShowDetails('Integrantes del grupo')}
-                  disabled={true}
+                  disabled={documentosDisponibles[item.idGrupoI]?.estado !== 'A'}
                 >
                   Ver
                 </button>
               </td>
-                <td>
+              <td>
+                {/* Mostrar el botón "Subir Documentos" si no hay documento */}
+                {!documentosDisponibles[item.idGrupoI] && (
                   <button
                     className="btn btn-warning"
-                    onClick={() => handleDocumento()}
+                    onClick={() => handleDocumento(item)}
                   >
                     Subir Documentos
                   </button>
-                </td>
-              </>
-            ) : (
-              <>
-                <td>
+                )}
+
+                {/* Mostrar "Verificando Documentos" si el estado del documento es "P" */}
+                {documentosDisponibles[item.idGrupoI]?.estado === 'P' && (
                   <button
-                    className="btn btn-info"
-                    onClick={() => handleShowDetails('Detalles del grupo')}
+                    className="btn btn-secondary"
+                    onClick={() => handleEdit(item)}
+                    disabled={true}
                   >
-                    Ver
+                    Verificando Documentos
                   </button>
-                </td>
-                <td>
+                )}
+
+                {/* Mostrar "Unirse al Grupo" si el estado del documento es "A" */}
+                {documentosDisponibles[item.idGrupoI]?.estado === 'A' && (
                   <button
-                    className="btn btn-info"
-                    onClick={() => handleShowDetails('Integrantes del grupo')}
-                  >
-                    Ver
-                  </button>
-                </td>
-                <td>
-                  <button
-                    className="btn btn-warning"
+                    className="btn btn-success"
                     onClick={() => handleEdit(item)}
                   >
-                    Editar
+                    Unirse Grupo
                   </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleDelete(item.idGrupoI)}
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </>
-            )}
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
+    {/* Modal para guardar documentos */}
+    <ModalGuardarDocumento
+        show={showModal}
+        onClose={handleCloseModal}
+        onSave={handleSaveDocumentos}
+      />
 
       {/* Modal de detalles */}
       {modalContent && (

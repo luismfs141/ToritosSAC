@@ -11,38 +11,69 @@ namespace ToritosSAC.BusinessLogic
 {
     public class BLDocumento
     {
-        public Resultado<Documento> BLDOCU_GuardarDocumento(Documento x_documento, Cliente x_cliente, Grupo x_grupo)
+        public Resultado<DocumentoBase64> BLDOCU_GuardarDocumento(DocumentoBase64 x_documento, Cliente x_cliente, Grupo x_grupo)
         {
             try
             {
                 DADocumento dADocumento = new DADocumento();
                 Documento documento = dADocumento.DADOCU_GuardarDocumento(x_documento, x_cliente, x_grupo);
-                return new Resultado<Documento>(documento, "Documento guardado exitosamente", true);
+
+                DocumentoBase64 documentoBase64 = new DocumentoBase64
+                {
+                    IdDocumento = documento.IdDocumentoI,
+                    ReciboAguaLuz = "",
+                    AntecedentesPenales = "",
+                    DocFax = "",
+                    DocumentoIdentidad = "",
+                    Estado = documento.EstadoC,
+                    FechaAprobacion = documento.FechaAprovacionD
+                };
+
+                if (documento != null)
+                {
+                    return new Resultado<DocumentoBase64>(documentoBase64, "Documento guardado exitosamente", true);
+                }
+                else
+                {
+                    return new Resultado<DocumentoBase64>(null, "Error al guardar el documento", false);
+                }
             }
             catch (Exception ex)
             {
-                return new Resultado<Documento>(null, $"Error al guardar el documento: {ex.Message}", false);
+                return new Resultado<DocumentoBase64>(null, $"Error al guardar el documento: {ex.Message}", false);
             }
         }
-        public Resultado<Documento> BLDOCU_ObtenerDocumentoPorClienteGrupo(Cliente x_cliente, Grupo x_grupo)
+        public Resultado<DocumentoBase64> BLDOCU_ObtenerDocumentoPorClienteGrupo(Cliente x_cliente, Grupo x_grupo)
         {
             try
             {
                 DADocumento dADocumento = new DADocumento();
                 Documento documento = dADocumento.DADOCU_ObtenerDocumentoPorClienteGrupo(x_cliente, x_grupo);
+
+                DocumentoBase64 documentoBase64 = new DocumentoBase64
+                {
+                    IdDocumento = documento.IdDocumentoI,
+                    ReciboAguaLuz = "",
+                    AntecedentesPenales = "",
+                    DocFax = "",
+                    DocumentoIdentidad = "",
+                    Estado = documento.EstadoC,
+                    FechaAprobacion = documento.FechaAprovacionD
+                };
+
                 if(documento != null)
                 {
-                    return new Resultado<Documento>(documento, "Documento obtenido exitosamente", true);
+                    return new Resultado<DocumentoBase64>(documentoBase64, "Documento obtenido exitosamente", true);
                 }
                 else
                 {
-                    return new Resultado<Documento>(null, "Documento no existe", false);
+                    return new Resultado<DocumentoBase64>(null, "Documento no existe", false);
                 }
                 
             }
             catch (Exception ex)
             {
-                return new Resultado<Documento>(null, $"Error al guardar el documento: {ex.Message}", false);
+                return new Resultado<DocumentoBase64>(null, $"Error al obtener el documento: {ex.Message}", false);
             }
         }
     }
