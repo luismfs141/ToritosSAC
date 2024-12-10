@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ToritosSAC.Entities;
+using ToritosSAC.DataAccess.Context;
 
 namespace ToritosSAC.DataAccess
 {
@@ -218,17 +219,18 @@ namespace ToritosSAC.DataAccess
                 Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo eliminar el registro";
             }
             catch (Exception ex)
-            {
+                {
                 Rpta = "No se pudo eliminar de la base de datos, verifique los campos.";
                 //instertar error  db 
                 throw new Exception(Rpta);
-            }
+                }
             finally
-            {
+                {
                 if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
             }
             return Rpta;
-        }
+                }
+                ctx.SaveChanges();
 
         public string Activar(int Id)
         {
