@@ -9,21 +9,99 @@ namespace ToritosSAC.Server.Controllers
     [Route("api/[controller]")]
     public class GrupoController
     {
-        //[HttpGet("UnirseGrupo")]
-        //public bool UnirseGrupo(Grupo x_grupo, Cliente x_cliente, Documento x_documento)
-        //{
-        //    try
-        //    {
-        //        bool resultado = false;
-        //        BLGrupo blGrupo = new BLGrupo();
-        //        resultado = blGrupo.BLGRUP_UnirseGrupo(x_grupo, x_cliente, x_documento);
+        [HttpGet("ObtenerGruposPorCliente")]
+        public Resultado<List<Grupo>> ObtenerGruposPorCliente(int idCliente)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_ObtenerGruposPorCliente(idCliente);
+        }
 
-        //        return resultado;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
+        [HttpGet("ObtenerGrupoPorCodigo")]
+        public Resultado<Grupo> ObtenerGrupoPorCodigo(string codigoGrupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_ObtenerGrupoPorCodigo(codigoGrupo);
+        }
+
+        [Route("GuardarGrupo")]
+        [HttpPost]
+        public Resultado<Grupo> GuardarGrupo([FromBody] GrupoClienteRequest request)
+        {
+            Grupo grupo = request.Grupo;
+            Cliente cliente = request.Cliente;
+
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_GuardarGrupo(grupo, cliente);
+        }
+
+        [Route("AbrirGrupoAdmin")]
+        [HttpPost]
+        public Resultado<Grupo> AbrirGrupoAdmin(DetalleGrupo detalleGrupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_AbrirGrupoAdmin(detalleGrupo);
+        }
+
+        [Route("AgregarListaGrupoCliente")]
+        [HttpPost]
+        public Resultado<DetalleGrupo> AgregarListaGrupoCliente([FromBody] GrupoClienteRequest request)
+        {
+            Grupo grupo = request.Grupo;
+            Cliente cliente = request.Cliente;
+
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_AgregarListaGrupoCliente(grupo, cliente);
+        }
+
+        [Route("EliminarListaGrupoCliente")]
+        [HttpPost]
+        public Resultado<DetalleGrupo> EliminarListaGrupoCliente(int idGrupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_EliminarListaGrupoCliente(idGrupo);
+        }
+
+        [Route("UnirseListaPendienteGrupo")]
+        [HttpPost]
+        public Resultado<DetalleGrupo> UnirseListaPendienteGrupo(DetalleGrupo x_detalleGrupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_UnirseListaPendienteGrupo(x_detalleGrupo);
+        }
+
+        [HttpGet("ListarClientesPendientesGrupo")]
+        public Resultado<List<Cliente>> ListarClientesPendientesGrupo(Grupo x_grupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_ListarClientesPendientesGrupo(x_grupo);
+        }
+
+        [Route("AdmitirClienteGrupo")]
+        [HttpPost]
+        public Resultado<DetalleGrupo> AdmitirClienteGrupo(DetalleGrupo x_detalleGrupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_AdmitirClienteGrupo(x_detalleGrupo);
+        }
+
+        [Route("RechazarClienteGrupo")]
+        [HttpPost]
+        public Resultado<DetalleGrupo> RechazarClienteGrupo(DetalleGrupo x_detalleGrupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_RechazarClienteGrupo(x_detalleGrupo);
+        }
+
+        [HttpGet("ListarClientesAdmitidosGrupo")]
+        public Resultado<List<Cliente>> ListarClientesAdmitidosGrupo(Grupo x_grupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_ListarClientesAdmitidosGrupo(x_grupo);
+        }
+    }
+    public class GrupoClienteRequest
+    {
+        public Grupo Grupo { get; set; }
+        public Cliente Cliente { get; set; }
     }
 }

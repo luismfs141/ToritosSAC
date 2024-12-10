@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './assetss/css/Generalbar.css';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 
@@ -17,28 +17,41 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
+  // Verificar si el usuario está autenticado al montar el componente
+  useEffect(() => {
+    const clienteData = localStorage.getItem('cliente');
+    if (clienteData) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   // Función para manejar el login
   const handleLogin = () => {
     setIsAuthenticated(true);
     navigate("/Menu"); // Redirige a la página principal después de iniciar sesión
   };
 
+  // Función para manejar el logout
+  const handleLogout = () => {
+    localStorage.removeItem('cliente'); // Eliminar los datos del cliente de localStorage
+    setIsAuthenticated(false); // Cambiar el estado de autenticación
+    navigate("/Login"); // Redirigir al login
+  };
+
   return (
-    <div>/
+    <div>
       {/* Mostrar el LoginForm solo si no está autenticado */}
       {!isAuthenticated ? (
-        <>
-          <Routes>
-            <Route path="/Login" element={<LoginForm onLogin={handleLogin}/>} />
-            <Route path="/RegistroCliente" element={<RegistroCliente />} />
-          </Routes>
-        </>
-        
+        <Routes>
+          <Route path="/" element={<LoginForm onLogin={handleLogin} />} />
+          <Route path="/Login" element={<LoginForm onLogin={handleLogin} />} />
+          <Route path="/RegistroCliente" element={<RegistroCliente />} />
+        </Routes>
       ) : (
         <>
           <Sidebar />
           <section id="content">
-            <Navbar />
+            <Navbar onLogout={handleLogout} />
             <Routes>
               <Route path="/Menu" element={<Menu />} />
               <Route path="/Grupos" element={<Grupos />} />

@@ -29,5 +29,5 @@ public partial class Grupo
 
     public virtual ICollection<DetalleGrupo> DetalleGrupos { get; } = new List<DetalleGrupo>();
 
-    public virtual Modelo IdModeloVehiculoINavigation { get; set; } = null!;
+    public virtual Modelo? IdModeloVehiculoINavigation { get; set; } = null!;
 }
