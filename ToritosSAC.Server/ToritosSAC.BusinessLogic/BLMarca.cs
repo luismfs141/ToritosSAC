@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,69 +9,57 @@ using ToritosSAC.Entities;
 
 namespace ToritosSAC.BusinessLogic
 {
-    public class BLProveedor
+    public class BLMarca
     {
         public static DataTable Listar()
         {
-            DAProveedor Datos = new DAProveedor();
+            DAMarca Datos = new DAMarca();
             return Datos.Listar();
         }
 
         public static DataTable Buscar(string Valor)
         {
-            DAProveedor Datos = new DAProveedor();
+            DAMarca Datos = new DAMarca();
             return Datos.Buscar(Valor);
         }
 
-        public static DataTable SeleccionarPais()
+        public static string Insertar(string Nombre, string SitioWeb)
         {
-            DAProveedor Datos = new DAProveedor();
-            return Datos.SeleccionarPais();
-        }
-
-        public static string Insertar(string Nombre, string Contacto, string Cargo, string Direccion, string Pais)
-        {
-            DAProveedor Datos = new DAProveedor();
+            DAMarca Datos = new DAMarca();
 
             try
             {
                 string Existe = Datos.Existe(Nombre);
                 if (Existe.Equals("1"))
                 {
-                    return "El proveedor ya existe";
+                    return "La marca ya existe";
                 }
                 else
                 {
-                    Proveedor Obj = new Proveedor();
+                    Marca Obj = new Marca();
                     Obj.NombreNv = Nombre;
-                    Obj.ContactoV = Contacto;
-                    Obj.CargoContactoNv = Cargo;
-                    Obj.DireccionNv = Direccion;
-                    Obj.IdPaisI = Pais;
+                    Obj.SitioWebNv = SitioWeb;
                     return Datos.Insertar(Obj);
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception( ex.Message);
+                throw new Exception(ex.Message);
             }
 
         }
 
-        public static string Actualizar(int Id, string NombreAnt, string Nombre, string Contacto, string Cargo, string Direccion, string Pais)
+        public static string Actualizar(int Id, string NombreAnt, string Nombre, string SitioWeb)
         {
-                DAProveedor Datos = new DAProveedor();
-                Proveedor Obj = new Proveedor();
+            DAMarca Datos = new DAMarca();
+            Marca Obj = new Marca();
             try
             {
                 if (NombreAnt.Equals(Nombre))
                 {
-                    Obj.IdProveedorI = Id;
+                    Obj.IdMarcaI = Id;
                     Obj.NombreNv = Nombre;
-                    Obj.ContactoV = Contacto;
-                    Obj.CargoContactoNv = Cargo;
-                    Obj.DireccionNv = Direccion;
-                    Obj.IdPaisI = Pais;
+                    Obj.SitioWebNv = SitioWeb;
                     return Datos.Actualizar(Obj);
                 }
                 else
@@ -80,16 +67,13 @@ namespace ToritosSAC.BusinessLogic
                     string Existe = Datos.Existe(Nombre);
                     if (Existe.Equals("1"))
                     {
-                        return "El proveedor ya existe";
+                        return "La marca ya existe";
                     }
                     else
                     {
-                        Obj.IdProveedorI = Id;
+                        Obj.IdMarcaI = Id;
                         Obj.NombreNv = Nombre;
-                        Obj.ContactoV = Contacto;
-                        Obj.CargoContactoNv = Cargo;
-                        Obj.DireccionNv = Direccion;
-                        Obj.IdPaisI = Pais;
+                        Obj.SitioWebNv = SitioWeb;
                         return Datos.Actualizar(Obj);
                     }
                 }
@@ -103,7 +87,7 @@ namespace ToritosSAC.BusinessLogic
 
         public static string Eliminar(int Id)
         {
-            DAProveedor Datos = new DAProveedor();
+            DAMarca Datos = new DAMarca();
             try
             {
                 return Datos.Eliminar(Id);
@@ -116,7 +100,7 @@ namespace ToritosSAC.BusinessLogic
 
         public static string Activar(int Id)
         {
-            DAProveedor Datos = new DAProveedor();
+            DAMarca Datos = new DAMarca();
             try
             {
                 return Datos.Activar(Id);
@@ -129,7 +113,7 @@ namespace ToritosSAC.BusinessLogic
 
         public static string Desactivar(int Id)
         {
-            DAProveedor Datos = new DAProveedor();
+            DAMarca Datos = new DAMarca();
             try
             {
                 return Datos.Desactivar(Id);

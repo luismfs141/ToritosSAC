@@ -5,12 +5,11 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ToritosSAC.DataAccess.Context;
 using ToritosSAC.Entities;
 
 namespace ToritosSAC.DataAccess
 {
-    public class DAProveedor
+    public class DAMarca
     {
         public DataTable Listar()
         {
@@ -20,7 +19,7 @@ namespace ToritosSAC.DataAccess
             try
             {
                 SqlCon = Conexion.getInstancia().CrearConexion();
-                SqlCommand Comando = new SqlCommand("ProveedorListar", SqlCon);
+                SqlCommand Comando = new SqlCommand("MarcaListar", SqlCon);
                 Comando.CommandType = CommandType.StoredProcedure;
                 SqlCon.Open();
                 Resultado = Comando.ExecuteReader();
@@ -45,34 +44,9 @@ namespace ToritosSAC.DataAccess
             try
             {
                 SqlCon = Conexion.getInstancia().CrearConexion();
-                SqlCommand Comando = new SqlCommand("ProveedorBuscar", SqlCon);
+                SqlCommand Comando = new SqlCommand("MarcaBuscar", SqlCon);
                 Comando.CommandType = CommandType.StoredProcedure;
                 Comando.Parameters.Add("@Nombre_nv", SqlDbType.VarChar).Value = Valor;
-                SqlCon.Open();
-                Resultado = Comando.ExecuteReader();
-                Tabla.Load(Resultado);
-                return Tabla;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
-            }
-        }
-
-        public DataTable SeleccionarPais()
-        {
-            SqlDataReader Resultado;
-            DataTable Tabla = new DataTable();
-            SqlConnection SqlCon = new SqlConnection();
-            try
-            {
-                SqlCon = Conexion.getInstancia().CrearConexion();
-                SqlCommand Comando = new SqlCommand("ListarPais", SqlCon);
-                Comando.CommandType = CommandType.StoredProcedure;
                 SqlCon.Open();
                 Resultado = Comando.ExecuteReader();
                 Tabla.Load(Resultado);
@@ -95,7 +69,7 @@ namespace ToritosSAC.DataAccess
             try
             {
                 SqlCon = Conexion.getInstancia().CrearConexion();
-                SqlCommand Comando = new SqlCommand("ProveedorExistente", SqlCon);
+                SqlCommand Comando = new SqlCommand("MarcaExistente", SqlCon);
                 Comando.CommandType = CommandType.StoredProcedure;
                 Comando.Parameters.Add("@Nombre_nv", SqlDbType.VarChar).Value = Valor;
                 SqlParameter ParExiste = new SqlParameter();
@@ -120,29 +94,26 @@ namespace ToritosSAC.DataAccess
             return Rpta;
         }
 
-        public string Insertar(Proveedor Obj)
+        public string Insertar(Marca Obj)
         {
             string Rpta = "";
             SqlConnection SqlCon = new SqlConnection();
             try
             {
                 SqlCon = Conexion.getInstancia().CrearConexion();
-                SqlCommand Comando = new SqlCommand("ProveedorInsertar", SqlCon);
+                SqlCommand Comando = new SqlCommand("MarcaInsertar", SqlCon);
                 Comando.CommandType = CommandType.StoredProcedure;
                 Comando.Parameters.Add("@Nombre_nv", SqlDbType.VarChar).Value = Obj.NombreNv;
-                Comando.Parameters.Add("@Contacto_v", SqlDbType.VarChar).Value = Obj.ContactoV;
-                Comando.Parameters.Add("@CargoContacto_nv", SqlDbType.VarChar).Value = Obj.CargoContactoNv;
-                Comando.Parameters.Add("@Direccion_nv", SqlDbType.VarChar).Value = Obj.DireccionNv;
-                Comando.Parameters.Add("@IdPais_i", SqlDbType.VarChar).Value = Obj.IdPaisI;
+                Comando.Parameters.Add("@SitioWeb_nv", SqlDbType.VarChar).Value = Obj.SitioWebNv;
                 SqlCon.Open();
                 Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo ingresar el registro";
-                
+
             }
             catch (Exception ex)
             {
                 Rpta = "No se pudo registrar en la base de datos, verifique los campos.";
                 //instertar error  db 
-                throw new Exception(Rpta);  
+                throw new Exception(Rpta);
             }
             finally
             {
@@ -151,21 +122,18 @@ namespace ToritosSAC.DataAccess
             return Rpta;
         }
 
-        public string Actualizar(Proveedor Obj)
+        public string Actualizar(Marca Obj)
         {
             string Rpta = "";
             SqlConnection SqlCon = new SqlConnection();
             try
             {
                 SqlCon = Conexion.getInstancia().CrearConexion();
-                SqlCommand Comando = new SqlCommand("ProveedorActualizar", SqlCon);
+                SqlCommand Comando = new SqlCommand("MarcaActualizar", SqlCon);
                 Comando.CommandType = CommandType.StoredProcedure;
-                Comando.Parameters.Add("@IdProveedor_i", SqlDbType.Int).Value = Obj.IdProveedorI;
+                Comando.Parameters.Add("@IdMarca_i", SqlDbType.Int).Value = Obj.IdMarcaI;
                 Comando.Parameters.Add("@Nombre_nv", SqlDbType.VarChar).Value = Obj.NombreNv;
-                Comando.Parameters.Add("@Contacto_v", SqlDbType.VarChar).Value = Obj.ContactoV;
-                Comando.Parameters.Add("@CargoContacto_nv", SqlDbType.VarChar).Value = Obj.CargoContactoNv;
-                Comando.Parameters.Add("@Direccion_nv", SqlDbType.VarChar).Value = Obj.DireccionNv;
-                Comando.Parameters.Add("@IdPais_i", SqlDbType.VarChar).Value = Obj.IdPaisI;
+                Comando.Parameters.Add("@SitioWeb_nv", SqlDbType.VarChar).Value = Obj.SitioWebNv;
                 SqlCon.Open();
                 Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo actualizar el registro";
             }
@@ -189,9 +157,9 @@ namespace ToritosSAC.DataAccess
             try
             {
                 SqlCon = Conexion.getInstancia().CrearConexion();
-                SqlCommand Comando = new SqlCommand("ProveedorEliminar", SqlCon);
+                SqlCommand Comando = new SqlCommand("MarcaEliminar", SqlCon);
                 Comando.CommandType = CommandType.StoredProcedure;
-                Comando.Parameters.Add("@IdProveedor_i", SqlDbType.Int).Value = Id;
+                Comando.Parameters.Add("@IdMarca_i", SqlDbType.Int).Value = Id;
                 SqlCon.Open();
                 Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo eliminar el registro";
             }
@@ -215,9 +183,9 @@ namespace ToritosSAC.DataAccess
             try
             {
                 SqlCon = Conexion.getInstancia().CrearConexion();
-                SqlCommand Comando = new SqlCommand("ProveedorActivar", SqlCon);
+                SqlCommand Comando = new SqlCommand("MarcaActivar", SqlCon);
                 Comando.CommandType = CommandType.StoredProcedure;
-                Comando.Parameters.Add("@IdProveedor_i", SqlDbType.Int).Value = Id;
+                Comando.Parameters.Add("@IdMarca_i", SqlDbType.Int).Value = Id;
                 SqlCon.Open();
                 Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo activar el registro";
             }
@@ -241,9 +209,9 @@ namespace ToritosSAC.DataAccess
             try
             {
                 SqlCon = Conexion.getInstancia().CrearConexion();
-                SqlCommand Comando = new SqlCommand("ProveedorDesactivar", SqlCon);
+                SqlCommand Comando = new SqlCommand("MarcaDesactivar", SqlCon);
                 Comando.CommandType = CommandType.StoredProcedure;
-                Comando.Parameters.Add("@IdProveedor_i", SqlDbType.Int).Value = Id;
+                Comando.Parameters.Add("@IdMarca_i", SqlDbType.Int).Value = Id;
                 SqlCon.Open();
                 Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo desactivar el registro";
             }

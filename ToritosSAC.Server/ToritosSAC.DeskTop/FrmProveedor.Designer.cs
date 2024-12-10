@@ -41,6 +41,7 @@
             dgvListado = new DataGridView();
             Seleccionar = new DataGridViewCheckBoxColumn();
             tabPage2 = new TabPage();
+            lblTitulo = new Label();
             btnCancelar = new Button();
             btnActualizar = new Button();
             btnInsertar = new Button();
@@ -71,7 +72,7 @@
             tabGeneral.Location = new Point(12, 12);
             tabGeneral.Name = "tabGeneral";
             tabGeneral.SelectedIndex = 0;
-            tabGeneral.Size = new Size(1146, 426);
+            tabGeneral.Size = new Size(782, 426);
             tabGeneral.TabIndex = 0;
             // 
             // tabPage1
@@ -87,42 +88,48 @@
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(1138, 398);
+            tabPage1.Size = new Size(774, 398);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "Listado";
             tabPage1.UseVisualStyleBackColor = true;
             // 
             // btnEliminar
             // 
-            btnEliminar.Location = new Point(651, 354);
+            btnEliminar.Location = new Point(660, 364);
             btnEliminar.Name = "btnEliminar";
-            btnEliminar.Size = new Size(75, 23);
+            btnEliminar.Size = new Size(104, 23);
             btnEliminar.TabIndex = 5;
             btnEliminar.Text = "Eliminar";
             btnEliminar.UseVisualStyleBackColor = true;
+            btnEliminar.Visible = false;
+            btnEliminar.Click += btnEliminar_Click;
             // 
             // btnActivar
             // 
-            btnActivar.Location = new Point(545, 353);
+            btnActivar.Location = new Point(550, 364);
             btnActivar.Name = "btnActivar";
-            btnActivar.Size = new Size(75, 23);
+            btnActivar.Size = new Size(104, 23);
             btnActivar.TabIndex = 5;
             btnActivar.Text = "Activar";
             btnActivar.UseVisualStyleBackColor = true;
+            btnActivar.Visible = false;
+            btnActivar.Click += btnActivar_Click;
             // 
             // btnDesactivar
             // 
-            btnDesactivar.Location = new Point(430, 353);
+            btnDesactivar.Location = new Point(440, 364);
             btnDesactivar.Name = "btnDesactivar";
-            btnDesactivar.Size = new Size(75, 23);
+            btnDesactivar.Size = new Size(104, 23);
             btnDesactivar.TabIndex = 5;
             btnDesactivar.Text = "Desactivar";
             btnDesactivar.UseVisualStyleBackColor = true;
+            btnDesactivar.Visible = false;
+            btnDesactivar.Click += btnDesactivar_Click;
             // 
             // ChkSeleccionar
             // 
             ChkSeleccionar.AutoSize = true;
-            ChkSeleccionar.Location = new Point(306, 357);
+            ChkSeleccionar.Location = new Point(348, 364);
             ChkSeleccionar.Name = "ChkSeleccionar";
             ChkSeleccionar.Size = new Size(86, 19);
             ChkSeleccionar.TabIndex = 4;
@@ -132,7 +139,7 @@
             // 
             // btnBuscar
             // 
-            btnBuscar.Location = new Point(395, 13);
+            btnBuscar.Location = new Point(395, 10);
             btnBuscar.Name = "btnBuscar";
             btnBuscar.Size = new Size(75, 23);
             btnBuscar.TabIndex = 3;
@@ -142,7 +149,7 @@
             // 
             // txtBuscar
             // 
-            txtBuscar.Location = new Point(6, 13);
+            txtBuscar.Location = new Point(6, 10);
             txtBuscar.Name = "txtBuscar";
             txtBuscar.Size = new Size(383, 23);
             txtBuscar.TabIndex = 2;
@@ -150,7 +157,7 @@
             // lblTotal
             // 
             lblTotal.AutoSize = true;
-            lblTotal.Location = new Point(24, 358);
+            lblTotal.Location = new Point(16, 369);
             lblTotal.Name = "lblTotal";
             lblTotal.Size = new Size(35, 15);
             lblTotal.TabIndex = 1;
@@ -163,12 +170,14 @@
             dgvListado.AllowUserToOrderColumns = true;
             dgvListado.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvListado.Columns.AddRange(new DataGridViewColumn[] { Seleccionar });
-            dgvListado.Location = new Point(6, 54);
+            dgvListado.Location = new Point(6, 42);
             dgvListado.Name = "dgvListado";
             dgvListado.ReadOnly = true;
             dgvListado.RowTemplate.Height = 25;
-            dgvListado.Size = new Size(1126, 278);
+            dgvListado.Size = new Size(758, 310);
             dgvListado.TabIndex = 0;
+            dgvListado.CellContentClick += dgvListado_CellContentClick;
+            dgvListado.CellDoubleClick += dgvListado_CellDoubleClick;
             // 
             // Seleccionar
             // 
@@ -178,6 +187,7 @@
             // 
             // tabPage2
             // 
+            tabPage2.Controls.Add(lblTitulo);
             tabPage2.Controls.Add(btnCancelar);
             tabPage2.Controls.Add(btnActualizar);
             tabPage2.Controls.Add(btnInsertar);
@@ -196,14 +206,24 @@
             tabPage2.Location = new Point(4, 24);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(1138, 398);
+            tabPage2.Size = new Size(774, 398);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "Mantenimiento";
             tabPage2.UseVisualStyleBackColor = true;
             // 
+            // lblTitulo
+            // 
+            lblTitulo.AutoSize = true;
+            lblTitulo.Font = new Font("Segoe UI", 14F, FontStyle.Bold, GraphicsUnit.Point);
+            lblTitulo.Location = new Point(28, 13);
+            lblTitulo.Name = "lblTitulo";
+            lblTitulo.Size = new Size(252, 25);
+            lblTitulo.TabIndex = 9;
+            lblTitulo.Text = "Registrar nuevo proveedor";
+            // 
             // btnCancelar
             // 
-            btnCancelar.Location = new Point(258, 245);
+            btnCancelar.Location = new Point(144, 254);
             btnCancelar.Name = "btnCancelar";
             btnCancelar.Size = new Size(108, 23);
             btnCancelar.TabIndex = 8;
@@ -213,7 +233,7 @@
             // 
             // btnActualizar
             // 
-            btnActualizar.Location = new Point(144, 245);
+            btnActualizar.Location = new Point(30, 254);
             btnActualizar.Name = "btnActualizar";
             btnActualizar.Size = new Size(108, 23);
             btnActualizar.TabIndex = 7;
@@ -223,7 +243,7 @@
             // 
             // btnInsertar
             // 
-            btnInsertar.Location = new Point(28, 245);
+            btnInsertar.Location = new Point(28, 254);
             btnInsertar.Name = "btnInsertar";
             btnInsertar.Size = new Size(108, 23);
             btnInsertar.TabIndex = 6;
@@ -245,7 +265,7 @@
             cboPais.FormattingEnabled = true;
             cboPais.Location = new Point(144, 165);
             cboPais.Name = "cboPais";
-            cboPais.Size = new Size(162, 23);
+            cboPais.Size = new Size(230, 23);
             cboPais.TabIndex = 5;
             // 
             // label5
@@ -297,36 +317,37 @@
             // 
             txtDireccion.Location = new Point(144, 136);
             txtDireccion.Name = "txtDireccion";
-            txtDireccion.Size = new Size(162, 23);
+            txtDireccion.Size = new Size(230, 23);
             txtDireccion.TabIndex = 4;
             // 
             // txtCargo
             // 
             txtCargo.Location = new Point(144, 107);
             txtCargo.Name = "txtCargo";
-            txtCargo.Size = new Size(162, 23);
+            txtCargo.Size = new Size(230, 23);
             txtCargo.TabIndex = 3;
             // 
             // txtContacto
             // 
             txtContacto.Location = new Point(144, 78);
             txtContacto.Name = "txtContacto";
-            txtContacto.Size = new Size(162, 23);
+            txtContacto.Size = new Size(230, 23);
             txtContacto.TabIndex = 2;
             // 
             // txtNombre
             // 
             txtNombre.Location = new Point(144, 49);
             txtNombre.Name = "txtNombre";
-            txtNombre.Size = new Size(162, 23);
+            txtNombre.Size = new Size(230, 23);
             txtNombre.TabIndex = 1;
             // 
             // txtId
             // 
-            txtId.Location = new Point(355, 6);
+            txtId.Location = new Point(668, 6);
             txtId.Name = "txtId";
             txtId.Size = new Size(100, 23);
             txtId.TabIndex = 0;
+            txtId.Visible = false;
             // 
             // ErrorIcono
             // 
@@ -337,7 +358,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.White;
-            ClientSize = new Size(1170, 450);
+            ClientSize = new Size(803, 450);
             Controls.Add(tabGeneral);
             Name = "FrmProveedor";
             Text = "Proveedores";
@@ -382,5 +403,6 @@
         private Button btnActivar;
         private Button btnDesactivar;
         private CheckBox ChkSeleccionar;
+        private Label lblTitulo;
     }
 }

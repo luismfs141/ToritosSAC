@@ -7,7 +7,7 @@ namespace ToritosSAC.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ModeloController 
+    public class ModeloController
     {
         [HttpGet("ObtenerModelos")]
         public Resultado<List<Modelo>> ObtenerModelos()
