@@ -37,10 +37,9 @@ export const useCliente = () => {
   const loginCliente = async (usuario, password) => {
     setLoading(true);
     setError(''); // Limpiar el error antes de hacer la llamada
-  
     try {
       const response = await api.get(`/Cliente/LoginCliente?x_usuario=${usuario}&x_password=${password}`);
-  
+      
       if (response.data.estado === 'Exito') {
         localStorage.setItem('usuario',JSON.stringify(response.data.data));
   

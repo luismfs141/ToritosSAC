@@ -69,9 +69,17 @@ namespace ToritosSAC.BusinessLogic
         {
             try
             {
-                DAGrupo dAGrupo = new DAGrupo();
-                var detalleGrupo = dAGrupo.DAGRUP_AgregarGrupoListaCliente(x_grupo, x_cliente);
-                return new Resultado<DetalleGrupo>(detalleGrupo, "Cliente agregado al grupo exitosamente", true);
+                if(x_grupo.EstadoC == "A")
+                {
+                    DAGrupo dAGrupo = new DAGrupo();
+                    var detalleGrupo = dAGrupo.DAGRUP_AgregarGrupoListaCliente(x_grupo, x_cliente);
+                    return new Resultado<DetalleGrupo>(detalleGrupo, "Cliente agregado al grupo exitosamente", true);
+                }
+                else
+                {
+                    return new Resultado<DetalleGrupo>(null, "Error, el grupo no se encuentra activado.", false);
+                }
+                
             }
             catch (Exception ex)
             {
@@ -99,7 +107,14 @@ namespace ToritosSAC.BusinessLogic
             {
                 DAGrupo dAGrupo = new DAGrupo();
                 var detalleGrupo = dAGrupo.DAGRUP_UnirseListaPendienteGrupo(x_detalleGrupo);
-                return new Resultado<DetalleGrupo>(detalleGrupo, "Unión a la lista pendiente del grupo exitosa", true);
+                if(detalleGrupo != null)
+                {
+                    return new Resultado<DetalleGrupo>(detalleGrupo, "Unión a la lista pendiente del grupo exitosa", true);
+                }
+                else
+                {
+                    return new Resultado<DetalleGrupo>(null, "Unión a la lista pendiente del grupo fallida", false);
+                }
             }
             catch (Exception ex)
             {

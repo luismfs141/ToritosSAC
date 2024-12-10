@@ -3,6 +3,8 @@ import '../assetss/css/Modal.css';
 import { useCliente } from '../hooks/useCliente';
 import { useGrupo } from '../hooks/useGrupo';
 import { useModelo } from '../hooks/useModelo';
+import { useDocumento } from '../hooks/useDocumento';
+import ModalGuardarDocumento from '../components/ModalGuardarDocumento';
 
 const Grupos = () => {
   const [data, setData] = useState([]);
@@ -14,11 +16,15 @@ const Grupos = () => {
   const [showCreateJoinModal, setShowCreateJoinModal] = useState(false);
   const [showCreateUModal, setShowCreateUModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
+  const [codigoGrupo, setCodigoGrupo] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [grupoSeleccionado, setGrupoSeleccionado] = useState(null);
 
   //Metodos Hooks
   const { getClienteFromLocalStorage } = useCliente();
-  const { getGruposPorCliente,guardarGrupo } = useGrupo();
-  const { getModelos} = useModelo();
+  const { getGruposPorCliente, guardarGrupo, buscarGrupoCodigo, agregarListaGrupoCliente } = useGrupo();
+  const { getModelos } = useModelo();
+  const { guardarDocumento, getDocumentoPorClienteGrupo } = useDocumento();
   
   //Variables de control
   const [gruposCliente, setGruposCliente] = useState([]);
@@ -51,7 +57,7 @@ const Grupos = () => {
       }
       setIsInitialized(true); // Cambiar el estado de isInitialized para que no se actualice nuevamente
     }
-  }, [isInitialized, getClienteFromLocalStorage]); 
+  }, [isInitialized, getClienteFromLocalStorage,getGruposPorCliente]); 
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
@@ -84,6 +90,7 @@ const Grupos = () => {
     setModalContent(null);
     setShowCreateJoinModal(false);
     setShowCreateUModal(false);
+    setShowModal(false);
   };
 
   // Modal Creación de grupo
@@ -127,6 +134,52 @@ const Grupos = () => {
     } else {
       setPrecioVehiculo(0);
     }
+  };
+
+  const handleUnirseGrupo = async (e) => {
+    e.preventDefault();  // Si estás usando un formulario, previenes el comportamiento por defecto
+  
+    // Verifica que el código del grupo no esté vacío
+    if (!codigoGrupo || !clienteData?.idClienteI) {
+      showErrorMessage("Por favor ingrese un código válido y asegúrese de estar logueado.");
+      return;
+    }
+    try {
+      // Busca el grupo con el código ingresado
+      const grupoBuscado = await buscarGrupoCodigo(codigoGrupo);
+      if (grupoBuscado) {
+        // Intentar unirse al grupo
+        const response = await agregarListaGrupoCliente(grupoBuscado, clienteData);
+        
+        if (response.exito) {
+          showSuccessMessage("¡Grupo agregado exitosamente!");
+          handleCloseModal();  // Si deseas cerrar el modal después del éxito
+        } else {
+          showErrorMessage("Error al agregar el grupo. Intenta de nuevo.");
+        }
+      } else {
+        showErrorMessage("Error: el grupo no existe.");
+      }
+    } catch (error) {
+      console.error("Error en unirse al grupo:", error);
+      showErrorMessage("Ocurrió un error al procesar la solicitud. Intente más tarde.");
+    }
+  };
+
+  const handleDocumento = (grupo) => {
+    setGrupoSeleccionado(grupo); // Establecer el grupo seleccionado
+    setShowModal(true); // Mostrar el modal
+  };
+
+
+  const handleSaveDocumentos = (documentos) => {
+    // Lógica para enviar los documentos al servidor
+    console.log('Documentos a guardar:', documentos);
+    console.log(grupoSeleccionado);
+    console.log(clienteData);
+    // Aquí puedes enviar los datos al servidor usando una solicitud HTTP, por ejemplo con fetch o axios
+    // Luego, cerramos el modal
+    handleCloseModal();
   };
 
   //Funcion de mensajes
@@ -303,24 +356,35 @@ const Grupos = () => {
           </div>
         </div>
       )}
+      {/* Modal para guardar documentos */}
+      <ModalGuardarDocumento
+        show={showModal}
+        onClose={handleCloseModal}
+        onSave={handleSaveDocumentos}
+      />
 
       {showCreateUModal && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h5>Ingrese Código de Invitación</h5>
-            <form className="mb-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="mb-4" onSubmit={handleUnirseGrupo}>
               <div className="mb-3 d-flex justify-content-center">
                 <input
                   type="text"
                   className="form-control w-75 text-center"
                   placeholder="Código"
+                  onChange={(e) => setCodigoGrupo(e.target.value)}
                 />
               </div>
               <div className="mb-3">
-                <button className="btn btn-primary me-2">
+                <button type="submit" className="btn btn-primary me-2">
                   Unirse
                 </button>
-                <button className="btn btn-secondary" onClick={handleCloseModal}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleCloseModal}
+                >
                   Cancelar
                 </button>
               </div>
@@ -359,36 +423,72 @@ const Grupos = () => {
               <td>{new Date(item.fechaInicioPanderoD).toLocaleDateString()}</td>
               <td>{item.precioUnidadVehiculoM}</td>
               <td>{item.tipoPeriodoPagoC}</td>
-              <td>
+
+            {/* Verificamos si getDocumentoPorClienteGrupo devuelve algo */}
+            {
+            getDocumentoPorClienteGrupo(clienteData, item) ? (
+              <>
+                <td>
                 <button
-                  className="btn btn-info"
+                  className="btn btn-secondary"
                   onClick={() => handleShowDetails('Detalles del grupo')}
+                  disabled={true}
                 >
                   Ver
                 </button>
               </td>
               <td>
                 <button
-                  className="btn btn-info"
+                  className="btn btn-secondary"
                   onClick={() => handleShowDetails('Integrantes del grupo')}
+                  disabled={true}
                 >
                   Ver
                 </button>
               </td>
-              <td>
-                <button
-                  className="btn btn-warning"
-                  onClick={() => handleEdit(item)}
-                >
-                  Editar
-                </button>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDelete(item.idGrupoI)}
-                >
-                  Eliminar
-                </button>
-              </td>
+                <td>
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => handleDocumento()}
+                  >
+                    Subir Documentos
+                  </button>
+                </td>
+              </>
+            ) : (
+              <>
+                <td>
+                  <button
+                    className="btn btn-info"
+                    onClick={() => handleShowDetails('Detalles del grupo')}
+                  >
+                    Ver
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className="btn btn-info"
+                    onClick={() => handleShowDetails('Integrantes del grupo')}
+                  >
+                    Ver
+                  </button>
+                </td>
+                <td>
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => handleEdit(item)}
+                  >
+                    Editar
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(item.idGrupoI)}
+                  >
+                    Eliminar
+                  </button>
+                </td>
+              </>
+            )}
             </tr>
           ))}
         </tbody>

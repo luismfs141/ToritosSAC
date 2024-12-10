@@ -28,8 +28,42 @@ export const useGrupo = () => {
         }
     };
 
+    const buscarGrupoCodigo = async (codigoGrupo) =>{
+        try{
+            const response = await api.get(`/Grupo/ObtenerGrupoPorCodigo?codigoGrupo=${codigoGrupo}`);
+            if(response.data.exito){
+                return response.data.objeto;
+            }
+            else{
+                throw new Error(response.data.Mensaje);
+            }
+        }
+        catch (error){
+            console.error("Error al obtener los grupos:", error);
+        }
+    }
+
+    const agregarListaGrupoCliente = async (grupoData, clienteData) =>{
+        try{
+            const request = {'Cliente':clienteData,'Grupo':grupoData};
+            console.log(request);
+            const response = await api.post('/Grupo/AgregarListaGrupoCliente', request);
+            if(response.data.exito){
+                return response.data;
+            }
+            else{
+                throw new Error(response.data.Mensaje);
+            }
+        }
+        catch (error){
+            console.error("Error al obtener los grupos:", error);
+        }
+    }
+
     return{
         getGruposPorCliente,
-        guardarGrupo
+        guardarGrupo,
+        buscarGrupoCodigo,
+        agregarListaGrupoCliente
     };
 };

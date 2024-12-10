@@ -7,14 +7,29 @@ namespace ToritosSAC.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class DocumentoController : Controller
+    public class DocumentoController 
     {
         [Route("GuardarDocumento")]
         [HttpPost]
-        public Resultado<Documento> GuardarDocumento(Documento x_documento)
+        public Resultado<Documento> GuardarDocumento([FromBody] GrupoClienteRequest request)
         {
+            Grupo grupo = request.Grupo;
+            Cliente cliente = request.Cliente;
+            Documento documento = request.Documento();
+
             BLDocumento bLDocumento = new BLDocumento();
-            return bLDocumento.BLDOCU_GuardarDocumento(x_documento);
+            return bLDocumento.BLDOCU_GuardarDocumento(documento,cliente,grupo);
+        }
+
+        [Route("ObtenerDocumentoPorClienteGrupo")]
+        [HttpPost]
+        public Resultado<Documento> ObtenerDocumentoPorClienteGrupo([FromBody] GrupoClienteRequest request)
+        {
+            Grupo grupo = request.Grupo;
+            Cliente cliente = request.Cliente;
+
+            BLDocumento bLDocumento = new BLDocumento();
+            return bLDocumento.BLDOCU_ObtenerDocumentoPorClienteGrupo(cliente, grupo);
         }
     }
 }
