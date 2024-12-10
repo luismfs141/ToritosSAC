@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,69 +9,72 @@ using ToritosSAC.Entities;
 
 namespace ToritosSAC.BusinessLogic
 {
-    public class BLProveedor
+    public class BLModelo
     {
         public static DataTable Listar()
         {
-            DAProveedor Datos = new DAProveedor();
+            DAModelo Datos = new DAModelo();
             return Datos.Listar();
         }
 
         public static DataTable Buscar(string Valor)
         {
-            DAProveedor Datos = new DAProveedor();
+            DAModelo Datos = new DAModelo();
             return Datos.Buscar(Valor);
         }
 
-        public static DataTable SeleccionarPais()
+        public static DataTable SeleccionarMarca()
         {
-            DAProveedor Datos = new DAProveedor();
-            return Datos.SeleccionarPais();
+            DAModelo Datos = new DAModelo();
+            return Datos.SeleccionarMarca();
+        }
+        public static DataTable SeleccionarTipoModelo()
+        {
+            DAModelo Datos = new DAModelo();
+            return Datos.SeleccionarTipoModelo();
         }
 
-        public static string Insertar(string Nombre, string Contacto, string Cargo, string Direccion, string Pais)
+        public static string Insertar(int Marca, string Nombre, string Tipo, decimal Precio)
         {
-            DAProveedor Datos = new DAProveedor();
+            DAModelo Datos = new DAModelo();
 
             try
             {
                 string Existe = Datos.Existe(Nombre);
                 if (Existe.Equals("1"))
                 {
-                    return "El proveedor ya existe";
+                    return "El modelo ya existe";
                 }
                 else
                 {
-                    Proveedor Obj = new Proveedor();
+                    Modelo Obj = new Modelo();
+                    Obj.IdMarcaI = Marca;
                     Obj.NombreNv = Nombre;
-                    Obj.ContactoV = Contacto;
-                    Obj.CargoContactoNv = Cargo;
-                    Obj.DireccionNv = Direccion;
-                    Obj.IdPaisI = Pais;
+                    Obj.TipoC = Tipo;
+                    Obj.PrecioUnidadVehiculoM = Precio;
                     return Datos.Insertar(Obj);
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception( ex.Message);
+                throw new Exception(ex.Message);
             }
 
         }
 
-        public static string Actualizar(int Id, string NombreAnt, string Nombre, string Contacto, string Cargo, string Direccion, string Pais)
+        public static string Actualizar(int Id, int Marca, string NombreAnt, string Nombre, string Tipo, decimal Precio)
         {
-                DAProveedor Datos = new DAProveedor();
-                Proveedor Obj = new Proveedor();
+            DAModelo Datos = new DAModelo();
+            Modelo Obj = new Modelo();
             try
             {
                 if (NombreAnt.Equals(Nombre))
                 {
-                    Obj.IdProveedorI = Id;
+                    Obj.IdModeloVehiculoI = Id;
+                    Obj.IdMarcaI = Marca;
                     Obj.NombreNv = Nombre;
-                    Obj.ContactoV = Contacto;
-                    Obj.CargoContactoNv = Cargo;
-                    Obj.DireccionNv = Direccion;
-                    Obj.IdPaisI = Pais;
+                    Obj.TipoC = Tipo;
+                    Obj.PrecioUnidadVehiculoM = Precio;
                     return Datos.Actualizar(Obj);
                 }
                 else
@@ -80,16 +82,15 @@ namespace ToritosSAC.BusinessLogic
                     string Existe = Datos.Existe(Nombre);
                     if (Existe.Equals("1"))
                     {
-                        return "El proveedor ya existe";
+                        return "El modelo ya existe";
                     }
                     else
                     {
-                        Obj.IdProveedorI = Id;
+                        Obj.IdModeloVehiculoI = Id;
+                        Obj.IdMarcaI = Marca;
                         Obj.NombreNv = Nombre;
-                        Obj.ContactoV = Contacto;
-                        Obj.CargoContactoNv = Cargo;
-                        Obj.DireccionNv = Direccion;
-                        Obj.IdPaisI = Pais;
+                        Obj.TipoC = Tipo;
+                        Obj.PrecioUnidadVehiculoM = Precio;
                         return Datos.Actualizar(Obj);
                     }
                 }
@@ -103,7 +104,7 @@ namespace ToritosSAC.BusinessLogic
 
         public static string Eliminar(int Id)
         {
-            DAProveedor Datos = new DAProveedor();
+            DAModelo Datos = new DAModelo();
             try
             {
                 return Datos.Eliminar(Id);
@@ -116,7 +117,7 @@ namespace ToritosSAC.BusinessLogic
 
         public static string Activar(int Id)
         {
-            DAProveedor Datos = new DAProveedor();
+            DAModelo Datos = new DAModelo();
             try
             {
                 return Datos.Activar(Id);
@@ -129,7 +130,7 @@ namespace ToritosSAC.BusinessLogic
 
         public static string Desactivar(int Id)
         {
-            DAProveedor Datos = new DAProveedor();
+            DAModelo Datos = new DAModelo();
             try
             {
                 return Datos.Desactivar(Id);

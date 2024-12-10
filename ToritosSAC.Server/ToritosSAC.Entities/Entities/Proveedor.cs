@@ -16,7 +16,7 @@ public partial class Proveedor
     public string DireccionNv { get; set; } = null!;
 
     public string IdPaisI { get; set; } = null!;
-
+    
     public string EstadoC { get; set; } = null!;
 
     public virtual Pai IdPaisINavigation { get; set; } = null!;

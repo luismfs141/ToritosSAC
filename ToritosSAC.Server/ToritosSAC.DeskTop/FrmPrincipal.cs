@@ -110,5 +110,38 @@ namespace ToritosSAC.DeskTop
             frm.MdiParent = this;
             frm.Show();
         }
+
+        private void marcaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmMarca frm = new FrmMarca();
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        private void FrmPrincipal_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void modeloToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmModelo frm = new FrmModelo();
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        private void rolesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmRol frm = new FrmRol();
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmUsuario frm = new FrmUsuario();
+            frm.MdiParent = this;
+            frm.Show();
+        }
     }
 }
