@@ -675,6 +675,7 @@ VALUES	('Administrador'),
 		('Vendedor'), 
 		('Gestor')
 
+
 --TABLA USUARIO
 CREATE TABLE Usuario
 (
@@ -714,7 +715,7 @@ INSERT INTO UsuarioTipoDocumento (Nombre_v, Codigo_c)
 VALUES	('DNI','D'),
 		('Carné de Extranjería','E'),
 		('Pasaporte', 'P')
-//////////////////////////////////
+--////////////////////////////////////
 
 
 

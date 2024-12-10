@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ToritosSAC.Entities;
 using ToritosSAC.DataAccess;
 using ToritosSAC.Entities;
+using ToritosSAC.Entities.Structures;
 
 namespace ToritosSAC.BusinessLogic
 {
@@ -139,6 +140,22 @@ namespace ToritosSAC.BusinessLogic
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+
+
+
+        public Resultado<List<Modelo>> BLMODE_ObtenerModelos()
+        {
+            try
+            {
+                DAModelo dAModelo = new DAModelo();
+                var modelos = dAModelo.DAMODE_ObtenerModelos();
+                return new Resultado<List<Modelo>>(modelos, "Modelos obtenidos exitosamente", true);
+            }
+            catch (Exception ex)
+            {
+                return new Resultado<List<Modelo>>(null, $"Error al obtener los modelos: {ex.Message}", false);
             }
         }
     }
