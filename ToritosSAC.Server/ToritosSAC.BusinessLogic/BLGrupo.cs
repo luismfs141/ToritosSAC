@@ -128,12 +128,12 @@ namespace ToritosSAC.BusinessLogic
             }
         }
 
-        public Resultado<DetalleGrupo> BLGRUP_UnirseListaPendienteGrupo(DetalleGrupo x_detalleGrupo)
+        public Resultado<DetalleGrupo> BLGRUP_UnirseListaPendienteGrupo(int idCliente, int idGrupo)
         {
             try
             {
                 DAGrupo dAGrupo = new DAGrupo();
-                var detalleGrupo = dAGrupo.DAGRUP_UnirseListaPendienteGrupo(x_detalleGrupo);
+                var detalleGrupo = dAGrupo.DAGRUP_UnirseListaPendienteGrupo(idCliente, idGrupo);
                 if(detalleGrupo != null)
                 {
                     return new Resultado<DetalleGrupo>(detalleGrupo, "Unión a la lista pendiente del grupo exitosa", true);
@@ -149,12 +149,12 @@ namespace ToritosSAC.BusinessLogic
             }
         }
 
-        public Resultado<List<Cliente>> BLGRUP_ListarClientesPendientesGrupo(Grupo x_grupo)
+        public Resultado<List<Cliente>> BLGRUP_ListarClientesPendientesGrupo(int idGrupo)
         {
             try
             {
                 DAGrupo dAGrupo = new DAGrupo();
-                var clientes = dAGrupo.DAGRUP_ListarClientesPendientesGrupo(x_grupo);
+                var clientes = dAGrupo.DAGRUP_ListarClientesPendientesIdGrupo(idGrupo);
                 return new Resultado<List<Cliente>>(clientes, "Clientes pendientes listados exitosamente", true);
             }
             catch (Exception ex)

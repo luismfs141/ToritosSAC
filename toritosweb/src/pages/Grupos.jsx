@@ -4,7 +4,9 @@ import { useCliente } from '../hooks/useCliente';
 import { useGrupo } from '../hooks/useGrupo';
 import { useModelo } from '../hooks/useModelo';
 import { useDocumento } from '../hooks/useDocumento';
-import ModalGuardarDocumento from '../components/ModalGuardarDocumento';
+import ModalGuardarDocumento from '../components/Modals/ModalGuardarDocumento';
+import ModalDetallesGrupo from '../components/Modals/ModalDetallesGrupo';
+import ModalClientesPendientes from '../components/Modals/ModalClientesPendientes';
 
 const Grupos = () => {
   const [data, setData] = useState([]);
@@ -19,10 +21,16 @@ const Grupos = () => {
   const [codigoGrupo, setCodigoGrupo] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [grupoSeleccionado, setGrupoSeleccionado] = useState(null);
+  const [showModalDetalles, setShowModalDetalles] = useState(false);
+  const [detallesGrupo, setDetallesGrupo] = useState(null);
+  const [showModalClientesPendientes, setShowModalClientesPendientes] = useState(false);
+  const [clientesPendientes, setClientesPendientes] = useState(null);
 
   //Metodos Hooks
   const { getClienteFromLocalStorage, getIdGruposAdminFromLocalStorage} = useCliente();
-  const { getGruposPorCliente, guardarGrupo, buscarGrupoCodigo, agregarListaGrupoCliente } = useGrupo();
+  const { getGruposPorCliente, guardarGrupo, buscarGrupoCodigo,
+          agregarListaGrupoCliente, getDetallesGrupo, agregarListaEsperaGrupo,
+          listarClientesPendientes } = useGrupo();
   const { getModelos } = useModelo();
   const { guardarDocumento, getDocumentoPorClienteGrupo } = useDocumento();
   
@@ -46,6 +54,7 @@ const Grupos = () => {
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState(""); // Puede ser 'success' o 'error'
   const [showMessage, setShowMessage] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!isInitialized) {
@@ -110,6 +119,8 @@ const Grupos = () => {
     setShowCreateJoinModal(false);
     setShowCreateUModal(false);
     setShowModal(false);
+    setShowModalDetalles(false);
+    setShowModalClientesPendientes(false);
   };
 
   // Modal Creación de grupo
@@ -155,7 +166,7 @@ const Grupos = () => {
     }
   };
 
-  const handleUnirseGrupo = async (e) => {
+  const handleAgregarListaClienteGrupo = async (e) => {
     e.preventDefault();  // Si estás usando un formulario, previenes el comportamiento por defecto
   
     // Verifica que el código del grupo no esté vacío
@@ -190,6 +201,47 @@ const Grupos = () => {
     setShowModal(true); // Mostrar el modal
   };
 
+  const handleShowDetailsModal = async (grupo) => {
+    setLoading(true); // Indicamos que estamos cargando
+    try {
+        const detallesGrupo = await getDetallesGrupo(grupo.idGrupoI);
+        setDetallesGrupo(detallesGrupo);
+        setShowModalDetalles(true);
+    } catch (error) {
+        console.error("Error al cargar los detalles del grupo:", error);
+    } finally {
+        setLoading(false); // Terminamos de cargar
+    }
+  };
+
+  const handleListaClientesPendientes = async (grupo) => {
+    setLoading(true); 
+    try {
+      const clientes = await listarClientesPendientes(grupo.idGrupoI);
+      setClientesPendientes(clientes);
+      setShowModalClientesPendientes(true);
+    } catch (error) {
+        console.error("Error al cargar la lista de clientes", error);
+    } finally {
+        setLoading(false);
+    }
+  };
+
+  const handleUnirseGrupo = async (grupo) => {
+    setLoading(true); 
+    try {
+      const response = await agregarListaEsperaGrupo(clienteData.idClienteI, grupo.idGrupoI);
+      if (response.exito) {
+        showSuccessMessage("¡Solicitud enviada!");
+      } else {
+        showErrorMessage("Error al enviar la solicitud de unión al grupo.");
+      }
+    } catch (error) {
+        console.error("Error al cargar los detalles del grupo:", error);
+    } finally {
+        setLoading(false);
+    }
+  };
 
   const handleSaveDocumentos = async (documentos) => {
     try {
@@ -202,6 +254,19 @@ const Grupos = () => {
     } catch (error) {
         console.error('Error al guardar documento:', error);
     }
+  };
+
+  //logica para aceptar clientes
+  const handleAccept = (idCliente) => {
+    console.log(`Cliente ${idCliente} aceptado`);
+    // Aquí puedes agregar la lógica para aceptar al cliente
+    setShowModal(false);
+  };
+
+  const handleReject = (idCliente) => {
+    console.log(`Cliente ${idCliente} rechazado`);
+    // Aquí puedes agregar la lógica para rechazar al cliente
+    setShowModal(false);
   };
 
   //Funcion de mensajes
@@ -383,7 +448,7 @@ const Grupos = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <h5>Ingrese Código de Invitación</h5>
-            <form className="mb-4" onSubmit={handleUnirseGrupo}>
+            <form className="mb-4" onSubmit={handleAgregarListaClienteGrupo}>
               <div className="mb-3 d-flex justify-content-center">
                 <input
                   type="text"
@@ -441,7 +506,8 @@ const Grupos = () => {
               <td>
                 <button
                   className={documentosDisponibles[item.idGrupoI]?.estado !== 'A'?"btn btn-secondary":"btn btn-primary"}
-                  onClick={() => handleShowDetails('Detalles del grupo')}
+                  onClick={() => handleShowDetailsModal(item)}
+                  // handleShowDetails
                   disabled={documentosDisponibles[item.idGrupoI]?.estado !== 'A'}
                 >
                   Ver
@@ -474,14 +540,14 @@ const Grupos = () => {
                   idGruposAdmin.includes(Number(item.idGrupoI)) ? (
                     <button
                       className="btn btn-info"
-                      onClick={() => handleEdit(item)}
+                      onClick={() => handleListaClientesPendientes(item)}
                     >
                       Añadir Clientes
                     </button>
                   ) : (
                     <button
                       className="btn btn-success"
-                      onClick={() => handleEdit(item)}
+                      onClick={() => handleUnirseGrupo(item)}
                     >
                       Unirse Grupo
                     </button>
@@ -493,24 +559,26 @@ const Grupos = () => {
         </tbody>
       </table>
     </div>
-    {/* Modal para guardar documentos */}
-    <ModalGuardarDocumento
+      {/* Modal para guardar documentos */}
+      <ModalGuardarDocumento
         show={showModal}
         onClose={handleCloseModal}
         onSave={handleSaveDocumentos}
       />
-
-      {/* Modal de detalles */}
-      {modalContent && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h5>{modalContent}</h5>
-            <button className="btn btn-secondary" onClick={handleCloseModal}>
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Modal de detalles del grupo */}
+      <ModalDetallesGrupo
+        show={showModalDetalles}
+        onClose={handleCloseModal}
+        detallesGrupo={detallesGrupo}
+      />
+      {/* Modal con la lista de clientes */}
+      <ModalClientesPendientes
+        show={showModalClientesPendientes}
+        onClose={handleCloseModal}
+        clientes={clientesPendientes}
+        onAccept={handleAccept}
+        onReject={handleReject}
+      />
     </div>
   );
 };

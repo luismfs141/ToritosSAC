@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ToritosSAC.Entities;
 
@@ -28,6 +29,6 @@ public partial class Grupo
     public string TipoPeriodoPagoC { get; set; } = null!;
 
     public virtual ICollection<DetalleGrupo> DetalleGrupos { get; } = new List<DetalleGrupo>();
-
+    [JsonIgnore]
     public virtual Modelo? IdModeloVehiculoINavigation { get; set; } = null!;
 }

@@ -231,47 +231,43 @@ namespace ToritosSAC.DataAccess
                 throw ex;
             }
         }
-        public DetalleGrupo? DAGRUP_UnirseListaPendienteGrupo(DetalleGrupo x_detalleGrupo)
+        public DetalleGrupo? DAGRUP_UnirseListaPendienteGrupo(int idCliente, int idGrupo)
         {
             try
             {
                 ToritosDbContext ctx = new ToritosDbContext();
 
-                Cliente? cliente = ctx.Clientes.SingleOrDefault(c => c.IdClienteI == x_detalleGrupo.IdClienteI);
-                Grupo? grupo = ctx.Grupos.SingleOrDefault(g => g.IdGrupoI == x_detalleGrupo.IdGrupoI);
-                Documento? documento = ctx.Documentos.SingleOrDefault(d => d.IdDocumentoI == x_detalleGrupo.IdDocumentosI);
+                Cliente? cliente = ctx.Clientes.SingleOrDefault(c => c.IdClienteI == idCliente);
+                Grupo? grupo = ctx.Grupos.SingleOrDefault(g => g.IdGrupoI == idGrupo);
+                DetalleGrupo detalleGrupoOriginal = ctx.DetalleGrupos.SingleOrDefault(d => d.IdClienteI == idCliente && d.IdGrupoI == idGrupo);
+                Documento? documento = ctx.Documentos.SingleOrDefault(d => d.IdDocumentoI == detalleGrupoOriginal.IdDocumentosI);
+                DetalleGrupo detalleGrupoCopia = detalleGrupoOriginal;
 
                 if (grupo != null && cliente != null && documento != null)
                 {
-                    if (cliente.EstadoC == "A" && grupo.EstadoC == "E" && documento.EstadoC == "A")
+                    if (cliente.EstadoC == "A" && grupo.EstadoC == "A" && documento.EstadoC == "A" && detalleGrupoOriginal.AdmisionC != "A" && detalleGrupoOriginal.AdmisionC != "P")
                     {
-                        DetalleGrupo detalleGrupoOriginal = ctx.DetalleGrupos.SingleOrDefault(d => d.IdDetalleGrupoI == x_detalleGrupo.IdGrupoI);
-                        
-                        if (detalleGrupoOriginal != null)
-                        {
-                            x_detalleGrupo.AdmisionC = "P";
-                            ctx.Entry(detalleGrupoOriginal).CurrentValues.SetValues(x_detalleGrupo);
-                        }
-
-                        ctx.SaveChanges();
-                        return x_detalleGrupo;
+                        detalleGrupoCopia.AdmisionC = "P";
+                        ctx.Entry(detalleGrupoOriginal).CurrentValues.SetValues(detalleGrupoCopia);
                     }
                 }
-                return null;
+
+                ctx.SaveChanges();
+                return detalleGrupoCopia;
             }
             catch (Exception ex)
             {
                 throw ex;
             }
         }
-        public List<Cliente> DAGRUP_ListarClientesPendientesGrupo(Grupo x_grupo)
+        public List<Cliente> DAGRUP_ListarClientesPendientesIdGrupo(int idGrupo)
         {
             try
             {
                 ToritosDbContext ctx = new ToritosDbContext();
 
                 List<int> idClientes = ctx.DetalleGrupos
-               .Where(d => d.IdGrupoI == x_grupo.IdGrupoI && d.AdmisionC == "P")
+               .Where(d => d.IdGrupoI == idGrupo && d.AdmisionC == "P")
                .Select(d => d.IdClienteI)
                .ToList();
 

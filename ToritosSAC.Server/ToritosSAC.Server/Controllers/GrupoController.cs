@@ -77,17 +77,17 @@ namespace ToritosSAC.Server.Controllers
 
         [Route("UnirseListaPendienteGrupo")]
         [HttpPost]
-        public Resultado<DetalleGrupo> UnirseListaPendienteGrupo(DetalleGrupo x_detalleGrupo)
+        public Resultado<DetalleGrupo> UnirseListaPendienteGrupo(int idCliente, int idGrupo)
         {
             BLGrupo bLGrupo = new BLGrupo();
-            return bLGrupo.BLGRUP_UnirseListaPendienteGrupo(x_detalleGrupo);
+            return bLGrupo.BLGRUP_UnirseListaPendienteGrupo(idCliente, idGrupo);
         }
 
-        [HttpGet("ListarClientesPendientesGrupo")]
-        public Resultado<List<Cliente>> ListarClientesPendientesGrupo(Grupo x_grupo)
+        [HttpGet("ListarClientesPendientesIdGrupo")]
+        public Resultado<List<Cliente>> ListarClientesPendientesIdGrupo(int idGrupo)
         {
             BLGrupo bLGrupo = new BLGrupo();
-            return bLGrupo.BLGRUP_ListarClientesPendientesGrupo(x_grupo);
+            return bLGrupo.BLGRUP_ListarClientesPendientesGrupo(idGrupo);
         }
 
         [Route("AdmitirClienteGrupo")]

@@ -41,12 +41,11 @@ export const useGrupo = () => {
         catch (error){
             console.error("Error al obtener los grupos:", error);
         }
-    }
+    };
 
     const agregarListaGrupoCliente = async (grupoData, clienteData) =>{
         try{
             const request = {'Cliente':clienteData,'Grupo':grupoData};
-            console.log(request);
             const response = await api.post('/Grupo/AgregarListaGrupoCliente', request);
             if(response.data.exito){
                 return response.data;
@@ -58,12 +57,60 @@ export const useGrupo = () => {
         catch (error){
             console.error("Error al obtener los grupos:", error);
         }
+    };
+
+    const getDetallesGrupo = async (idGrupo) =>{
+        try{
+            const response = await api.get(`/Grupo/ObtenerDetallesPorIdGrupo?idGrupo=${idGrupo}`);
+            if(response.data.exito){
+                return response.data.objeto;
+            }
+            else{
+                throw new Error(response.data.Mensaje);
+            }
+        }
+        catch (error){
+            console.error("Error al obtener los detalles de grupo:", error);
+        }       
+    };
+
+    const agregarListaEsperaGrupo = async(idCliente, idGrupo) =>{
+        try{
+            const response = await api.post(`/Grupo/UnirseListaPendienteGrupo?idCliente=${idCliente}&idGrupo=${idGrupo}`);
+            if(response.data.exito){
+                return response.data;
+            }
+            else{
+                throw new Error(response.data.Mensaje);
+            }
+        }
+        catch (error){
+            console.error("Error al agregar en la lista de espera de grupo:", error);
+        }       
+    };
+
+    const listarClientesPendientes = async(idGrupo) => {
+        try{
+            const response = await api.get(`/Grupo/ListarClientesPendientesIdGrupo?idGrupo=${idGrupo}`);
+            if(response.data.exito){
+                return response.data.objeto;
+            }
+            else{
+                throw new Error(response.data.Mensaje);
+            }
+        }
+        catch (error){
+            console.error("Error al agregar en la lista de espera de grupo:", error);
+        }      
     }
 
     return{
         getGruposPorCliente,
         guardarGrupo,
         buscarGrupoCodigo,
-        agregarListaGrupoCliente
+        agregarListaGrupoCliente,
+        getDetallesGrupo,
+        agregarListaEsperaGrupo,
+        listarClientesPendientes
     };
 };

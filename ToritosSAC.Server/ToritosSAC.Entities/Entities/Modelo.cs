@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ToritosSAC.Entities;
 
@@ -16,7 +17,7 @@ public partial class Modelo
     public decimal? PrecioUnidadVehiculoM { get; set; }
 
     public virtual ICollection<Grupo> Grupos { get; } = new List<Grupo>();
-
+    [JsonIgnore]
     public virtual Marca IdMarcaINavigation { get; set; } = null!;
 
     public virtual ICollection<Vehiculo> Vehiculos { get; } = new List<Vehiculo>();
