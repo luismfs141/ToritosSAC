@@ -33,20 +33,25 @@ export const useCliente = () => {
     return clienteData;
   };
 
+  const getIdGruposAdminFromLocalStorage = () => {
+    const idGrupos = JSON.parse(localStorage.getItem('idGruposAdmin'));
+    return idGrupos;
+  }
+
   // Función de login del cliente
   const loginCliente = async (usuario, password) => {
     setLoading(true);
-    setError(''); // Limpiar el error antes de hacer la llamada
+    setError(''); 
     try {
       const response = await api.get(`/Cliente/LoginCliente?x_usuario=${usuario}&x_password=${password}`);
       
       if (response.data.estado === 'Exito') {
         localStorage.setItem('usuario',JSON.stringify(response.data.data));
-  
-        return response.data; // Retorna la respuesta completa o los datos necesarios
+        getIdGruposAdministrados(response.data.data.idClienteI);
+        return response.data; 
       } else {
-        setError(response.data.mensaje); // Asegúrate de que 'mensaje' es el nombre correcto
-        throw new Error(response.data.mensaje); // Usa el nombre correcto de la propiedad del mensaje
+        setError(response.data.mensaje);
+        throw new Error(response.data.mensaje);
       }
     } catch (err) {
       console.error('Error de login:', err);
@@ -61,8 +66,7 @@ export const useCliente = () => {
   // Función para registrar un nuevo cliente
   const registrarCliente = async (ClienteData) => {
     setLoading(true);
-    setError(''); // Limpiar el error antes de hacer la llamada
-  
+    setError('');
     try {
       const response = await api.post('/Cliente/GuardarCliente', ClienteData); 
       
@@ -86,11 +90,27 @@ export const useCliente = () => {
     localStorage.removeItem('cliente');
   };
 
+  const getIdGruposAdministrados = async (idCliente) => {
+    try{
+      const response = await api.get(`/Grupo/ObtenerListaIdGruposAdministrados?idCliente=${idCliente}`);
+      if(response.data.exito){
+        localStorage.setItem('idGruposAdmin',JSON.stringify(response.data.objeto));
+      }
+      else{
+        throw new Error(response.data.Mensaje);
+      }
+    }
+    catch(error){
+      console.error("Error al obtener los id grupos:", error);
+    }
+  }
+
   return {
     loginCliente,
     registrarCliente,
     logoutCliente,
     getClienteFromLocalStorage,
+    getIdGruposAdminFromLocalStorage,
     loading,
     error
   };

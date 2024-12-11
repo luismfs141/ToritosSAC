@@ -21,7 +21,7 @@ const Grupos = () => {
   const [grupoSeleccionado, setGrupoSeleccionado] = useState(null);
 
   //Metodos Hooks
-  const { getClienteFromLocalStorage } = useCliente();
+  const { getClienteFromLocalStorage, getIdGruposAdminFromLocalStorage} = useCliente();
   const { getGruposPorCliente, guardarGrupo, buscarGrupoCodigo, agregarListaGrupoCliente } = useGrupo();
   const { getModelos } = useModelo();
   const { guardarDocumento, getDocumentoPorClienteGrupo } = useDocumento();
@@ -31,6 +31,7 @@ const Grupos = () => {
   const [modelos, setModelos] = useState([]);
   const [clienteData,setClienteData] = useState();
   const [isInitialized, setIsInitialized] = useState(false); // Nuevo estado para evitar el ciclo infinito
+  const [idGruposAdmin, setIdGruposAdmin] = useState();
 
   //Variables de Objetos
   //Grupo
@@ -49,8 +50,10 @@ const Grupos = () => {
   useEffect(() => {
     if (!isInitialized) {
       const clienteLogin = getClienteFromLocalStorage();
+      const idGrupos = getIdGruposAdminFromLocalStorage();
       if (clienteLogin) {
         setClienteData(clienteLogin);
+        setIdGruposAdmin(idGrupos);
         const listaGrupo = getGruposPorCliente(clienteLogin);
         listaGrupo.then(grupos => {
           setGruposCliente(grupos); 
@@ -67,7 +70,6 @@ const Grupos = () => {
       const documentos = {};
       for (const item of gruposCliente) {
         const resultado = await getDocumentoPorClienteGrupo(clienteData, item);
-        
         documentos[item.idGrupoI] = resultado; // Guardamos el resultado en el objeto
       }
       setDocumentosDisponibles(documentos); // Actualizamos el estado con los resultados
@@ -418,7 +420,6 @@ const Grupos = () => {
             <th>Cuota</th>
             <th>Periodo</th>
             <th>Detalles</th>
-            <th>Integrantes</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -441,15 +442,6 @@ const Grupos = () => {
                 <button
                   className={documentosDisponibles[item.idGrupoI]?.estado !== 'A'?"btn btn-secondary":"btn btn-primary"}
                   onClick={() => handleShowDetails('Detalles del grupo')}
-                  disabled={documentosDisponibles[item.idGrupoI]?.estado !== 'A'}
-                >
-                  Ver
-                </button>
-              </td>
-              <td>
-                <button
-                  className={documentosDisponibles[item.idGrupoI]?.estado !== 'A'?"btn btn-secondary":"btn btn-primary"}
-                  onClick={() => handleShowDetails('Integrantes del grupo')}
                   disabled={documentosDisponibles[item.idGrupoI]?.estado !== 'A'}
                 >
                   Ver
@@ -479,12 +471,21 @@ const Grupos = () => {
 
                 {/* Mostrar "Unirse al Grupo" si el estado del documento es "A" */}
                 {documentosDisponibles[item.idGrupoI]?.estado === 'A' && (
-                  <button
-                    className="btn btn-success"
-                    onClick={() => handleEdit(item)}
-                  >
-                    Unirse Grupo
-                  </button>
+                  idGruposAdmin.includes(Number(item.idGrupoI)) ? (
+                    <button
+                      className="btn btn-info"
+                      onClick={() => handleEdit(item)}
+                    >
+                      Añadir Clientes
+                    </button>
+                  ) : (
+                    <button
+                      className="btn btn-success"
+                      onClick={() => handleEdit(item)}
+                    >
+                      Unirse Grupo
+                    </button>
+                  )
                 )}
               </td>
             </tr>

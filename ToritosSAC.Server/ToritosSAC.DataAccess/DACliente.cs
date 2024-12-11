@@ -67,7 +67,7 @@ namespace ToritosSAC.DataAccess
 
             return ctx.Clientes.SingleOrDefault(c => c.IdClienteI == x_cliente.IdClienteI);
         }
-        public List<Cliente> DACLIE_ObtenerClientesPorGrupo(string x_codigoGrupo)
+        public List<Cliente> DACLIE_ObtenerClientesPorIdGrupo(int idGrupo)
         {
             try
             {
@@ -75,7 +75,7 @@ namespace ToritosSAC.DataAccess
                 DAGrupo dAGrupo = new DAGrupo();
 
                 // Obtener el grupo con el código proporcionado
-                Grupo grupo = ctx.Grupos.SingleOrDefault(g => g.CodigoC == x_codigoGrupo);
+                Grupo grupo = ctx.Grupos.SingleOrDefault(g => g.IdGrupoI == idGrupo);
 
                 if (grupo == null)
                 {
@@ -84,7 +84,7 @@ namespace ToritosSAC.DataAccess
 
                 // Obtener los IDs de los clientes asociados a este grupo
                 List<int> idClientes = ctx.DetalleGrupos
-                                           .Where(dg => dg.IdGrupoI == grupo.IdGrupoI)
+                                           .Where(dg => dg.IdGrupoI == grupo.IdGrupoI && dg.AdmisionC == "A")
                                            .Select(dg => dg.IdClienteI)
                                            .ToList();
 
@@ -114,6 +114,22 @@ namespace ToritosSAC.DataAccess
             catch (Exception ex)
             {
                 throw new Exception("Error al obtener el cliente", ex);
+            }
+        }
+
+        public Cliente DACLIE_ObtenerAdminPorGrupo(int idGrupo)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+                DetalleGrupo detalleGrupoAdmin = ctx.DetalleGrupos.SingleOrDefault(d => d.IdGrupoI == idGrupo && d.ClienteAdminBo == true);
+
+                return ctx.Clientes.SingleOrDefault(c => c.IdClienteI == detalleGrupoAdmin.IdClienteI);
+                    
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener el administrador del grupo", ex);
             }
         }
     }

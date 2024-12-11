@@ -16,11 +16,25 @@ namespace ToritosSAC.Server.Controllers
             return bLGrupo.BLGRUP_ObtenerGruposPorCliente(idCliente);
         }
 
+        [HttpGet("ObtenerDetallesPorIdGrupo")]
+        public Resultado<DetallesGrupoStruct> ObtenerDetallesPorIdGrupo(int idGrupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_ObtenerDetallesPorIdGrupo(idGrupo);
+        }
+
         [HttpGet("ObtenerGrupoPorCodigo")]
         public Resultado<Grupo> ObtenerGrupoPorCodigo(string codigoGrupo)
         {
             BLGrupo bLGrupo = new BLGrupo();
             return bLGrupo.BLGRUP_ObtenerGrupoPorCodigo(codigoGrupo);
+        }
+
+        [HttpGet("ObtenerListaIdGruposAdministrados")]
+        public Resultado<List<int>> ObtenerListaIdGruposAdministrados(int idCliente)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_ObtenerListaGruposAdministrados(idCliente);
         }
 
         [Route("GuardarGrupo")]

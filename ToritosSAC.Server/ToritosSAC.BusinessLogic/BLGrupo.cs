@@ -22,7 +22,34 @@ namespace ToritosSAC.BusinessLogic
                 return new Resultado<List<Grupo>>(null, $"Error al obtener los grupos del cliente: {ex.Message}", false);
             }
         }
+        public Resultado<DetallesGrupoStruct> BLGRUP_ObtenerDetallesPorIdGrupo(int idGrupo)
+        {
+            try
+            {
+                DAGrupo dAGrupo = new DAGrupo();
+                DetallesGrupoStruct detallesGrupoStruct = dAGrupo.DAGRUP_ObtenerDetallesPorIdGrupo(idGrupo);
+                return new Resultado<DetallesGrupoStruct>(detallesGrupoStruct, "Detalles obtenidos exitosamente", true);
+            }
+            catch (Exception ex)
+            {
+                return new Resultado<DetallesGrupoStruct>(null, $"Error al obtener los detalles del grupo: {ex.Message}", false);
+            }
+        }
 
+        public Resultado<List<int>> BLGRUP_ObtenerListaGruposAdministrados(int idCliente)
+        {
+            try
+            {
+                DAGrupo dAGrupo = new DAGrupo();
+                List<int> idGrupos = dAGrupo.DAGRUP_ObtenerListaGruposAdministrados(idCliente);
+
+                return new Resultado<List<int>>(idGrupos, "Grupos obtenidos exitosamente", true);
+            }
+            catch (Exception ex)
+            {
+                return new Resultado<List<int>>(null, $"Error al obtener los grupos administrados: {ex.Message}", false);
+            }
+        }
         public Resultado<Grupo> BLGRUP_ObtenerGrupoPorCodigo(string x_codigo)
         {
             try

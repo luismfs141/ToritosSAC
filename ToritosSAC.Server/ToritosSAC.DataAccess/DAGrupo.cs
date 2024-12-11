@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ToritosSAC.DataAccess.Context;
 using ToritosSAC.Entities;
+using ToritosSAC.Entities.Structures;
 
 namespace ToritosSAC.DataAccess
 {
@@ -28,7 +29,7 @@ namespace ToritosSAC.DataAccess
                 }
 
                 var grupos = ctx.Grupos
-                    .Where(g => idGruposCliente.Contains(g.IdGrupoI) && g.EstadoC != "F")
+                    .Where(g => idGruposCliente.Contains(g.IdGrupoI))
                     .ToList();
 
                 return grupos;
@@ -36,6 +37,57 @@ namespace ToritosSAC.DataAccess
             catch (Exception ex)
             {
                 throw new Exception("Ocurrió un error al obtener el grupo del cliente.", ex);
+            }
+        }
+
+        public DetallesGrupoStruct DAGRUP_ObtenerDetallesPorIdGrupo(int idGrupo)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+                DACliente dACliente = new DACliente();
+
+                //List<DetalleGrupo> detallesGrupo = ctx.DetalleGrupos.Where(d => d.IdGrupoI == idGrupo && d.AdmisionC =="A").ToList();
+                Grupo grupo = ctx.Grupos.SingleOrDefault(g => g.IdGrupoI == idGrupo);
+                Modelo modeloVehiculo = ctx.Modelos.SingleOrDefault(m => m.IdModeloVehiculoI == grupo.IdModeloVehiculoI);
+                Cliente adminGrupo = dACliente.DACLIE_ObtenerAdminPorGrupo(idGrupo);
+                List<Cliente> listaMiembros = dACliente.DACLIE_ObtenerClientesPorIdGrupo(idGrupo);
+
+                DetallesGrupoStruct grupoStruct = new DetallesGrupoStruct
+                {
+                    IdGrupo = grupo.IdGrupoI,
+                    CodigoGrupo = grupo.CodigoC,
+                    TipoPeriodo = grupo.TipoPeriodoPagoC,
+                    EstadoGrupo = grupo.EstadoC,
+                    MontoCuota = grupo.PrecioUnidadVehiculoM / grupo.CantidadCuotasI,
+                    NumeroCuotas = grupo.CantidadCuotasI,
+                    FechaCreacion = grupo.FechaCreacionD,
+                    FechaInicio = grupo.FechaInicioPanderoD,
+                    ModeloVehiculo = modeloVehiculo,
+                    AdminGrupo = adminGrupo,
+                    IntegrantesGrupo = listaMiembros,
+                    NumeroIntegrantes = listaMiembros.Count()
+                };
+
+                return grupoStruct;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Ocurrió un error al obtener los detalles del grupo.", ex);
+            }
+        }
+
+        public List<int> DAGRUP_ObtenerListaGruposAdministrados(int idCliente)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+                List<int> idGrupos = ctx.DetalleGrupos.Where(d => d.IdClienteI == idCliente && d.ClienteAdminBo == true).Select(d => d.IdGrupoI).ToList();
+                return idGrupos;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al obtener la lista de grupos administrados", ex);
             }
         }
         public Grupo DAGRUP_ObtenerGrupoPorCodigo(string x_codigo)

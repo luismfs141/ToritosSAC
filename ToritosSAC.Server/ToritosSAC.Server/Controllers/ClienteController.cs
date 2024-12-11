@@ -81,50 +81,11 @@ namespace ToritosSAC.Server.Controllers
             return apiResponse;
         }
 
-        [HttpGet("GetClientesPorGrupo")]
-        public ApiResponse<List<Cliente>> GetClientesPorGrupo(string x_codigoGrupo)
+        [HttpGet("ObtenerClientesPorIdGrupo")]
+        public Resultado<List<Cliente>> ObtenerClientesPorIdGrupo(int idGrupo)
         {
-            DACliente dACliente = new DACliente();
-            ApiResponse<List<Cliente>> apiResponse;
-
-            try
-            {
-                // Obtener la lista de clientes para el grupo dado por el código
-                List<Cliente> clientes = dACliente.DACLIE_ObtenerClientesPorGrupo(x_codigoGrupo);
-
-                if (clientes == null || clientes.Count == 0)
-                {
-                    // Si no se encuentran clientes para el grupo
-                    apiResponse = new ApiResponse<List<Cliente>>
-                    {
-                        Estado = "Error",
-                        Mensaje = "No se encontraron clientes para el grupo con el código proporcionado.",
-                        Data = null
-                    };
-                }
-                else
-                {
-                    // Si se encontraron clientes, devolvemos la lista con éxito
-                    apiResponse = new ApiResponse<List<Cliente>>
-                    {
-                        Estado = "Exito",
-                        Mensaje = "Clientes obtenidos con éxito.",
-                        Data = clientes
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                // Si ocurre un error, devolvemos un mensaje de error adecuado
-                apiResponse = new ApiResponse<List<Cliente>>
-                {
-                    Estado = "Error",
-                    Mensaje = "Error al obtener clientes para el grupo: " + ex.Message,
-                    Data = null
-                };
-            }
-
-            return apiResponse;
+            BLCliente bLCliente = new BLCliente();
+            return bLCliente.BLCLIE_ObtenerClientesPorIdGrupo(idGrupo);
         }
     }
 }
