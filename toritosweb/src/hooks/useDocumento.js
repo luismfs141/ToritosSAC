@@ -23,9 +23,8 @@ export const useDocumento = () => {
             // Crear el objeto de solicitud
             const request = { 'Documento': documentoData, 'Cliente': clienteData, 'Grupo': grupoData };
 
-            // Realizar la solicitud POST
             const response = await api.post('/Documento/GuardarDocumento', request);
-            console.log(response);
+            
             if (response.data.exito) {
                 return response.data;
             } else {
@@ -33,7 +32,7 @@ export const useDocumento = () => {
             }
         } catch (error) {
             console.error("Error al guardar el documento:", error);
-            throw error; // Vuelve a lanzar el error para que sea manejado en otro nivel si es necesario
+            throw error;
         }
     };
 
@@ -50,7 +49,6 @@ export const useDocumento = () => {
 
     const convertirArchivoEnBase64 = (archivo) => {
         return new Promise((resolve, reject) => {
-            // Verifica si el archivo es de tipo Blob (File es un tipo de Blob)
             if (!(archivo instanceof Blob)) {
                 reject(new Error('El archivo proporcionado no es de tipo Blob.'));
                 return;
@@ -58,11 +56,10 @@ export const useDocumento = () => {
 
             const reader = new FileReader();
             reader.onloadend = () => {
-                // Aquí tienes el archivo como un string en base64
-                resolve(reader.result.split(',')[1]);  // Elimina la parte "data:image/png;base64," o similar
+                resolve(reader.result.split(',')[1]);
             };
             reader.onerror = reject;
-            reader.readAsDataURL(archivo);  // Esto convierte el archivo en base64
+            reader.readAsDataURL(archivo);
         });
     };
 
