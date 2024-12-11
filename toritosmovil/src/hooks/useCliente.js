@@ -5,6 +5,7 @@ export const useCliente = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  //prueba cambio
   /* Función para obtener el cliente de localStorage
   const getClienteFromLocalStorage = () => {
     const loginCliente = JSON.parse(localStorage.getItem('usuario'));
