@@ -15,6 +15,7 @@ namespace ToritosSAC.DeskTop
     {
         //Variables
         private string NombreAnt;
+        private string CorreoAnt;
         public FrmUsuario()
         {
             InitializeComponent();
@@ -172,22 +173,20 @@ namespace ToritosSAC.DeskTop
                 if (txtNombre.Text == string.Empty || 
                     txtNroDocumento.Text == string.Empty || 
                     txtDireccion.Text == string.Empty || 
-                    txtCorreo.Text == string.Empty || 
-                    txtClave.Text == string.Empty || 
-                    txtTelefono.Text == string.Empty)
+                    txtTelefono.Text == string.Empty || 
+                    txtCorreo.Text == string.Empty)
                 {
                     this.MensajeError("Falta ingresar algunos datos, serán remarcados.");
                     ErrorIcono.SetError(txtNombre, "Ingrese un nombre.");
                     ErrorIcono.SetError(txtNroDocumento, "Ingrese un numero número de documento.");
                     ErrorIcono.SetError(txtDireccion, "Ingrese una dirección.");
+                    ErrorIcono.SetError(txtTelefono, "Ingrese un teléfono válido.");
                     ErrorIcono.SetError(txtCorreo, "Ingrese un correo válido.");
-                    ErrorIcono.SetError(txtClave, "Ingrese una clave.");
-                    ErrorIcono.SetError(txtTelefono, "Ingrese un número de contacto.");
                 }
                 else
                 {
                     Rpta = BLUsuario.Insertar(Convert.ToInt32(cboRol.SelectedValue), txtNombre.Text.Trim(),Convert.ToString(cboTipoDocumento.SelectedValue), txtNroDocumento.Text.Trim(), txtDireccion.Text.Trim(),txtTelefono.Text.Trim(), txtCorreo.Text.Trim(),txtClave.Text.Trim());
-                    //public static string Insertar(string Nombre, string Contacto, string Cargo, string Direccion, string Pais)
+
                     if (Rpta.Equals("OK"))
                     {
                         this.MensajeOk("Se insertó de forma correcta el registro");
@@ -209,7 +208,44 @@ namespace ToritosSAC.DeskTop
 
         private void btnActualizar_Click(object sender, EventArgs e)
         {
+            try
+            {
+                //string Rpta = "";
+                //if (txtNombre.Text == string.Empty ||
+                //    txtNroDocumento.Text == string.Empty ||
+                //    txtDireccion.Text == string.Empty ||
+                //    txtTelefono.Text == string.Empty ||
+                //    txtCorreo.Text == string.Empty)
+                //{
+                //    this.MensajeError("Falta ingresar algunos datos, serán remarcados.");
+                //    ErrorIcono.SetError(txtNombre, "Ingrese un nombre.");
+                //    ErrorIcono.SetError(txtNroDocumento, "Ingrese un numero número de documento.");
+                //    ErrorIcono.SetError(txtDireccion, "Ingrese una dirección.");
+                //    ErrorIcono.SetError(txtTelefono, "Ingrese un teléfono válido.");
+                //    ErrorIcono.SetError(txtCorreo, "Ingrese un correo válido.");
+                //}
+                //else
+                //{
+                //    //Rpta = BLProveedor.Actualizar(Convert.ToInt32(txtId.Text), this.NombreAnt, txtNombre.Text.Trim(), txtContacto.Text.Trim(), txtCargo.Text.Trim(), txtDireccion.Text.Trim(), Convert.ToString(cboPais.SelectedValue));
+                //    Rpta = BLUsuario.Actualizar(Convert.ToInt32(txtId.Text.Trim()), Convert.ToString(cboRol.SelectedValue), txtNombre.Text.Trim(), Convert.ToString(cboTipoDocumento.SelectedValue), txtNroDocumento.Text.Trim(), txtDireccion.Text.Trim(), txtTelefono.Text.Trim(), txtCorreo.Text.Trim(), txtClave.Text.Trim());
 
+                //    if (Rpta.Equals("OK"))
+                //    {
+                //        this.MensajeOk("Se actualizó de forma correcta el registro");
+                //        lblTitulo.Text = "Registrar nuevo proveedor";
+                //        this.Listar();
+                //        tabGeneral.SelectedIndex = 0;
+                //    }
+                //    else
+                //    {
+                //        this.MensajeError(Rpta);
+                //    }
+                //}
+            }
+            catch (Exception ex)
+            {
+                this.MensajeError(ex.Message);
+            }
         }
 
         private void btnEliminar_Click(object sender, EventArgs e)
@@ -261,26 +297,21 @@ namespace ToritosSAC.DeskTop
 
         private void dgvListado_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            lblTitulo.Text = "Actualizar datos de usuario: " + Convert.ToString(dgvListado.CurrentRow.Cells["Nombre_v"].Value);
+            //lblTitulo.Text = "Actualizar datos de usuario: " + Convert.ToString(dgvListado.CurrentRow.Cells["Nombre_v"].Value);
             try
             {
                 this.Limpiar();
                 btnActualizar.Visible = true;
                 btnInsertar.Visible = false;
-                txtId.Text = Convert.ToString(dgvListado.CurrentRow.Cells["IdProveedor_i"].Value);
-
-                txtNombre.Text = Convert.ToString(dgvListado.CurrentRow.Cells["CargoContacto_nv"].Value);
-                txtNroDocumento.Text = Convert.ToString(dgvListado.CurrentRow.Cells["CargoContacto_nv"].Value);
-                txtDireccion.Text = Convert.ToString(dgvListado.CurrentRow.Cells["CargoContacto_nv"].Value);
-                txtTelefono.Text = Convert.ToString(dgvListado.CurrentRow.Cells["CargoContacto_nv"].Value);
-                txtCorreo.Text = Convert.ToString(dgvListado.CurrentRow.Cells["CargoContacto_nv"].Value);
-                txtClave.Text = Convert.ToString(dgvListado.CurrentRow.Cells["CargoContacto_nv"].Value);
-                
-                cboRol.SelectedValue = Convert.ToString(dgvListado.CurrentRow.Cells["IdPais_i"].Value);
-                cboTipoDocumento.SelectedValue = Convert.ToString(dgvListado.CurrentRow.Cells["IdPais_i"].Value);
-
-                this.NombreAnt = Convert.ToString(dgvListado.CurrentRow.Cells["Nombre_nv"].Value);
-                txtNombre.Text = Convert.ToString(dgvListado.CurrentRow.Cells["Nombre_nv"].Value);
+                txtId.Text = Convert.ToString(dgvListado.CurrentRow.Cells["ID"].Value);
+                cboRol.SelectedValue = Convert.ToString(dgvListado.CurrentRow.Cells["IdRol_i"].Value);
+                txtNombre.Text = Convert.ToString(dgvListado.CurrentRow.Cells["Nombre"].Value);
+                this.NombreAnt = Convert.ToString(dgvListado.CurrentRow.Cells["Nombre"].Value);
+                cboTipoDocumento.SelectedValue = Convert.ToString(dgvListado.CurrentRow.Cells["Tipo_Documento"].Value);
+                txtNroDocumento.Text = Convert.ToString(dgvListado.CurrentRow.Cells["Num_Documento"].Value);
+                txtDireccion.Text = Convert.ToString(dgvListado.CurrentRow.Cells["Direccion"].Value);
+                txtTelefono.Text = Convert.ToString(dgvListado.CurrentRow.Cells["Telefono"].Value);
+                txtCorreo.Text = Convert.ToString(dgvListado.CurrentRow.Cells["Correo"].Value);
 
                 tabGeneral.SelectedIndex = 1;
             }
