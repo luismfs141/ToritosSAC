@@ -3,6 +3,8 @@ import '../assetss/css/Modal.css';
 import { useCliente } from '../hooks/useCliente';
 import { useGrupo } from '../hooks/useGrupo';
 import { useModelo } from '../hooks/useModelo';
+import { useDocumento } from '../hooks/useDocumento';
+import ModalGuardarDocumento from '../components/ModalGuardarDocumento';
 
 const Grupos = () => {
   const [data, setData] = useState([]);
@@ -14,11 +16,15 @@ const Grupos = () => {
   const [showCreateJoinModal, setShowCreateJoinModal] = useState(false);
   const [showCreateUModal, setShowCreateUModal] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
+  const [codigoGrupo, setCodigoGrupo] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [grupoSeleccionado, setGrupoSeleccionado] = useState(null);
 
   //Metodos Hooks
   const { getClienteFromLocalStorage } = useCliente();
-  const { getGruposPorCliente,guardarGrupo } = useGrupo();
-  const { getModelos} = useModelo();
+  const { getGruposPorCliente, guardarGrupo, buscarGrupoCodigo, agregarListaGrupoCliente } = useGrupo();
+  const { getModelos } = useModelo();
+  const { guardarDocumento, getDocumentoPorClienteGrupo } = useDocumento();
   
   //Variables de control
   const [gruposCliente, setGruposCliente] = useState([]);
@@ -33,6 +39,7 @@ const Grupos = () => {
   const [tipoPeriodoPago, setTipoPeriodoPago] = useState('');
   const [modeloVehiculo, setModeloVehiculo] = useState('');
   const [precioVehiculo, setPrecioVehiculo] = useState('');
+  const [documentosDisponibles, setDocumentosDisponibles] = useState({});
 
   //Message Box
   const [message, setMessage] = useState("");
@@ -51,7 +58,23 @@ const Grupos = () => {
       }
       setIsInitialized(true); // Cambiar el estado de isInitialized para que no se actualice nuevamente
     }
-  }, [isInitialized, getClienteFromLocalStorage]); 
+  }, [isInitialized, getClienteFromLocalStorage,getGruposPorCliente]); 
+
+  //useEffect para tabla de grupos
+  useEffect(() => {
+    // Función para obtener los documentos por cliente y grupo
+    const checkDocumentosDisponibles = async () => {
+      const documentos = {};
+      for (const item of gruposCliente) {
+        const resultado = await getDocumentoPorClienteGrupo(clienteData, item);
+        
+        documentos[item.idGrupoI] = resultado; // Guardamos el resultado en el objeto
+      }
+      setDocumentosDisponibles(documentos); // Actualizamos el estado con los resultados
+    };
+
+    checkDocumentosDisponibles();
+  }, [gruposCliente, clienteData]);
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
@@ -84,6 +107,7 @@ const Grupos = () => {
     setModalContent(null);
     setShowCreateJoinModal(false);
     setShowCreateUModal(false);
+    setShowModal(false);
   };
 
   // Modal Creación de grupo
@@ -126,6 +150,55 @@ const Grupos = () => {
       setPrecioVehiculo(modeloSeleccionado.precioUnidadVehiculoM);
     } else {
       setPrecioVehiculo(0);
+    }
+  };
+
+  const handleUnirseGrupo = async (e) => {
+    e.preventDefault();  // Si estás usando un formulario, previenes el comportamiento por defecto
+  
+    // Verifica que el código del grupo no esté vacío
+    if (!codigoGrupo || !clienteData?.idClienteI) {
+      showErrorMessage("Por favor ingrese un código válido y asegúrese de estar logueado.");
+      return;
+    }
+    try {
+      // Busca el grupo con el código ingresado
+      const grupoBuscado = await buscarGrupoCodigo(codigoGrupo);
+      if (grupoBuscado) {
+        // Intentar unirse al grupo
+        const response = await agregarListaGrupoCliente(grupoBuscado, clienteData);
+        
+        if (response.exito) {
+          showSuccessMessage("¡Grupo agregado exitosamente!");
+          handleCloseModal();  // Si deseas cerrar el modal después del éxito
+        } else {
+          showErrorMessage("Error al agregar el grupo. Intenta de nuevo.");
+        }
+      } else {
+        showErrorMessage("Error: el grupo no existe.");
+      }
+    } catch (error) {
+      console.error("Error en unirse al grupo:", error);
+      showErrorMessage("Ocurrió un error al procesar la solicitud. Intente más tarde.");
+    }
+  };
+
+  const handleDocumento = (grupo) => {
+    setGrupoSeleccionado(grupo); // Establecer el grupo seleccionado
+    setShowModal(true); // Mostrar el modal
+  };
+
+
+  const handleSaveDocumentos = async (documentos) => {
+    try {
+      const response = await guardarDocumento(documentos, clienteData, grupoSeleccionado);
+      const listaGrupo = getGruposPorCliente(clienteData);
+      listaGrupo.then(grupos => {
+        setGruposCliente(grupos); 
+      });
+      handleCloseModal();
+    } catch (error) {
+        console.error('Error al guardar documento:', error);
     }
   };
 
@@ -308,19 +381,24 @@ const Grupos = () => {
         <div className="modal-overlay">
           <div className="modal-content">
             <h5>Ingrese Código de Invitación</h5>
-            <form className="mb-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="mb-4" onSubmit={handleUnirseGrupo}>
               <div className="mb-3 d-flex justify-content-center">
                 <input
                   type="text"
                   className="form-control w-75 text-center"
                   placeholder="Código"
+                  onChange={(e) => setCodigoGrupo(e.target.value)}
                 />
               </div>
               <div className="mb-3">
-                <button className="btn btn-primary me-2">
+                <button type="submit" className="btn btn-primary me-2">
                   Unirse
                 </button>
-                <button className="btn btn-secondary" onClick={handleCloseModal}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={handleCloseModal}
+                >
                   Cancelar
                 </button>
               </div>
@@ -361,39 +439,65 @@ const Grupos = () => {
               <td>{item.tipoPeriodoPagoC}</td>
               <td>
                 <button
-                  className="btn btn-info"
+                  className={documentosDisponibles[item.idGrupoI]?.estado !== 'A'?"btn btn-secondary":"btn btn-primary"}
                   onClick={() => handleShowDetails('Detalles del grupo')}
+                  disabled={documentosDisponibles[item.idGrupoI]?.estado !== 'A'}
                 >
                   Ver
                 </button>
               </td>
               <td>
                 <button
-                  className="btn btn-info"
+                  className={documentosDisponibles[item.idGrupoI]?.estado !== 'A'?"btn btn-secondary":"btn btn-primary"}
                   onClick={() => handleShowDetails('Integrantes del grupo')}
+                  disabled={documentosDisponibles[item.idGrupoI]?.estado !== 'A'}
                 >
                   Ver
                 </button>
               </td>
               <td>
-                <button
-                  className="btn btn-warning"
-                  onClick={() => handleEdit(item)}
-                >
-                  Editar
-                </button>
-                <button
-                  className="btn btn-danger"
-                  onClick={() => handleDelete(item.idGrupoI)}
-                >
-                  Eliminar
-                </button>
+                {/* Mostrar el botón "Subir Documentos" si no hay documento */}
+                {!documentosDisponibles[item.idGrupoI] && (
+                  <button
+                    className="btn btn-warning"
+                    onClick={() => handleDocumento(item)}
+                  >
+                    Subir Documentos
+                  </button>
+                )}
+
+                {/* Mostrar "Verificando Documentos" si el estado del documento es "P" */}
+                {documentosDisponibles[item.idGrupoI]?.estado === 'P' && (
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => handleEdit(item)}
+                    disabled={true}
+                  >
+                    Verificando Documentos
+                  </button>
+                )}
+
+                {/* Mostrar "Unirse al Grupo" si el estado del documento es "A" */}
+                {documentosDisponibles[item.idGrupoI]?.estado === 'A' && (
+                  <button
+                    className="btn btn-success"
+                    onClick={() => handleEdit(item)}
+                  >
+                    Unirse Grupo
+                  </button>
+                )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
+    {/* Modal para guardar documentos */}
+    <ModalGuardarDocumento
+        show={showModal}
+        onClose={handleCloseModal}
+        onSave={handleSaveDocumentos}
+      />
 
       {/* Modal de detalles */}
       {modalContent && (

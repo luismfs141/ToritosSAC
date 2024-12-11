@@ -194,8 +194,13 @@ namespace ToritosSAC.DataAccess
                     if (cliente.EstadoC == "A" && grupo.EstadoC == "E" && documento.EstadoC == "A")
                     {
                         DetalleGrupo detalleGrupoOriginal = ctx.DetalleGrupos.SingleOrDefault(d => d.IdDetalleGrupoI == x_detalleGrupo.IdGrupoI);
-                        x_detalleGrupo.AdmisionC = "P";
-                        ctx.Entry(detalleGrupoOriginal).CurrentValues.SetValues(x_detalleGrupo);
+                        
+                        if (detalleGrupoOriginal != null)
+                        {
+                            x_detalleGrupo.AdmisionC = "P";
+                            ctx.Entry(detalleGrupoOriginal).CurrentValues.SetValues(x_detalleGrupo);
+                        }
+
                         ctx.SaveChanges();
                         return x_detalleGrupo;
                     }
