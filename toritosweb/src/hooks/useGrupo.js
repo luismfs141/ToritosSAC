@@ -102,7 +102,37 @@ export const useGrupo = () => {
         catch (error){
             console.error("Error al agregar en la lista de espera de grupo:", error);
         }      
-    }
+    };
+
+    const admitirClienteGrupo = async(idCliente, idGrupo) =>{
+        try{
+            const response = await api.post(`/Grupo/AdmitirClienteGrupo?idCliente=${idCliente}&idGrupo=${idGrupo}`);
+            if(response.data.exito){
+                return response.data.objeto;
+            }
+            else{
+                throw new Error(response.data.Mensaje);
+            }
+        }
+        catch (error){
+            console.error("Error admitir cliente en el grupo:", error);
+        }   
+    };
+
+    const rechazarClienteGrupo = async(idCliente, idGrupo) =>{
+        try{
+            const response = await api.post(`/Grupo/RechazarClienteGrupo?idCliente=${idCliente}&idGrupo=${idGrupo}`);
+            if(response.data.exito){
+                return response.data.objeto;
+            }
+            else{
+                throw new Error(response.data.Mensaje);
+            }
+        }
+        catch (error){
+            console.error("Error al rechazar el cliente:", error);
+        }   
+    };
 
     return{
         getGruposPorCliente,
@@ -111,6 +141,8 @@ export const useGrupo = () => {
         agregarListaGrupoCliente,
         getDetallesGrupo,
         agregarListaEsperaGrupo,
-        listarClientesPendientes
+        listarClientesPendientes,
+        admitirClienteGrupo,
+        rechazarClienteGrupo
     };
 };

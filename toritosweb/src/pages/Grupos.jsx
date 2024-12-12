@@ -30,7 +30,7 @@ const Grupos = () => {
   const { getClienteFromLocalStorage, getIdGruposAdminFromLocalStorage} = useCliente();
   const { getGruposPorCliente, guardarGrupo, buscarGrupoCodigo,
           agregarListaGrupoCliente, getDetallesGrupo, agregarListaEsperaGrupo,
-          listarClientesPendientes } = useGrupo();
+          listarClientesPendientes, admitirClienteGrupo, rechazarClienteGrupo } = useGrupo();
   const { getModelos } = useModelo();
   const { guardarDocumento, getDocumentoPorClienteGrupo } = useDocumento();
   
@@ -219,6 +219,7 @@ const Grupos = () => {
     try {
       const clientes = await listarClientesPendientes(grupo.idGrupoI);
       setClientesPendientes(clientes);
+      setGrupoSeleccionado(grupo);
       setShowModalClientesPendientes(true);
     } catch (error) {
         console.error("Error al cargar la lista de clientes", error);
@@ -257,16 +258,32 @@ const Grupos = () => {
   };
 
   //logica para aceptar clientes
-  const handleAccept = (idCliente) => {
-    console.log(`Cliente ${idCliente} aceptado`);
-    // Aquí puedes agregar la lógica para aceptar al cliente
-    setShowModal(false);
+  const handleAdmitirClienteGrupo = async (idCliente) => {
+    setLoading(true); 
+    try {
+      const idGrupo = grupoSeleccionado.idGrupoI;
+      const response = await admitirClienteGrupo(idCliente, idGrupo);
+      console.log(response);
+      handleListaClientesPendientes(grupoSeleccionado);
+    } catch (error) {
+        console.error("Error al admitir el cliente", error);
+    } finally {
+        setLoading(false); 
+    }
   };
 
-  const handleReject = (idCliente) => {
-    console.log(`Cliente ${idCliente} rechazado`);
-    // Aquí puedes agregar la lógica para rechazar al cliente
-    setShowModal(false);
+  const handleRechazarClienteGrupo = async (idCliente) => {
+    setLoading(true); 
+    try {
+      const idGrupo = grupoSeleccionado.idGrupoI;
+      const response = await rechazarClienteGrupo(idCliente, idGrupo);
+      console.log(response);
+      handleListaClientesPendientes(grupoSeleccionado);
+    } catch (error) {
+        console.error("Error al rechazar el cliente", error);
+    } finally {
+        setLoading(false);
+    }
   };
 
   //Funcion de mensajes
@@ -542,7 +559,7 @@ const Grupos = () => {
                       className="btn btn-info"
                       onClick={() => handleListaClientesPendientes(item)}
                     >
-                      Añadir Clientes
+                      Solicitudes
                     </button>
                   ) : (
                     <button
@@ -576,8 +593,8 @@ const Grupos = () => {
         show={showModalClientesPendientes}
         onClose={handleCloseModal}
         clientes={clientesPendientes}
-        onAccept={handleAccept}
-        onReject={handleReject}
+        onAccept={handleAdmitirClienteGrupo}
+        onReject={handleRechazarClienteGrupo}
       />
     </div>
   );

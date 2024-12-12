@@ -284,27 +284,29 @@ namespace ToritosSAC.DataAccess
             }
         }
 
-        public DetalleGrupo? DAGRUP_AdmitirClienteGrupo(DetalleGrupo x_detalleGrupo)
+        public DetalleGrupo? DAGRUP_AdmitirClienteGrupo(int idCliente, int idGrupo)
         {
             try
             {
                 ToritosDbContext ctx = new ToritosDbContext();
 
-                Grupo grupo = ctx.Grupos.SingleOrDefault(g => g.IdGrupoI == x_detalleGrupo.IdGrupoI);
-                int integrantesGrupo = ctx.DetalleGrupos.Count(d => d.IdGrupoI == x_detalleGrupo.IdGrupoI && d.AdmisionC == "A");
+                Grupo grupo = ctx.Grupos.SingleOrDefault(g => g.IdGrupoI == idGrupo);
+                int integrantesGrupo = ctx.DetalleGrupos.Count(d => d.IdGrupoI == idGrupo && d.AdmisionC == "A");
+                DetalleGrupo detalleGrupo = ctx.DetalleGrupos.SingleOrDefault(d => d.IdClienteI == idCliente && d.IdGrupoI == idGrupo);
 
-                if (x_detalleGrupo.AdmisionC == "P" && grupo.EstadoC == "A" && integrantesGrupo < grupo.CantMaxIntegrantesI)
+                if (detalleGrupo.AdmisionC == "P" && grupo.EstadoC == "A" && integrantesGrupo < grupo.CantMaxIntegrantesI)
                 {
-                    x_detalleGrupo.AdmisionC = "A";
-
-                    DetalleGrupo? detGrupoOriginal = ctx.DetalleGrupos.SingleOrDefault(d => d.IdDetalleGrupoI == x_detalleGrupo.IdDetalleGrupoI);
-
-                    ctx.Entry(detGrupoOriginal).CurrentValues.SetValues(x_detalleGrupo);
+                    detalleGrupo.AdmisionC = "A";
                     ctx.SaveChanges();
-
-                    return x_detalleGrupo;
                 }
-                return null;
+                else
+                {
+                    if (integrantesGrupo < grupo.CantMaxIntegrantesI)
+                    {
+                        throw new Exception("El grupo ya tiene el número máximo de integrantes.");
+                    }
+                }
+                return detalleGrupo;
             }
             catch (Exception ex)
             {
@@ -312,26 +314,21 @@ namespace ToritosSAC.DataAccess
             }
         }
 
-        public DetalleGrupo? DAGRUP_RechazarClienteGrupo(DetalleGrupo x_detalleGrupo)
+        public DetalleGrupo? DAGRUP_RechazarClienteGrupo(int idCliente, int idGrupo)
         {
             try
             {
                 ToritosDbContext ctx = new ToritosDbContext();
 
-                Grupo grupo = ctx.Grupos.SingleOrDefault(g => g.IdGrupoI == x_detalleGrupo.IdGrupoI);
+                Grupo grupo = ctx.Grupos.SingleOrDefault(g => g.IdGrupoI == idGrupo);
+                DetalleGrupo detalleGrupo = ctx.DetalleGrupos.SingleOrDefault(d => d.IdClienteI == idCliente && d.IdGrupoI == idGrupo);
 
-                if (x_detalleGrupo.AdmisionC == "P" && grupo.EstadoC == "A")
+                if (detalleGrupo.AdmisionC == "P" && grupo.EstadoC == "A")
                 {
-                    x_detalleGrupo.AdmisionC = "R";
-
-                    DetalleGrupo? detGrupoOriginal = ctx.DetalleGrupos.SingleOrDefault(d => d.IdDetalleGrupoI == x_detalleGrupo.IdDetalleGrupoI);
-
-                    ctx.Entry(detGrupoOriginal).CurrentValues.SetValues(x_detalleGrupo);
+                    detalleGrupo.AdmisionC = "R";
                     ctx.SaveChanges();
-
-                    return x_detalleGrupo;
                 }
-                return null;
+                return detalleGrupo;
             }
             catch (Exception ex)
             {

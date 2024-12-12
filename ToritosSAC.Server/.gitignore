@@ -1,0 +1,16 @@
+=======
+
+# Archivos y carpetas de Visual Studio
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.dbmdl
+bin/
+obj/
+Thumbs.db
+.DS_Store
+
+>>>>>>> origin/luis

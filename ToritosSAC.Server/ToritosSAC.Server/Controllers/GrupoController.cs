@@ -92,18 +92,18 @@ namespace ToritosSAC.Server.Controllers
 
         [Route("AdmitirClienteGrupo")]
         [HttpPost]
-        public Resultado<DetalleGrupo> AdmitirClienteGrupo(DetalleGrupo x_detalleGrupo)
+        public Resultado<DetalleGrupo> AdmitirClienteGrupo(int idCliente, int idGrupo)
         {
             BLGrupo bLGrupo = new BLGrupo();
-            return bLGrupo.BLGRUP_AdmitirClienteGrupo(x_detalleGrupo);
+            return bLGrupo.BLGRUP_AdmitirClienteGrupo(idCliente, idGrupo);
         }
 
         [Route("RechazarClienteGrupo")]
         [HttpPost]
-        public Resultado<DetalleGrupo> RechazarClienteGrupo(DetalleGrupo x_detalleGrupo)
+        public Resultado<DetalleGrupo> RechazarClienteGrupo(int idCliente, int idGrupo)
         {
             BLGrupo bLGrupo = new BLGrupo();
-            return bLGrupo.BLGRUP_RechazarClienteGrupo(x_detalleGrupo);
+            return bLGrupo.BLGRUP_RechazarClienteGrupo(idCliente, idGrupo);
         }
 
         [HttpGet("ListarClientesAdmitidosGrupo")]

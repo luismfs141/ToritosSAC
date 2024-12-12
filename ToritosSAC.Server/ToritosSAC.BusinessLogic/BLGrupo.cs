@@ -163,12 +163,12 @@ namespace ToritosSAC.BusinessLogic
             }
         }
 
-        public Resultado<DetalleGrupo> BLGRUP_AdmitirClienteGrupo(DetalleGrupo x_detalleGrupo)
+        public Resultado<DetalleGrupo> BLGRUP_AdmitirClienteGrupo(int idCliente, int idGrupo)
         {
             try
             {
                 DAGrupo dAGrupo = new DAGrupo();
-                var detalleGrupo = dAGrupo.DAGRUP_AdmitirClienteGrupo(x_detalleGrupo);
+                var detalleGrupo = dAGrupo.DAGRUP_AdmitirClienteGrupo(idCliente, idGrupo);
                 return new Resultado<DetalleGrupo>(detalleGrupo, "Cliente admitido en el grupo exitosamente", true);
             }
             catch (Exception ex)
@@ -177,12 +177,12 @@ namespace ToritosSAC.BusinessLogic
             }
         }
 
-        public Resultado<DetalleGrupo> BLGRUP_RechazarClienteGrupo(DetalleGrupo x_detalleGrupo)
+        public Resultado<DetalleGrupo> BLGRUP_RechazarClienteGrupo(int idCliente, int idGrupo)
         {
             try
             {
                 DAGrupo dAGrupo = new DAGrupo();
-                var detalleGrupo = dAGrupo.DAGRUP_RechazarClienteGrupo(x_detalleGrupo);
+                var detalleGrupo = dAGrupo.DAGRUP_RechazarClienteGrupo(idCliente, idGrupo);
                 return new Resultado<DetalleGrupo>(detalleGrupo, "Cliente rechazado del grupo exitosamente", true);
             }
             catch (Exception ex)
