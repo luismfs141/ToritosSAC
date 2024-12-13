@@ -49,6 +49,9 @@ const Grupos = () => {
   const [tipoPeriodoPago, setTipoPeriodoPago] = useState('');
   const [modeloVehiculo, setModeloVehiculo] = useState('');
   const [precioVehiculo, setPrecioVehiculo] = useState('');
+  const [montoCuota, setMontoCuota] = useState(0);
+  const [tiempoPago, setTiempoPago] = useState(0);
+  const [sorteo, setSorteo] = useState(0);
   const [documentosDisponibles, setDocumentosDisponibles] = useState({});
 
   //Message Box
@@ -84,9 +87,44 @@ const Grupos = () => {
       }
       setDocumentosDisponibles(documentos); // Actualizamos el estado con los resultados
     };
-
     checkDocumentosDisponibles();
   }, [gruposCliente, clienteData]);
+
+  useEffect(() => {
+    if (precioVehiculo > 0 && montoCuota > 0) {
+      const cantCuotas = precioVehiculo / montoCuota;
+      setCantidadCuotas(cantCuotas);
+    }
+  }, [precioVehiculo, montoCuota]);
+  
+  useEffect(() => {
+    if (cantidadCuotas && tipoPeriodoPago) {
+      let tiempo;
+      if (tipoPeriodoPago === "D") {
+        tiempo = cantidadCuotas / 30;
+      } else if (tipoPeriodoPago === "S") {
+        tiempo = cantidadCuotas / 4;
+      } else if (tipoPeriodoPago === "Q") {
+        tiempo = cantidadCuotas / 2;
+      } else if (tipoPeriodoPago === "M") {
+        tiempo = cantidadCuotas;
+      }
+  
+      if (tiempo !== undefined) {
+        setTiempoPago(tiempo);
+      }
+    }
+  }, [cantidadCuotas, tipoPeriodoPago]);
+
+  useEffect(() => {
+    if (cantidadCuotas && tipoPeriodoPago && cantMaxIntegrantes) {
+      let sorteo;
+      sorteo = precioVehiculo/(cantMaxIntegrantes*montoCuota);
+      if (sorteo !== undefined) {
+        setSorteo(sorteo);
+      }
+    }
+  }, [cantidadCuotas, tipoPeriodoPago, cantMaxIntegrantes]);
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
@@ -122,7 +160,19 @@ const Grupos = () => {
     setShowModal(false);
     setShowModalDetalles(false);
     setShowModalClientesPendientes(false);
+    limpiarCamposGrupo();
   };
+
+  const limpiarCamposGrupo = () =>{
+    setCantMaxIntegrantes(0);
+    setCantidadCuotas(0);
+    setTipoPeriodoPago("");
+    setModeloVehiculo("");
+    setPrecioVehiculo(0);
+    setMontoCuota(0);
+    setTiempoPago(0);
+    setSorteo(0);
+  }
 
   // Modal Creación de grupo
   const toggleCreateJoinModal = () => {
@@ -423,22 +473,6 @@ const Grupos = () => {
               </div>
 
               <div className="mb-3 d-flex flex-column flex-sm-row align-items-center">
-                <label className="me-2 w-25">Número de Cuotas</label>
-                <select 
-                className="form-control w-75"
-                id="cantidadCuotas"
-                value={cantidadCuotas}
-                onChange={(e) => setCantidadCuotas(e.target.value)}
-                required
-                >
-                  <option value="">Seleccione cuotas</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                </select>
-              </div>
-
-              <div className="mb-3 d-flex flex-column flex-sm-row align-items-center">
                 <label className="me-2 w-25">Periodo</label>
                 <select 
                 className="form-control w-75"
@@ -448,12 +482,46 @@ const Grupos = () => {
                 required
                 >
                   <option value="">Seleccione periodo</option>
+                  <option value="D">Diario</option>
+                  <option value="S">Semanal</option>
+                  <option value="Q">Quincenal</option>
                   <option value="M">Mensual</option>
-                  <option value="S">Semestral</option>
-                  <option value="A">Anual</option>
                 </select>
               </div>
 
+              <div className="mb-3 d-flex flex-column flex-sm-row align-items-center">
+                <label className="me-2 w-25">Monto Cuota</label>
+                <select 
+                className="form-control w-75"
+                id="montoCuota"
+                value={montoCuota}
+                onChange={(e) => setMontoCuota(e.target.value)}
+                required
+                >
+                  <option value="">Seleccione cuota</option>
+                  <option value={20}>S/20.00</option>
+                  <option value={30}>S/30.00</option>
+                  <option value={40}>S/40.00</option>
+                  <option value={50}>S/50.00</option>
+                  <option value={100}>S/100.00</option>
+                  <option value={200}>S/200.00</option>
+                  <option value={500}>S/500.00</option>
+                  <option value={1000}>S/1,000.00</option>
+                </select>
+              </div>
+
+              <div className="mb-3 d-flex flex-row align-items-center">
+                <div className="w-auto" style={{fontWeight: 'bold' }}>
+                  {cantidadCuotas} cuotas durante {tiempoPago} meses
+                </div>
+              </div>
+
+              <div className="mb-3 d-flex flex-row align-items-center">
+                <div className="w-auto" style={{fontWeight: 'bold' }}>
+                  Sorteo cada {sorteo} días
+                </div>
+              </div>
+              
               <div className="mb-3">
                 <button className="btn btn-primary me-2" onClick={crearGrupoModal}>
                   Crear Grupo
@@ -498,14 +566,14 @@ const Grupos = () => {
       )}
 
       {/* Tabla de grupos */}
-      <div className="table-responsive">
-      <table className="table table-bordered">
-        <thead>
+      <div className="table-responsive" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+      <table className="table table-bordered table table-striped">
+        <thead className="table-dark" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
           <tr>
             <th>Código</th>
             <th>Estado</th>
             <th>Fecha de Inicio</th>
-            <th>Cuota</th>
+            <th>Cuota Total</th>
             <th>Periodo</th>
             <th>Detalles</th>
             <th>Acciones</th>
@@ -523,9 +591,22 @@ const Grupos = () => {
                   'T': 'Terminado'
                 })[item.estadoC] || 'En Espera'}
               </td>
-              <td>{new Date(item.fechaInicioPanderoD).toLocaleDateString()}</td>
-              <td>{item.precioUnidadVehiculoM}</td>
-              <td>{item.tipoPeriodoPagoC}</td>
+              <td>
+                {item.fechaInicioPanderoD ? 
+                  new Date(item.fechaInicioPanderoD).toLocaleDateString() : 
+                  'Sin Fecha'}
+              </td>
+              <td>
+                {new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' }).format(item.precioUnidadVehiculoM)}
+              </td>
+              <td>
+                {({
+                  'D': 'Diario',
+                  'S': 'Semanal',
+                  'Q': 'Quincenal',
+                  'M': 'Mensual'
+                })[item.tipoPeriodoPagoC]}
+              </td>
               <td>
                 <button
                   className={documentosDisponibles[item.idGrupoI]?.estado !== 'A'?"btn btn-secondary":"btn btn-primary"}
