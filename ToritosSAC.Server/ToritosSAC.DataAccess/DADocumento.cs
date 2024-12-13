@@ -101,7 +101,7 @@ namespace ToritosSAC.DataAccess
             }
         }
 
-        public static byte[] ConvertBase64ToByteArray(string base64String)
+        private static byte[] ConvertBase64ToByteArray(string base64String)
         {
             // Verificar si la cadena es nula o vacía
             if (string.IsNullOrEmpty(base64String))
@@ -126,6 +126,30 @@ namespace ToritosSAC.DataAccess
             catch (FormatException ex)
             {
                 throw new FormatException("La cadena Base64 no tiene un formato válido.", ex);
+            }
+        }
+        public string DADOCU_ObtenerEstadoDocumentoClienteGrupo(int idCliente, int idGrupo)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+
+                DetalleGrupo detalleGrupo = ctx.DetalleGrupos.SingleOrDefault(d => d.IdClienteI == idCliente && d.IdGrupoI == idGrupo);
+
+                Documento documento = ctx.Documentos.SingleOrDefault(d => d.IdDocumentoI == detalleGrupo.IdDocumentosI);
+
+                if(documento != null)
+                {
+                    return documento.EstadoC;
+                }
+                else
+                {
+                    return "";
+                }
+            }
+            catch (FormatException ex)
+            {
+                throw ex;
             }
         }
     }

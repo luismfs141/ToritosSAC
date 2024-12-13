@@ -112,5 +112,24 @@ namespace ToritosSAC.Server.Controllers
             BLGrupo bLGrupo = new BLGrupo();
             return bLGrupo.BLGRUP_ListarClientesAdmitidosGrupo(x_grupo);
         }
+
+        [HttpGet("ObtenerNumeroIntegrantesIdGrupo")]
+        public Resultado<int> ObtenerNumeroIntegrantesIdGrupo(int idGrupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_ObtenerNumeroIntegrantesIdGrupo(idGrupo);
+        }
+        [HttpGet("EsAdministradorGrupo")]
+        public Resultado<bool> EsAdministradorGrupo(int idCliente, int idGrupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_EsAdministradorGrupo(idCliente, idGrupo);
+        }
+        [HttpGet("EsMiembroGrupo")]
+        public Resultado<bool> EsMiembroGrupo(int idCliente, int idGrupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_EsMiembroGrupo(idCliente, idGrupo);
+        }
     }
 }

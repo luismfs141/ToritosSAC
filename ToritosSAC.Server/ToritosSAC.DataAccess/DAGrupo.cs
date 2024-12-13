@@ -356,5 +356,60 @@ namespace ToritosSAC.DataAccess
                 throw ex;
             }
         }
+
+        public int DAGRUP_ObtenerNumeroIntegrantesIdGrupo(int idGrupo)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+
+                int numClientes = ctx.DetalleGrupos
+                    .Where(d => d.IdGrupoI == idGrupo && d.AdmisionC == "A").Count();
+
+                return numClientes;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+        public bool DAGRUP_EsAdministradorGrupo(int idCliente, int idGrupo)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+
+                DetalleGrupo detalleGrupo = ctx.DetalleGrupos.SingleOrDefault(d => d.IdClienteI == idCliente && d.IdGrupoI == idGrupo);
+
+                return detalleGrupo.ClienteAdminBo;
+            }
+            catch (FormatException ex)
+            {
+                throw ex;
+            }
+        }
+        public bool DAGRUP_EsMiembroGrupo(int idCliente, int idGrupo)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+
+                DetalleGrupo detalleGrupo = ctx.DetalleGrupos.SingleOrDefault(d => d.IdClienteI == idCliente && d.IdGrupoI == idGrupo);
+
+                if(detalleGrupo.AdmisionC == "A")
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch (FormatException ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

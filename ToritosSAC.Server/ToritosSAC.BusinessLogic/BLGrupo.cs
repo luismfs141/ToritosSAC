@@ -204,5 +204,63 @@ namespace ToritosSAC.BusinessLogic
                 return new Resultado<List<Cliente>>(null, $"Error al listar los clientes admitidos en el grupo: {ex.Message}", false);
             }
         }
+
+        public Resultado<int> BLGRUP_ObtenerNumeroIntegrantesIdGrupo(int idGrupo)
+        {
+            try
+            {
+                DAGrupo dAGrupo = new DAGrupo();
+                int numClientes = dAGrupo.DAGRUP_ObtenerNumeroIntegrantesIdGrupo(idGrupo);
+                return new Resultado<int>(numClientes, "Número de clientes obtenidos exitosamente", true);
+            }
+            catch (Exception ex)
+            {
+                return new Resultado<int>(0, $"Error al obtener el número de integrantes: {ex.Message}", false);
+            }
+        }
+
+        public Resultado<bool> BLGRUP_EsAdministradorGrupo(int idCliente, int idGrupo)
+        {
+            try
+            {
+                DAGrupo dAGrupo = new DAGrupo();
+                bool esAdmin = dAGrupo.DAGRUP_EsAdministradorGrupo(idCliente, idGrupo);
+                if (esAdmin)
+                {
+                    return new Resultado<bool>(esAdmin, "Es administrador de grupo", true);
+                }
+                else
+                {
+                    return new Resultado<bool>(esAdmin, "No es Administrador de grupo", true);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                return new Resultado<bool>(false, $"Error comprobar administrador: {ex.Message}", false);
+            }
+        }
+
+        public Resultado<bool> BLGRUP_EsMiembroGrupo(int idCliente, int idGrupo)
+        {
+            try
+            {
+                DAGrupo dAGrupo = new DAGrupo();
+                bool esMiembro = dAGrupo.DAGRUP_EsMiembroGrupo(idCliente, idGrupo);
+                if (esMiembro)
+                {
+                    return new Resultado<bool>(esMiembro, "Es miembro de grupo", true);
+                }
+                else
+                {
+                    return new Resultado<bool>(esMiembro, "No es miembro de grupo", true);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new Resultado<bool>(false, $"Error comprobar cliente: {ex.Message}", false);
+            }
+        }
     }
 }

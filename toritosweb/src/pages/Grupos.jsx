@@ -7,6 +7,7 @@ import { useDocumento } from '../hooks/useDocumento';
 import ModalGuardarDocumento from '../components/Modals/ModalGuardarDocumento';
 import ModalDetallesGrupo from '../components/Modals/ModalDetallesGrupo';
 import ModalClientesPendientes from '../components/Modals/ModalClientesPendientes';
+import ButtonAccionGrupo from '../components/Buttons/ButtonAccionGrupo'; 
 
 const Grupos = () => {
   const [data, setData] = useState([]);
@@ -191,8 +192,13 @@ const Grupos = () => {
         showErrorMessage("Error: el grupo no existe.");
       }
     } catch (error) {
-      console.error("Error en unirse al grupo:", error);
       showErrorMessage("Ocurrió un error al procesar la solicitud. Intente más tarde.");
+    }
+    finally{
+      const listaGrupo = getGruposPorCliente(clienteData);
+      listaGrupo.then(grupos => {
+        setGruposCliente(grupos); 
+      });
     }
   };
 
@@ -531,45 +537,14 @@ const Grupos = () => {
                 </button>
               </td>
               <td>
-                {/* Mostrar el botón "Subir Documentos" si no hay documento */}
-                {!documentosDisponibles[item.idGrupoI] && (
-                  <button
-                    className="btn btn-warning"
-                    onClick={() => handleDocumento(item)}
-                  >
-                    Subir Documentos
-                  </button>
-                )}
-
-                {/* Mostrar "Verificando Documentos" si el estado del documento es "P" */}
-                {documentosDisponibles[item.idGrupoI]?.estado === 'P' && (
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => handleEdit(item)}
-                    disabled={true}
-                  >
-                    Verificando Documentos
-                  </button>
-                )}
-
-                {/* Mostrar "Unirse al Grupo" si el estado del documento es "A" */}
-                {documentosDisponibles[item.idGrupoI]?.estado === 'A' && (
-                  idGruposAdmin.includes(Number(item.idGrupoI)) ? (
-                    <button
-                      className="btn btn-info"
-                      onClick={() => handleListaClientesPendientes(item)}
-                    >
-                      Solicitudes
-                    </button>
-                  ) : (
-                    <button
-                      className="btn btn-success"
-                      onClick={() => handleUnirseGrupo(item)}
-                    >
-                      Unirse Grupo
-                    </button>
-                  )
-                )}
+                {/*Botones de Acciones */}
+                <ButtonAccionGrupo 
+                  cliente={clienteData}
+                  grupo={item}
+                  onUnirseGrupo={handleUnirseGrupo}
+                  onSolicitudes={handleListaClientesPendientes}
+                  onDocumentos={handleDocumento}
+                />
               </td>
             </tr>
           ))}

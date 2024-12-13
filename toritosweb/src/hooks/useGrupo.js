@@ -134,6 +134,51 @@ export const useGrupo = () => {
         }   
     };
 
+    const getNumeroIntegrantesGrupo = async(idGrupo) =>{
+        try{
+            const response = await api.get(`/Grupo/ObtenerNumeroIntegrantesIdGrupo?idGrupo=${idGrupo}`);
+            if(response.data.exito){
+                return response.data.objeto;
+            }
+            else{
+                throw new Error(response.data.Mensaje);
+            }
+        }
+        catch (error){
+            console.error("Error al agregar en la lista de espera de grupo:", error);
+        }   
+    };
+
+    const getEsAdministradorGrupo = async(idCliente, idGrupo) =>{
+        try{
+            const response = await api.get(`/Grupo/EsAdministradorGrupo?idCliente=${idCliente}&idGrupo=${idGrupo}`);
+            if(response.data.exito){
+                return response.data.objeto;
+            }
+            else{
+                throw new Error(response.data.Mensaje);
+            }
+        }
+        catch (error){
+            console.error("Error comprobar cliente:", error);
+        }   
+    };
+
+    const getEsMiembroGrupo = async(idCliente, idGrupo) =>{
+        try{
+            const response = await api.get(`/Grupo/EsMiembroGrupo?idCliente=${idCliente}&idGrupo=${idGrupo}`);
+            if(response.data.exito){
+                return response.data.objeto;
+            }
+            else{
+                throw new Error(response.data.Mensaje);
+            }
+        }
+        catch (error){
+            console.error("Error comprobar cliente:", error);
+        }   
+    };
+
     return{
         getGruposPorCliente,
         guardarGrupo,
@@ -143,6 +188,9 @@ export const useGrupo = () => {
         agregarListaEsperaGrupo,
         listarClientesPendientes,
         admitirClienteGrupo,
-        rechazarClienteGrupo
+        rechazarClienteGrupo,
+        getNumeroIntegrantesGrupo,
+        getEsAdministradorGrupo,
+        getEsMiembroGrupo
     };
 };

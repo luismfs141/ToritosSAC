@@ -7,7 +7,7 @@ namespace ToritosSAC.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class DocumentoController 
+    public class DocumentoController
     {
         [Route("GuardarDocumento")]
         [HttpPost]
@@ -18,7 +18,7 @@ namespace ToritosSAC.Server.Controllers
             DocumentoBase64 documento = request.Documento;
 
             BLDocumento bLDocumento = new BLDocumento();
-            return bLDocumento.BLDOCU_GuardarDocumento(documento,cliente,grupo);
+            return bLDocumento.BLDOCU_GuardarDocumento(documento, cliente, grupo);
         }
 
         [Route("ObtenerDocumentoPorClienteGrupo")]
@@ -30,6 +30,13 @@ namespace ToritosSAC.Server.Controllers
 
             BLDocumento bLDocumento = new BLDocumento();
             return bLDocumento.BLDOCU_ObtenerDocumentoPorClienteGrupo(cliente, grupo);
+        }
+
+        [HttpGet("ObtenerEstadoDocumentoClienteGrupo")]
+        public Resultado<string> ObtenerEstadoDocumentoClienteGrupo(int idCliente, int idGrupo)
+        {
+            BLDocumento blDocumento = new BLDocumento();
+            return blDocumento.BLDOCU_ObtenerEstadoDocumentoClienteGrupo(idCliente, idGrupo);
         }
     }
 }
