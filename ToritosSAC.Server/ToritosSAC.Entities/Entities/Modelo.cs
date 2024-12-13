@@ -15,6 +15,7 @@ public partial class Modelo
     public string TipoC { get; set; } = null!;
 
     public decimal? PrecioUnidadVehiculoM { get; set; }
+    public string EstadoC { get; set; } = null!;
 
     public virtual ICollection<Grupo> Grupos { get; } = new List<Grupo>();
     [JsonIgnore]

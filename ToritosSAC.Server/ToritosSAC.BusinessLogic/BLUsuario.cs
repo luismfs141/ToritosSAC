@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ToritosSAC.DataAccess;
-using ToritosSAC.Entities.Entities;
+using ToritosSAC.Entities;
 
 namespace ToritosSAC.BusinessLogic
 {
@@ -48,7 +48,8 @@ namespace ToritosSAC.BusinessLogic
                 Obj.DireccionV = Direccion;
                 Obj.TelefonoC = Telefono;
                 Obj.CorreoV = Correo;
-                Obj.ClaveVB = Clave;
+                byte[] claveBytes = System.Text.Encoding.UTF8.GetBytes(Clave);
+                Obj.ClaveVb = claveBytes;
                 return Datos.Insertar(Obj);
             }
         }
@@ -68,7 +69,8 @@ namespace ToritosSAC.BusinessLogic
                 Obj.DireccionV = Direccion;
                 Obj.TelefonoC = Telefono;
                 Obj.CorreoV = Correo;
-                Obj.ClaveVB = Clave;
+                byte[] claveBytes = System.Text.Encoding.UTF8.GetBytes(Clave);
+                Obj.ClaveVb = claveBytes;
                 return Datos.Actualizar(Obj);
             }
             else
@@ -88,7 +90,8 @@ namespace ToritosSAC.BusinessLogic
                     Obj.DireccionV = Direccion;
                     Obj.TelefonoC = Telefono;
                     Obj.CorreoV = Correo;
-                    Obj.ClaveVB = Clave;
+                    byte[] claveBytes = System.Text.Encoding.UTF8.GetBytes(Clave);
+                    Obj.ClaveVb = claveBytes;
                     return Datos.Actualizar(Obj);
                 }
             }

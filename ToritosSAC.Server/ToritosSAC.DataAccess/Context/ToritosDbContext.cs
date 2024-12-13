@@ -20,6 +20,8 @@ public partial class ToritosDbContext : DbContext
 
     public virtual DbSet<Cliente> Clientes { get; set; }
 
+    public virtual DbSet<Color> Colors { get; set; }
+
     public virtual DbSet<Departamento> Departamentos { get; set; }
 
     public virtual DbSet<DetalleEstadoCuentum> DetalleEstadoCuenta { get; set; }
@@ -29,6 +31,8 @@ public partial class ToritosDbContext : DbContext
     public virtual DbSet<Distrito> Distritos { get; set; }
 
     public virtual DbSet<Documento> Documentos { get; set; }
+
+    public virtual DbSet<Estado> Estados { get; set; }
 
     public virtual DbSet<Grupo> Grupos { get; set; }
 
@@ -42,11 +46,19 @@ public partial class ToritosDbContext : DbContext
 
     public virtual DbSet<Provincium> Provincia { get; set; }
 
+    public virtual DbSet<Rol> Rols { get; set; }
+
+    public virtual DbSet<TipoModelo> TipoModelos { get; set; }
+
+    public virtual DbSet<Usuario> Usuarios { get; set; }
+
+    public virtual DbSet<UsuarioTipoDocumento> UsuarioTipoDocumentos { get; set; }
+
     public virtual DbSet<Vehiculo> Vehiculos { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-//#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-         => optionsBuilder.UseSqlServer("Server=localhost;Database=ToritosDB;Trusted_Connection=True;TrustServerCertificate=True;");
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=localhost;Database=ToritosDB;Trusted_Connection=True;TrustServerCertificate=True;");
     //optionsBuilder.UseSqlServer("server=localhost; initial catalog=ToritosDB; user id=sa; password=1342; TrustServerCertificate=True");
     //optionsBuilder.UseSqlServer("Server=DESKTOP-Q9NGHHL\\SQL2022;Initial Catalog=ToritosDB;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;");
 
@@ -161,6 +173,22 @@ public partial class ToritosDbContext : DbContext
                 .HasForeignKey(d => d.IdDistritoC)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Cliente_Distrito");
+        });
+
+        modelBuilder.Entity<Color>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("Color");
+
+            entity.Property(e => e.AbreviaturaC)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("Abreviatura_c");
+            entity.Property(e => e.DescripcionVc)
+                .HasMaxLength(15)
+                .HasColumnName("Descripcion_vc");
         });
 
         modelBuilder.Entity<Departamento>(entity =>
@@ -297,22 +325,27 @@ public partial class ToritosDbContext : DbContext
             entity.Property(e => e.FechaAprovacionD)
                 .HasColumnType("datetime")
                 .HasColumnName("FechaAprovacion_d");
-            entity.Property(e => e.FileAntecedentesPenalesBy)
-                .HasMaxLength(255)
+            entity.Property(e => e.FileAntecedentesPenalesBy).HasColumnName("FileAntecedentesPenales_by");
+            entity.Property(e => e.FileDocIdentidadBy).HasColumnName("FileDocIdentidad_by");
+            entity.Property(e => e.FileEquifaxBy).HasColumnName("FileEquifax_by");
+            entity.Property(e => e.FileReciboLuzAguaBy).HasColumnName("FileReciboLuzAgua_by");
+        });
+
+        modelBuilder.Entity<Estado>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("Estado");
+
+            entity.Property(e => e.AbreviaturaC)
+                .HasMaxLength(1)
+                .IsUnicode(false)
                 .IsFixedLength()
-                .HasColumnName("FileAntecedentesPenales_by");
-            entity.Property(e => e.FileDocIdentidadBy)
-                .HasMaxLength(255)
-                .IsFixedLength()
-                .HasColumnName("FileDocIdentidad_by");
-            entity.Property(e => e.FileEquifaxBy)
-                .HasMaxLength(255)
-                .IsFixedLength()
-                .HasColumnName("FileEquifax_by");
-            entity.Property(e => e.FileReciboLuzAguaBy)
-                .HasMaxLength(255)
-                .IsFixedLength()
-                .HasColumnName("FileReciboLuzAgua_by");
+                .HasColumnName("Abreviatura_C");
+            entity.Property(e => e.DescripcionVc)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("Descripcion_VC");
         });
 
         modelBuilder.Entity<Grupo>(entity =>
@@ -344,6 +377,9 @@ public partial class ToritosDbContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("FechaInicioPandero_d");
             entity.Property(e => e.IdModeloVehiculoI).HasColumnName("IdModeloVehiculo_i");
+            entity.Property(e => e.MontoCuotaN)
+                .HasColumnType("numeric(18, 2)")
+                .HasColumnName("MontoCuota_N");
             entity.Property(e => e.PenalidadDc)
                 .HasColumnType("decimal(18, 0)")
                 .HasColumnName("Penalidad_dc");
@@ -372,13 +408,16 @@ public partial class ToritosDbContext : DbContext
             entity.Property(e => e.EstadoC)
                 .HasMaxLength(1)
                 .IsUnicode(false)
+                .HasDefaultValueSql("('A')")
                 .IsFixedLength()
                 .HasColumnName("Estado_c");
             entity.Property(e => e.NombreNv)
                 .HasMaxLength(30)
+                .IsUnicode(false)
                 .HasColumnName("Nombre_nv");
             entity.Property(e => e.SitioWebNv)
                 .HasMaxLength(100)
+                .IsUnicode(false)
                 .HasColumnName("SitioWeb_nv");
         });
 
@@ -389,9 +428,16 @@ public partial class ToritosDbContext : DbContext
             entity.ToTable("Modelo");
 
             entity.Property(e => e.IdModeloVehiculoI).HasColumnName("IdModeloVehiculo_i");
+            entity.Property(e => e.EstadoC)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('A')")
+                .IsFixedLength()
+                .HasColumnName("Estado_c");
             entity.Property(e => e.IdMarcaI).HasColumnName("IdMarca_i");
             entity.Property(e => e.NombreNv)
                 .HasMaxLength(50)
+                .IsUnicode(false)
                 .HasColumnName("Nombre_nv");
             entity.Property(e => e.PrecioUnidadVehiculoM)
                 .HasColumnType("money")
@@ -482,6 +528,112 @@ public partial class ToritosDbContext : DbContext
                 .HasForeignKey(d => d.IdDepartamentoC)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Provincia_Departamento");
+        });
+
+        modelBuilder.Entity<Rol>(entity =>
+        {
+            entity.HasKey(e => e.IdRolI).HasName("PK_Rol_IdRol");
+
+            entity.ToTable("Rol");
+
+            entity.Property(e => e.IdRolI).HasColumnName("IdRol_i");
+            entity.Property(e => e.DescripcionV)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("Descripcion_v");
+            entity.Property(e => e.EstadoC)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('A')")
+                .IsFixedLength()
+                .HasColumnName("Estado_c");
+            entity.Property(e => e.NombreV)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("Nombre_v");
+        });
+
+        modelBuilder.Entity<TipoModelo>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("TipoModelo");
+
+            entity.Property(e => e.AbreviaturaC)
+                .HasMaxLength(2)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("Abreviatura_c");
+            entity.Property(e => e.DescripcionVc)
+                .HasMaxLength(15)
+                .HasColumnName("Descripcion_vc");
+        });
+
+        modelBuilder.Entity<Usuario>(entity =>
+        {
+            entity.HasKey(e => e.IdUsuarioI).HasName("PK_Usuario_IdUsuario");
+
+            entity.ToTable("Usuario");
+
+            entity.Property(e => e.IdUsuarioI).HasColumnName("IdUsuario_i");
+            entity.Property(e => e.ClaveVb)
+                .HasMaxLength(64)
+                .HasColumnName("Clave_vb");
+            entity.Property(e => e.CorreoV)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("Correo_v");
+            entity.Property(e => e.DireccionV)
+                .HasMaxLength(70)
+                .IsUnicode(false)
+                .HasColumnName("Direccion_v");
+            entity.Property(e => e.EstadoC)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .HasDefaultValueSql("('A')")
+                .IsFixedLength()
+                .HasColumnName("Estado_c");
+            entity.Property(e => e.IdRolI).HasColumnName("IdRol_i");
+            entity.Property(e => e.NombreV)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("Nombre_v");
+            entity.Property(e => e.NroDocumentoV)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .HasColumnName("NroDocumento_v");
+            entity.Property(e => e.TelefonoC)
+                .HasMaxLength(9)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("Telefono_c");
+            entity.Property(e => e.TipoDocumentoC)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("TipoDocumento_c");
+
+            entity.HasOne(d => d.IdRolINavigation).WithMany(p => p.Usuarios)
+                .HasForeignKey(d => d.IdRolI)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Usuario_IdRol");
+        });
+
+        modelBuilder.Entity<UsuarioTipoDocumento>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("UsuarioTipoDocumento");
+
+            entity.Property(e => e.CodigoC)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("Codigo_c");
+            entity.Property(e => e.NombreV)
+                .HasMaxLength(20)
+                .IsUnicode(false)
+                .HasColumnName("Nombre_v");
         });
 
         modelBuilder.Entity<Vehiculo>(entity =>

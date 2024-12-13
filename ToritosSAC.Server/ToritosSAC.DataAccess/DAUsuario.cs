@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ToritosSAC.Entities.Entities;
+using ToritosSAC.Entities;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ToritosSAC.DataAccess
@@ -139,7 +139,7 @@ namespace ToritosSAC.DataAccess
                 Comando.Parameters.AddWithValue("@Direccion_v", obj.DireccionV);
                 Comando.Parameters.AddWithValue("@Telefono_c", obj.TelefonoC);
                 Comando.Parameters.AddWithValue("@Correo_v", obj.CorreoV);
-                Comando.Parameters.AddWithValue("@Clave_vb", obj.ClaveVB);
+                Comando.Parameters.AddWithValue("@Clave_vb", obj.ClaveVb);
                 SqlCon.Open();
                 Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo ingresar el registro";
             }
@@ -173,7 +173,7 @@ namespace ToritosSAC.DataAccess
                 Comando.Parameters.AddWithValue("@Direccion", obj.DireccionV);
                 Comando.Parameters.AddWithValue("@Telefono", obj.TelefonoC);
                 Comando.Parameters.AddWithValue("@Correo", obj.CorreoV);
-                Comando.Parameters.AddWithValue("@Clave", obj.ClaveVB);
+                Comando.Parameters.AddWithValue("@Clave", obj.ClaveVb);
                 SqlCon.Open();
                 Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo actualizar el registro";
             }
