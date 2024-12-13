@@ -451,7 +451,7 @@ const Grupos = () => {
                   type="number"
                   className="form-control w-75"
                   placeholder="Precio"
-                  value={precioVehiculo} // Enlace al estado precioVehiculo
+                  value={precioVehiculo}
                   readOnly
                 />
               </div>
