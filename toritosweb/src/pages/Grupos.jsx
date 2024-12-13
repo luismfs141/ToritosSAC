@@ -359,8 +359,8 @@ const Grupos = () => {
         <button className="btn btn-primary me-2 mb-2 mb-sm-0" onClick={() => toggleCreateJoinModal(false)}>
           Crear Grupo
         </button>
-        <button className="btn btn-secondary" onClick={() => toggleCreateUModal(true)}>
-          Unirse a Grupo
+        <button className="btn btn-warning" onClick={() => toggleCreateUModal(true)}>
+          Agregar Grupo
         </button>
       </div>
       {showMessage && (
@@ -470,7 +470,7 @@ const Grupos = () => {
       {showCreateUModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h5>Ingrese Código de Invitación</h5>
+            <h5>Ingrese Código de Grupo</h5>
             <form className="mb-4" onSubmit={handleAgregarListaClienteGrupo}>
               <div className="mb-3 d-flex justify-content-center">
                 <input
@@ -482,7 +482,7 @@ const Grupos = () => {
               </div>
               <div className="mb-3">
                 <button type="submit" className="btn btn-primary me-2">
-                  Unirse
+                  Agregar
                 </button>
                 <button
                   type="button"
