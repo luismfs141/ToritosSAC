@@ -375,7 +375,8 @@ const Grupos = () => {
     estadoC: "E",
     cantidadCuotasI: cantidadCuotas,
     tipoPeriodoPagoC: tipoPeriodoPago,
-    precioUnidadVehiculoM : precioVehiculo
+    precioUnidadVehiculoM: precioVehiculo,
+    montoCuotaN: montoCuota
   };
 
   return (
