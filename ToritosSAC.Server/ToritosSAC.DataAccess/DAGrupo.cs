@@ -59,14 +59,14 @@ namespace ToritosSAC.DataAccess
                     CodigoGrupo = grupo.CodigoC,
                     TipoPeriodo = grupo.TipoPeriodoPagoC,
                     EstadoGrupo = grupo.EstadoC,
-                    MontoCuota = grupo.PrecioUnidadVehiculoM / grupo.CantidadCuotasI,
+                    MontoCuota = grupo.MontoCuotaN == null ? 0: (decimal)grupo.MontoCuotaN,
                     NumeroCuotas = grupo.CantidadCuotasI,
                     FechaCreacion = grupo.FechaCreacionD,
                     FechaInicio = grupo.FechaInicioPanderoD,
                     ModeloVehiculo = modeloVehiculo,
                     AdminGrupo = adminGrupo,
                     IntegrantesGrupo = listaMiembros,
-                    NumeroIntegrantes = listaMiembros.Count()
+                    NumeroIntegrantes = grupo.CantMaxIntegrantesI
                 };
 
                 return grupoStruct;

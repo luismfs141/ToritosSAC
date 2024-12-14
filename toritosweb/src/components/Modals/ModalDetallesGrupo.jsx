@@ -1,6 +1,22 @@
-import React from 'react';
+import React, { useState,useEffect } from 'react';
 
-const ModalDetallesGrupo = ({ show, onClose, detallesGrupo }) => {
+const ModalDetallesGrupo = ({ show, onClose, detallesGrupo, cliente,onRetirarGrupo }) => {
+
+  const [idAdminGrupo, setIdAdminGrupo] = useState();
+  const [idCliente, setIdCliente] = useState();
+  const [estadoGrupo, setEstadoGrupo] = useState();
+
+  useEffect(() => {
+    if(detallesGrupo && cliente){
+      const idAdmin = detallesGrupo.adminGrupo.idClienteI;
+      const idclnt = cliente.idClienteI;
+      const estado = detallesGrupo.estadoGrupo;
+      setIdAdminGrupo(idAdmin);
+      setIdCliente(idclnt);
+      setEstadoGrupo(estado);
+    }
+  }, [detallesGrupo,cliente]);
+
   return (
     <div className={`modal ${show ? 'show' : ''}`} tabIndex="-1" style={{ display: show ? 'block' : 'none' }}>
       <div className="modal-dialog" style={{ maxWidth: '50%' }}>{/*Se puede modificar el ancho del modal */}
@@ -30,31 +46,62 @@ const ModalDetallesGrupo = ({ show, onClose, detallesGrupo }) => {
                 </div>
 
                 {/* Tabla de integrantes del grupo */}
-                <h6><strong>Integrantes del Grupo</strong></h6>
-                <table className="table table-bordered">
-                  <thead>
-                    <tr>
-                      <th>Nombre</th>
-                      <th>Apellido</th>
-                      <th>Email</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {detallesGrupo.integrantesGrupo?.length > 0 ? (
-                      detallesGrupo.integrantesGrupo.map((integrante, index) => (
-                        <tr key={index}>
-                          <td>{integrante.nombreNv}</td>
-                          <td>{integrante.apellidoPaternoNv}</td>
-                          <td>{integrante.correoNv}</td>
-                        </tr>
-                      ))
-                    ) : (
+                <h6><strong>{detallesGrupo.integrantesGrupo ? detallesGrupo.integrantesGrupo.length+" " : 0 +" "} 
+                  de {" "+detallesGrupo.numeroIntegrantes} integrantes.</strong></h6>
+                <div className="table-responsive" style={{ maxHeight: '300px', overflowY: 'auto' }}>
+                  <table className="table table-bordered">
+                    <thead className="table-dark" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
                       <tr>
-                        <td colSpan="3" className="text-center">No hay integrantes</td>
+                        <th>N°</th>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
                       </tr>
-                    )}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {detallesGrupo.integrantesGrupo?.length > 0 ? (
+                        detallesGrupo.integrantesGrupo.map((integrante, index) => (
+                          <tr key={index}>
+                            <td>{index+1}</td>
+                            <td>{integrante.nombreNv}</td>
+                            <td>{integrante.apellidoPaternoNv +" "}{integrante.apellidoMaternoNv}</td>
+                            <td>{integrante.correoNv}</td>
+                            <td>{integrante.nroContactoC}</td>
+                            <td>
+                            {idAdminGrupo == idCliente?
+                              (
+                                <button 
+                                  className="btn btn-danger"
+                                  onClick={() => onRetirarGrupo(integrante.idClienteI, detallesGrupo.idGrupo)}
+                                  disabled={estadoGrupo ==='A'?false:true}
+                                >
+                                  Retirar
+                                </button>
+                              )
+                              :
+                              (
+                                <button 
+                                  className="btn btn-danger"
+                                  onClick={() => onRetirarGrupo(integrante.idClienteI, detallesGrupo.idGrupo)}
+                                  disabled={idCliente==integrante.idClienteI && estadoGrupo === 'A'?false:true}
+                                >
+                                  Retirar
+                                </button>
+                              )
+                            }
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan="3" className="text-center">No hay integrantes</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
               </div>
             ) : (
               <p>No se encontró información para este grupo.</p>

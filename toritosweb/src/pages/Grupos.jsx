@@ -342,6 +342,15 @@ const Grupos = () => {
     }
   };
 
+  const handleRetirarClienteGrupo = (idCliente, idGrupo) =>{
+    console.log("Retirar Cliente: ",idCliente);
+    console.log("Grupo: ",idGrupo);
+  };
+
+  const handleIniciarGrupo = (grupo) =>{
+    console.log("Iniciar Grupo ", grupo.idGrupoI);
+  };
+
   //Funcion de mensajes
   const showSuccessMessage = (msg) => {
     setMessage(msg);
@@ -626,6 +635,7 @@ const Grupos = () => {
                   onUnirseGrupo={handleUnirseGrupo}
                   onSolicitudes={handleListaClientesPendientes}
                   onDocumentos={handleDocumento}
+                  onIniciarGrupo={handleIniciarGrupo}
                 />
               </td>
             </tr>
@@ -644,6 +654,8 @@ const Grupos = () => {
         show={showModalDetalles}
         onClose={handleCloseModal}
         detallesGrupo={detallesGrupo}
+        cliente={clienteData}
+        onRetirarGrupo={handleRetirarClienteGrupo}
       />
       {/* Modal con la lista de clientes */}
       <ModalClientesPendientes

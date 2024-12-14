@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useGrupo } from '../../hooks/useGrupo';
 import { useDocumento } from '../../hooks/useDocumento';
 
-const ButtonAccionGrupo = ({ cliente, grupo, onUnirseGrupo, onSolicitudes, onDocumentos }) => {
+const ButtonAccionGrupo = ({ cliente, grupo, onUnirseGrupo, onSolicitudes, onDocumentos, onIniciarGrupo }) => {
     const [estadoCliente, setEstadoCliente] = useState('');
     const [estadoGrupo, setEstadoGrupo] = useState('');
     const [estadoDocumento, setEstadoDocumento] = useState('');
@@ -37,8 +37,13 @@ const ButtonAccionGrupo = ({ cliente, grupo, onUnirseGrupo, onSolicitudes, onDoc
 
     const renderButtonForAdmin = () => {
         if (estadoDocumento === 'A') {
-            if (cantIntegrantes > grupo.cantIntegrantes) {
-                return <button className="btn btn-info" disabled>Grupo Completo</button>;
+            if (cantIntegrantes == grupo.cantMaxIntegrantesI ) {
+                if(grupo.estadoC === 'A'){
+                    return <button className="btn btn-success" onClick={() => onIniciarGrupo(grupo)}>Iniciar Grupo</button>;
+                }
+                else{
+                    return <button className="btn btn-success" disabled onClick={() => onIniciarGrupo(grupo)}>Grupo Iniciado</button>;
+                }
             }
             return <button className="btn btn-info" onClick={() => onSolicitudes(grupo)}>Solicitudes</button>;
         }
