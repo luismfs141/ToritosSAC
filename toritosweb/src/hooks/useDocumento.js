@@ -47,6 +47,22 @@ export const useDocumento = () => {
         }
     };
 
+    const getEstadoDocumentoClienteGrupo = async(idCliente, idGrupo) =>{
+        try{
+            const response = await api.get(`/Documento/ObtenerEstadoDocumentoClienteGrupo?idCliente=${idCliente}&idGrupo=${idGrupo}`);
+            
+            if(response.data.exito){
+                return response.data.objeto;   
+            }
+            else{
+                throw new Error(response.data.Mensaje);
+            }
+        }
+        catch (error){
+            console.error("Error al agregar en la lista de espera de grupo:", error);
+        }   
+    };
+
     const convertirArchivoEnBase64 = (archivo) => {
         return new Promise((resolve, reject) => {
             if (!(archivo instanceof Blob)) {
@@ -65,6 +81,7 @@ export const useDocumento = () => {
 
     return{
         guardarDocumento,
-        getDocumentoPorClienteGrupo
+        getDocumentoPorClienteGrupo,
+        getEstadoDocumentoClienteGrupo
     }
 }

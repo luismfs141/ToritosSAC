@@ -16,11 +16,25 @@ namespace ToritosSAC.Server.Controllers
             return bLGrupo.BLGRUP_ObtenerGruposPorCliente(idCliente);
         }
 
+        [HttpGet("ObtenerDetallesPorIdGrupo")]
+        public Resultado<DetallesGrupoStruct> ObtenerDetallesPorIdGrupo(int idGrupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_ObtenerDetallesPorIdGrupo(idGrupo);
+        }
+
         [HttpGet("ObtenerGrupoPorCodigo")]
         public Resultado<Grupo> ObtenerGrupoPorCodigo(string codigoGrupo)
         {
             BLGrupo bLGrupo = new BLGrupo();
             return bLGrupo.BLGRUP_ObtenerGrupoPorCodigo(codigoGrupo);
+        }
+
+        [HttpGet("ObtenerListaIdGruposAdministrados")]
+        public Resultado<List<int>> ObtenerListaIdGruposAdministrados(int idCliente)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_ObtenerListaGruposAdministrados(idCliente);
         }
 
         [Route("GuardarGrupo")]
@@ -63,33 +77,33 @@ namespace ToritosSAC.Server.Controllers
 
         [Route("UnirseListaPendienteGrupo")]
         [HttpPost]
-        public Resultado<DetalleGrupo> UnirseListaPendienteGrupo(DetalleGrupo x_detalleGrupo)
+        public Resultado<DetalleGrupo> UnirseListaPendienteGrupo(int idCliente, int idGrupo)
         {
             BLGrupo bLGrupo = new BLGrupo();
-            return bLGrupo.BLGRUP_UnirseListaPendienteGrupo(x_detalleGrupo);
+            return bLGrupo.BLGRUP_UnirseListaPendienteGrupo(idCliente, idGrupo);
         }
 
-        [HttpGet("ListarClientesPendientesGrupo")]
-        public Resultado<List<Cliente>> ListarClientesPendientesGrupo(Grupo x_grupo)
+        [HttpGet("ListarClientesPendientesIdGrupo")]
+        public Resultado<List<Cliente>> ListarClientesPendientesIdGrupo(int idGrupo)
         {
             BLGrupo bLGrupo = new BLGrupo();
-            return bLGrupo.BLGRUP_ListarClientesPendientesGrupo(x_grupo);
+            return bLGrupo.BLGRUP_ListarClientesPendientesGrupo(idGrupo);
         }
 
         [Route("AdmitirClienteGrupo")]
         [HttpPost]
-        public Resultado<DetalleGrupo> AdmitirClienteGrupo(DetalleGrupo x_detalleGrupo)
+        public Resultado<DetalleGrupo> AdmitirClienteGrupo(int idCliente, int idGrupo)
         {
             BLGrupo bLGrupo = new BLGrupo();
-            return bLGrupo.BLGRUP_AdmitirClienteGrupo(x_detalleGrupo);
+            return bLGrupo.BLGRUP_AdmitirClienteGrupo(idCliente, idGrupo);
         }
 
         [Route("RechazarClienteGrupo")]
         [HttpPost]
-        public Resultado<DetalleGrupo> RechazarClienteGrupo(DetalleGrupo x_detalleGrupo)
+        public Resultado<DetalleGrupo> RechazarClienteGrupo(int idCliente, int idGrupo)
         {
             BLGrupo bLGrupo = new BLGrupo();
-            return bLGrupo.BLGRUP_RechazarClienteGrupo(x_detalleGrupo);
+            return bLGrupo.BLGRUP_RechazarClienteGrupo(idCliente, idGrupo);
         }
 
         [HttpGet("ListarClientesAdmitidosGrupo")]
@@ -97,6 +111,25 @@ namespace ToritosSAC.Server.Controllers
         {
             BLGrupo bLGrupo = new BLGrupo();
             return bLGrupo.BLGRUP_ListarClientesAdmitidosGrupo(x_grupo);
+        }
+
+        [HttpGet("ObtenerNumeroIntegrantesIdGrupo")]
+        public Resultado<int> ObtenerNumeroIntegrantesIdGrupo(int idGrupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_ObtenerNumeroIntegrantesIdGrupo(idGrupo);
+        }
+        [HttpGet("EsAdministradorGrupo")]
+        public Resultado<bool> EsAdministradorGrupo(int idCliente, int idGrupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_EsAdministradorGrupo(idCliente, idGrupo);
+        }
+        [HttpGet("EsMiembroGrupo")]
+        public Resultado<bool> EsMiembroGrupo(int idCliente, int idGrupo)
+        {
+            BLGrupo bLGrupo = new BLGrupo();
+            return bLGrupo.BLGRUP_EsMiembroGrupo(idCliente, idGrupo);
         }
     }
 }

@@ -76,5 +76,19 @@ namespace ToritosSAC.BusinessLogic
                 return new Resultado<DocumentoBase64>(null, $"Error al obtener el documento: {ex.Message}", false);
             }
         }
+
+        public Resultado<string> BLDOCU_ObtenerEstadoDocumentoClienteGrupo(int idCliente, int idGrupo)
+        {
+            try
+            {
+                DADocumento dADocumento = new DADocumento();
+                string estadoDoc = dADocumento.DADOCU_ObtenerEstadoDocumentoClienteGrupo(idCliente, idGrupo);
+                return new Resultado<string>(estadoDoc, $"Estado obtenido exitosamente", true);
+            }
+            catch (Exception ex)
+            {
+                return new Resultado<string>(null, $"Error al obtener el estado del documento: {ex.Message}", false);
+            }
+        }
     }
 }

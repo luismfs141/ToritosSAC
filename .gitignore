@@ -1,16 +1,23 @@
-=======
-
-# Archivos y carpetas de Visual Studio
+# Archivos de Visual Studio
 .vs/
-.vscode/
 *.user
-*.userosscache
 *.suo
-*.userprefs
-*.dbmdl
+*.cache
+
+# Archivos de compilación
 bin/
 obj/
-Thumbs.db
-.DS_Store
 
->>>>>>> origin/luis
+# Archivos de paquetes
+*.nupkg
+packages/
+
+# Configuraciones específicas de depuración
+*.launch.json
+*.generated.*
+
+# Archivos temporales
+*.log
+*.tmp
+*.bak
+*.swp

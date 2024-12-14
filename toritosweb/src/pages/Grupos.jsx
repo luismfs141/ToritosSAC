@@ -4,7 +4,10 @@ import { useCliente } from '../hooks/useCliente';
 import { useGrupo } from '../hooks/useGrupo';
 import { useModelo } from '../hooks/useModelo';
 import { useDocumento } from '../hooks/useDocumento';
-import ModalGuardarDocumento from '../components/ModalGuardarDocumento';
+import ModalGuardarDocumento from '../components/Modals/ModalGuardarDocumento';
+import ModalDetallesGrupo from '../components/Modals/ModalDetallesGrupo';
+import ModalClientesPendientes from '../components/Modals/ModalClientesPendientes';
+import ButtonAccionGrupo from '../components/Buttons/ButtonAccionGrupo'; 
 
 const Grupos = () => {
   const [data, setData] = useState([]);
@@ -19,10 +22,16 @@ const Grupos = () => {
   const [codigoGrupo, setCodigoGrupo] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [grupoSeleccionado, setGrupoSeleccionado] = useState(null);
+  const [showModalDetalles, setShowModalDetalles] = useState(false);
+  const [detallesGrupo, setDetallesGrupo] = useState(null);
+  const [showModalClientesPendientes, setShowModalClientesPendientes] = useState(false);
+  const [clientesPendientes, setClientesPendientes] = useState(null);
 
   //Metodos Hooks
-  const { getClienteFromLocalStorage } = useCliente();
-  const { getGruposPorCliente, guardarGrupo, buscarGrupoCodigo, agregarListaGrupoCliente } = useGrupo();
+  const { getClienteFromLocalStorage, getIdGruposAdminFromLocalStorage} = useCliente();
+  const { getGruposPorCliente, guardarGrupo, buscarGrupoCodigo,
+          agregarListaGrupoCliente, getDetallesGrupo, agregarListaEsperaGrupo,
+          listarClientesPendientes, admitirClienteGrupo, rechazarClienteGrupo } = useGrupo();
   const { getModelos } = useModelo();
   const { guardarDocumento, getDocumentoPorClienteGrupo } = useDocumento();
   
@@ -31,6 +40,7 @@ const Grupos = () => {
   const [modelos, setModelos] = useState([]);
   const [clienteData,setClienteData] = useState();
   const [isInitialized, setIsInitialized] = useState(false); // Nuevo estado para evitar el ciclo infinito
+  const [idGruposAdmin, setIdGruposAdmin] = useState();
 
   //Variables de Objetos
   //Grupo
@@ -39,18 +49,24 @@ const Grupos = () => {
   const [tipoPeriodoPago, setTipoPeriodoPago] = useState('');
   const [modeloVehiculo, setModeloVehiculo] = useState('');
   const [precioVehiculo, setPrecioVehiculo] = useState('');
+  const [montoCuota, setMontoCuota] = useState(0);
+  const [tiempoPago, setTiempoPago] = useState(0);
+  const [sorteo, setSorteo] = useState(0);
   const [documentosDisponibles, setDocumentosDisponibles] = useState({});
 
   //Message Box
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState(""); // Puede ser 'success' o 'error'
   const [showMessage, setShowMessage] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!isInitialized) {
       const clienteLogin = getClienteFromLocalStorage();
+      const idGrupos = getIdGruposAdminFromLocalStorage();
       if (clienteLogin) {
         setClienteData(clienteLogin);
+        setIdGruposAdmin(idGrupos);
         const listaGrupo = getGruposPorCliente(clienteLogin);
         listaGrupo.then(grupos => {
           setGruposCliente(grupos); 
@@ -67,14 +83,48 @@ const Grupos = () => {
       const documentos = {};
       for (const item of gruposCliente) {
         const resultado = await getDocumentoPorClienteGrupo(clienteData, item);
-        
         documentos[item.idGrupoI] = resultado; // Guardamos el resultado en el objeto
       }
       setDocumentosDisponibles(documentos); // Actualizamos el estado con los resultados
     };
-
     checkDocumentosDisponibles();
   }, [gruposCliente, clienteData]);
+
+  useEffect(() => {
+    if (precioVehiculo > 0 && montoCuota > 0) {
+      const cantCuotas = precioVehiculo / montoCuota;
+      setCantidadCuotas(cantCuotas);
+    }
+  }, [precioVehiculo, montoCuota]);
+  
+  useEffect(() => {
+    if (cantidadCuotas && tipoPeriodoPago) {
+      let tiempo;
+      if (tipoPeriodoPago === "D") {
+        tiempo = cantidadCuotas / 30;
+      } else if (tipoPeriodoPago === "S") {
+        tiempo = cantidadCuotas / 4;
+      } else if (tipoPeriodoPago === "Q") {
+        tiempo = cantidadCuotas / 2;
+      } else if (tipoPeriodoPago === "M") {
+        tiempo = cantidadCuotas;
+      }
+  
+      if (tiempo !== undefined) {
+        setTiempoPago(tiempo);
+      }
+    }
+  }, [cantidadCuotas, tipoPeriodoPago]);
+
+  useEffect(() => {
+    if (cantidadCuotas && tipoPeriodoPago && cantMaxIntegrantes) {
+      let sorteo;
+      sorteo = precioVehiculo/(cantMaxIntegrantes*montoCuota);
+      if (sorteo !== undefined) {
+        setSorteo(sorteo);
+      }
+    }
+  }, [cantidadCuotas, tipoPeriodoPago, cantMaxIntegrantes]);
 
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
@@ -108,7 +158,21 @@ const Grupos = () => {
     setShowCreateJoinModal(false);
     setShowCreateUModal(false);
     setShowModal(false);
+    setShowModalDetalles(false);
+    setShowModalClientesPendientes(false);
+    limpiarCamposGrupo();
   };
+
+  const limpiarCamposGrupo = () =>{
+    setCantMaxIntegrantes(0);
+    setCantidadCuotas(0);
+    setTipoPeriodoPago("");
+    setModeloVehiculo("");
+    setPrecioVehiculo(0);
+    setMontoCuota(0);
+    setTiempoPago(0);
+    setSorteo(0);
+  }
 
   // Modal Creación de grupo
   const toggleCreateJoinModal = () => {
@@ -153,7 +217,7 @@ const Grupos = () => {
     }
   };
 
-  const handleUnirseGrupo = async (e) => {
+  const handleAgregarListaClienteGrupo = async (e) => {
     e.preventDefault();  // Si estás usando un formulario, previenes el comportamiento por defecto
   
     // Verifica que el código del grupo no esté vacío
@@ -178,8 +242,13 @@ const Grupos = () => {
         showErrorMessage("Error: el grupo no existe.");
       }
     } catch (error) {
-      console.error("Error en unirse al grupo:", error);
       showErrorMessage("Ocurrió un error al procesar la solicitud. Intente más tarde.");
+    }
+    finally{
+      const listaGrupo = getGruposPorCliente(clienteData);
+      listaGrupo.then(grupos => {
+        setGruposCliente(grupos); 
+      });
     }
   };
 
@@ -188,6 +257,48 @@ const Grupos = () => {
     setShowModal(true); // Mostrar el modal
   };
 
+  const handleShowDetailsModal = async (grupo) => {
+    setLoading(true); // Indicamos que estamos cargando
+    try {
+        const detallesGrupo = await getDetallesGrupo(grupo.idGrupoI);
+        setDetallesGrupo(detallesGrupo);
+        setShowModalDetalles(true);
+    } catch (error) {
+        console.error("Error al cargar los detalles del grupo:", error);
+    } finally {
+        setLoading(false); // Terminamos de cargar
+    }
+  };
+
+  const handleListaClientesPendientes = async (grupo) => {
+    setLoading(true); 
+    try {
+      const clientes = await listarClientesPendientes(grupo.idGrupoI);
+      setClientesPendientes(clientes);
+      setGrupoSeleccionado(grupo);
+      setShowModalClientesPendientes(true);
+    } catch (error) {
+        console.error("Error al cargar la lista de clientes", error);
+    } finally {
+        setLoading(false);
+    }
+  };
+
+  const handleUnirseGrupo = async (grupo) => {
+    setLoading(true); 
+    try {
+      const response = await agregarListaEsperaGrupo(clienteData.idClienteI, grupo.idGrupoI);
+      if (response.exito) {
+        showSuccessMessage("¡Solicitud enviada!");
+      } else {
+        showErrorMessage("Error al enviar la solicitud de unión al grupo.");
+      }
+    } catch (error) {
+        console.error("Error al cargar los detalles del grupo:", error);
+    } finally {
+        setLoading(false);
+    }
+  };
 
   const handleSaveDocumentos = async (documentos) => {
     try {
@@ -200,6 +311,44 @@ const Grupos = () => {
     } catch (error) {
         console.error('Error al guardar documento:', error);
     }
+  };
+
+  //logica para aceptar clientes
+  const handleAdmitirClienteGrupo = async (idCliente) => {
+    setLoading(true); 
+    try {
+      const idGrupo = grupoSeleccionado.idGrupoI;
+      const response = await admitirClienteGrupo(idCliente, idGrupo);
+      console.log(response);
+      handleListaClientesPendientes(grupoSeleccionado);
+    } catch (error) {
+        console.error("Error al admitir el cliente", error);
+    } finally {
+        setLoading(false); 
+    }
+  };
+
+  const handleRechazarClienteGrupo = async (idCliente) => {
+    setLoading(true); 
+    try {
+      const idGrupo = grupoSeleccionado.idGrupoI;
+      const response = await rechazarClienteGrupo(idCliente, idGrupo);
+      console.log(response);
+      handleListaClientesPendientes(grupoSeleccionado);
+    } catch (error) {
+        console.error("Error al rechazar el cliente", error);
+    } finally {
+        setLoading(false);
+    }
+  };
+
+  const handleRetirarClienteGrupo = (idCliente, idGrupo) =>{
+    console.log("Retirar Cliente: ",idCliente);
+    console.log("Grupo: ",idGrupo);
+  };
+
+  const handleIniciarGrupo = (grupo) =>{
+    console.log("Iniciar Grupo ", grupo.idGrupoI);
   };
 
   //Funcion de mensajes
@@ -235,7 +384,8 @@ const Grupos = () => {
     estadoC: "E",
     cantidadCuotasI: cantidadCuotas,
     tipoPeriodoPagoC: tipoPeriodoPago,
-    precioUnidadVehiculoM : precioVehiculo
+    precioUnidadVehiculoM: precioVehiculo,
+    montoCuotaN: montoCuota
   };
 
   return (
@@ -269,8 +419,8 @@ const Grupos = () => {
         <button className="btn btn-primary me-2 mb-2 mb-sm-0" onClick={() => toggleCreateJoinModal(false)}>
           Crear Grupo
         </button>
-        <button className="btn btn-secondary" onClick={() => toggleCreateUModal(true)}>
-          Unirse a Grupo
+        <button className="btn btn-warning" onClick={() => toggleCreateUModal(true)}>
+          Agregar Grupo
         </button>
       </div>
       {showMessage && (
@@ -311,7 +461,7 @@ const Grupos = () => {
                   type="number"
                   className="form-control w-75"
                   placeholder="Precio"
-                  value={precioVehiculo} // Enlace al estado precioVehiculo
+                  value={precioVehiculo}
                   readOnly
                 />
               </div>
@@ -333,22 +483,6 @@ const Grupos = () => {
               </div>
 
               <div className="mb-3 d-flex flex-column flex-sm-row align-items-center">
-                <label className="me-2 w-25">Número de Cuotas</label>
-                <select 
-                className="form-control w-75"
-                id="cantidadCuotas"
-                value={cantidadCuotas}
-                onChange={(e) => setCantidadCuotas(e.target.value)}
-                required
-                >
-                  <option value="">Seleccione cuotas</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                </select>
-              </div>
-
-              <div className="mb-3 d-flex flex-column flex-sm-row align-items-center">
                 <label className="me-2 w-25">Periodo</label>
                 <select 
                 className="form-control w-75"
@@ -358,12 +492,46 @@ const Grupos = () => {
                 required
                 >
                   <option value="">Seleccione periodo</option>
+                  <option value="D">Diario</option>
+                  <option value="S">Semanal</option>
+                  <option value="Q">Quincenal</option>
                   <option value="M">Mensual</option>
-                  <option value="S">Semestral</option>
-                  <option value="A">Anual</option>
                 </select>
               </div>
 
+              <div className="mb-3 d-flex flex-column flex-sm-row align-items-center">
+                <label className="me-2 w-25">Monto Cuota</label>
+                <select 
+                className="form-control w-75"
+                id="montoCuota"
+                value={montoCuota}
+                onChange={(e) => setMontoCuota(e.target.value)}
+                required
+                >
+                  <option value="">Seleccione cuota</option>
+                  <option value={20}>S/20.00</option>
+                  <option value={30}>S/30.00</option>
+                  <option value={40}>S/40.00</option>
+                  <option value={50}>S/50.00</option>
+                  <option value={100}>S/100.00</option>
+                  <option value={200}>S/200.00</option>
+                  <option value={500}>S/500.00</option>
+                  <option value={1000}>S/1,000.00</option>
+                </select>
+              </div>
+
+              <div className="mb-3 d-flex flex-row align-items-center">
+                <div className="w-auto" style={{fontWeight: 'bold' }}>
+                  {cantidadCuotas} cuotas durante {tiempoPago} meses
+                </div>
+              </div>
+
+              <div className="mb-3 d-flex flex-row align-items-center">
+                <div className="w-auto" style={{fontWeight: 'bold' }}>
+                  Sorteo cada {sorteo} días
+                </div>
+              </div>
+              
               <div className="mb-3">
                 <button className="btn btn-primary me-2" onClick={crearGrupoModal}>
                   Crear Grupo
@@ -380,8 +548,8 @@ const Grupos = () => {
       {showCreateUModal && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <h5>Ingrese Código de Invitación</h5>
-            <form className="mb-4" onSubmit={handleUnirseGrupo}>
+            <h5>Ingrese Código de Grupo</h5>
+            <form className="mb-4" onSubmit={handleAgregarListaClienteGrupo}>
               <div className="mb-3 d-flex justify-content-center">
                 <input
                   type="text"
@@ -392,7 +560,7 @@ const Grupos = () => {
               </div>
               <div className="mb-3">
                 <button type="submit" className="btn btn-primary me-2">
-                  Unirse
+                  Agregar
                 </button>
                 <button
                   type="button"
@@ -408,17 +576,16 @@ const Grupos = () => {
       )}
 
       {/* Tabla de grupos */}
-      <div className="table-responsive">
-      <table className="table table-bordered">
-        <thead>
+      <div className="table-responsive" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+      <table className="table table-bordered table table-striped">
+        <thead className="table-dark" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
           <tr>
             <th>Código</th>
             <th>Estado</th>
             <th>Fecha de Inicio</th>
-            <th>Cuota</th>
+            <th>Cuota Total</th>
             <th>Periodo</th>
             <th>Detalles</th>
-            <th>Integrantes</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -434,82 +601,70 @@ const Grupos = () => {
                   'T': 'Terminado'
                 })[item.estadoC] || 'En Espera'}
               </td>
-              <td>{new Date(item.fechaInicioPanderoD).toLocaleDateString()}</td>
-              <td>{item.precioUnidadVehiculoM}</td>
-              <td>{item.tipoPeriodoPagoC}</td>
+              <td>
+                {item.fechaInicioPanderoD ? 
+                  new Date(item.fechaInicioPanderoD).toLocaleDateString() : 
+                  'Sin Fecha'}
+              </td>
+              <td>
+                {new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' }).format(item.precioUnidadVehiculoM)}
+              </td>
+              <td>
+                {({
+                  'D': 'Diario',
+                  'S': 'Semanal',
+                  'Q': 'Quincenal',
+                  'M': 'Mensual'
+                })[item.tipoPeriodoPagoC]}
+              </td>
               <td>
                 <button
                   className={documentosDisponibles[item.idGrupoI]?.estado !== 'A'?"btn btn-secondary":"btn btn-primary"}
-                  onClick={() => handleShowDetails('Detalles del grupo')}
+                  onClick={() => handleShowDetailsModal(item)}
+                  // handleShowDetails
                   disabled={documentosDisponibles[item.idGrupoI]?.estado !== 'A'}
                 >
                   Ver
                 </button>
               </td>
               <td>
-                <button
-                  className={documentosDisponibles[item.idGrupoI]?.estado !== 'A'?"btn btn-secondary":"btn btn-primary"}
-                  onClick={() => handleShowDetails('Integrantes del grupo')}
-                  disabled={documentosDisponibles[item.idGrupoI]?.estado !== 'A'}
-                >
-                  Ver
-                </button>
-              </td>
-              <td>
-                {/* Mostrar el botón "Subir Documentos" si no hay documento */}
-                {!documentosDisponibles[item.idGrupoI] && (
-                  <button
-                    className="btn btn-warning"
-                    onClick={() => handleDocumento(item)}
-                  >
-                    Subir Documentos
-                  </button>
-                )}
-
-                {/* Mostrar "Verificando Documentos" si el estado del documento es "P" */}
-                {documentosDisponibles[item.idGrupoI]?.estado === 'P' && (
-                  <button
-                    className="btn btn-secondary"
-                    onClick={() => handleEdit(item)}
-                    disabled={true}
-                  >
-                    Verificando Documentos
-                  </button>
-                )}
-
-                {/* Mostrar "Unirse al Grupo" si el estado del documento es "A" */}
-                {documentosDisponibles[item.idGrupoI]?.estado === 'A' && (
-                  <button
-                    className="btn btn-success"
-                    onClick={() => handleEdit(item)}
-                  >
-                    Unirse Grupo
-                  </button>
-                )}
+                {/*Botones de Acciones */}
+                <ButtonAccionGrupo 
+                  cliente={clienteData}
+                  grupo={item}
+                  onUnirseGrupo={handleUnirseGrupo}
+                  onSolicitudes={handleListaClientesPendientes}
+                  onDocumentos={handleDocumento}
+                  onIniciarGrupo={handleIniciarGrupo}
+                />
               </td>
             </tr>
           ))}
         </tbody>
       </table>
     </div>
-    {/* Modal para guardar documentos */}
-    <ModalGuardarDocumento
+      {/* Modal para guardar documentos */}
+      <ModalGuardarDocumento
         show={showModal}
         onClose={handleCloseModal}
         onSave={handleSaveDocumentos}
       />
-
-      {/* Modal de detalles */}
-      {modalContent && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h5>{modalContent}</h5>
-            <button className="btn btn-secondary" onClick={handleCloseModal}>
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Modal de detalles del grupo */}
+      <ModalDetallesGrupo
+        show={showModalDetalles}
+        onClose={handleCloseModal}
+        detallesGrupo={detallesGrupo}
+        cliente={clienteData}
+        onRetirarGrupo={handleRetirarClienteGrupo}
+      />
+      {/* Modal con la lista de clientes */}
+      <ModalClientesPendientes
+        show={showModalClientesPendientes}
+        onClose={handleCloseModal}
+        clientes={clientesPendientes}
+        onAccept={handleAdmitirClienteGrupo}
+        onReject={handleRechazarClienteGrupo}
+      />
     </div>
   );
 };

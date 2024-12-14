@@ -21,11 +21,11 @@ public partial class DetalleGrupo
     public string? AdmisionC { get; set; }
 
     public virtual ICollection<DetalleEstadoCuentum> DetalleEstadoCuenta { get; } = new List<DetalleEstadoCuentum>();
-
+    [JsonIgnore]
     public virtual Asignacion? IdAsignacionINavigation { get; set; }
     [JsonIgnore]
     public virtual Cliente? IdClienteINavigation { get; set; } = null!;
-
+    [JsonIgnore]
     public virtual Documento? IdDocumentosINavigation { get; set; }
     [JsonIgnore]
     public virtual Grupo? IdGrupoINavigation { get; set; } = null!;

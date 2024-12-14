@@ -22,7 +22,34 @@ namespace ToritosSAC.BusinessLogic
                 return new Resultado<List<Grupo>>(null, $"Error al obtener los grupos del cliente: {ex.Message}", false);
             }
         }
+        public Resultado<DetallesGrupoStruct> BLGRUP_ObtenerDetallesPorIdGrupo(int idGrupo)
+        {
+            try
+            {
+                DAGrupo dAGrupo = new DAGrupo();
+                DetallesGrupoStruct detallesGrupoStruct = dAGrupo.DAGRUP_ObtenerDetallesPorIdGrupo(idGrupo);
+                return new Resultado<DetallesGrupoStruct>(detallesGrupoStruct, "Detalles obtenidos exitosamente", true);
+            }
+            catch (Exception ex)
+            {
+                return new Resultado<DetallesGrupoStruct>(null, $"Error al obtener los detalles del grupo: {ex.Message}", false);
+            }
+        }
 
+        public Resultado<List<int>> BLGRUP_ObtenerListaGruposAdministrados(int idCliente)
+        {
+            try
+            {
+                DAGrupo dAGrupo = new DAGrupo();
+                List<int> idGrupos = dAGrupo.DAGRUP_ObtenerListaGruposAdministrados(idCliente);
+
+                return new Resultado<List<int>>(idGrupos, "Grupos obtenidos exitosamente", true);
+            }
+            catch (Exception ex)
+            {
+                return new Resultado<List<int>>(null, $"Error al obtener los grupos administrados: {ex.Message}", false);
+            }
+        }
         public Resultado<Grupo> BLGRUP_ObtenerGrupoPorCodigo(string x_codigo)
         {
             try
@@ -101,12 +128,12 @@ namespace ToritosSAC.BusinessLogic
             }
         }
 
-        public Resultado<DetalleGrupo> BLGRUP_UnirseListaPendienteGrupo(DetalleGrupo x_detalleGrupo)
+        public Resultado<DetalleGrupo> BLGRUP_UnirseListaPendienteGrupo(int idCliente, int idGrupo)
         {
             try
             {
                 DAGrupo dAGrupo = new DAGrupo();
-                var detalleGrupo = dAGrupo.DAGRUP_UnirseListaPendienteGrupo(x_detalleGrupo);
+                var detalleGrupo = dAGrupo.DAGRUP_UnirseListaPendienteGrupo(idCliente, idGrupo);
                 if(detalleGrupo != null)
                 {
                     return new Resultado<DetalleGrupo>(detalleGrupo, "Unión a la lista pendiente del grupo exitosa", true);
@@ -122,12 +149,12 @@ namespace ToritosSAC.BusinessLogic
             }
         }
 
-        public Resultado<List<Cliente>> BLGRUP_ListarClientesPendientesGrupo(Grupo x_grupo)
+        public Resultado<List<Cliente>> BLGRUP_ListarClientesPendientesGrupo(int idGrupo)
         {
             try
             {
                 DAGrupo dAGrupo = new DAGrupo();
-                var clientes = dAGrupo.DAGRUP_ListarClientesPendientesGrupo(x_grupo);
+                var clientes = dAGrupo.DAGRUP_ListarClientesPendientesIdGrupo(idGrupo);
                 return new Resultado<List<Cliente>>(clientes, "Clientes pendientes listados exitosamente", true);
             }
             catch (Exception ex)
@@ -136,12 +163,12 @@ namespace ToritosSAC.BusinessLogic
             }
         }
 
-        public Resultado<DetalleGrupo> BLGRUP_AdmitirClienteGrupo(DetalleGrupo x_detalleGrupo)
+        public Resultado<DetalleGrupo> BLGRUP_AdmitirClienteGrupo(int idCliente, int idGrupo)
         {
             try
             {
                 DAGrupo dAGrupo = new DAGrupo();
-                var detalleGrupo = dAGrupo.DAGRUP_AdmitirClienteGrupo(x_detalleGrupo);
+                var detalleGrupo = dAGrupo.DAGRUP_AdmitirClienteGrupo(idCliente, idGrupo);
                 return new Resultado<DetalleGrupo>(detalleGrupo, "Cliente admitido en el grupo exitosamente", true);
             }
             catch (Exception ex)
@@ -150,12 +177,12 @@ namespace ToritosSAC.BusinessLogic
             }
         }
 
-        public Resultado<DetalleGrupo> BLGRUP_RechazarClienteGrupo(DetalleGrupo x_detalleGrupo)
+        public Resultado<DetalleGrupo> BLGRUP_RechazarClienteGrupo(int idCliente, int idGrupo)
         {
             try
             {
                 DAGrupo dAGrupo = new DAGrupo();
-                var detalleGrupo = dAGrupo.DAGRUP_RechazarClienteGrupo(x_detalleGrupo);
+                var detalleGrupo = dAGrupo.DAGRUP_RechazarClienteGrupo(idCliente, idGrupo);
                 return new Resultado<DetalleGrupo>(detalleGrupo, "Cliente rechazado del grupo exitosamente", true);
             }
             catch (Exception ex)
@@ -175,6 +202,64 @@ namespace ToritosSAC.BusinessLogic
             catch (Exception ex)
             {
                 return new Resultado<List<Cliente>>(null, $"Error al listar los clientes admitidos en el grupo: {ex.Message}", false);
+            }
+        }
+
+        public Resultado<int> BLGRUP_ObtenerNumeroIntegrantesIdGrupo(int idGrupo)
+        {
+            try
+            {
+                DAGrupo dAGrupo = new DAGrupo();
+                int numClientes = dAGrupo.DAGRUP_ObtenerNumeroIntegrantesIdGrupo(idGrupo);
+                return new Resultado<int>(numClientes, "Número de clientes obtenidos exitosamente", true);
+            }
+            catch (Exception ex)
+            {
+                return new Resultado<int>(0, $"Error al obtener el número de integrantes: {ex.Message}", false);
+            }
+        }
+
+        public Resultado<bool> BLGRUP_EsAdministradorGrupo(int idCliente, int idGrupo)
+        {
+            try
+            {
+                DAGrupo dAGrupo = new DAGrupo();
+                bool esAdmin = dAGrupo.DAGRUP_EsAdministradorGrupo(idCliente, idGrupo);
+                if (esAdmin)
+                {
+                    return new Resultado<bool>(esAdmin, "Es administrador de grupo", true);
+                }
+                else
+                {
+                    return new Resultado<bool>(esAdmin, "No es Administrador de grupo", true);
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                return new Resultado<bool>(false, $"Error comprobar administrador: {ex.Message}", false);
+            }
+        }
+
+        public Resultado<bool> BLGRUP_EsMiembroGrupo(int idCliente, int idGrupo)
+        {
+            try
+            {
+                DAGrupo dAGrupo = new DAGrupo();
+                bool esMiembro = dAGrupo.DAGRUP_EsMiembroGrupo(idCliente, idGrupo);
+                if (esMiembro)
+                {
+                    return new Resultado<bool>(esMiembro, "Es miembro de grupo", true);
+                }
+                else
+                {
+                    return new Resultado<bool>(esMiembro, "No es miembro de grupo", true);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new Resultado<bool>(false, $"Error comprobar cliente: {ex.Message}", false);
             }
         }
     }

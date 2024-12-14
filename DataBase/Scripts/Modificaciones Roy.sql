@@ -648,9 +648,9 @@ ALTER TABLE Modelo
 ADD Estado_c CHAR(1) NOT NULL DEFAULT 'A';
 GO
 
-ALTER TABLE Modelo
-    ADD CONSTRAINT CHK_Proveedor_Estado CHECK (Estado_c IN ('A', 'I'));
-GO
+/*ALTER TABLE Modelo
+    ADD CONSTRAINT CHK_Modelo_Estado CHECK (Estado_c IN ('A', 'I'));
+GO*/
 
 ALTER TABLE Modelo
 ALTER COLUMN Nombre_nv VARCHAR(50) NOT NULL;

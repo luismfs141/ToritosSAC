@@ -749,7 +749,7 @@ BEGIN
 END;
 GO
 
-/////////////////
+--/////////////////
 CREATE OR ALTER PROCEDURE UsuarioLogin
 @Correo_v NVARCHAR(50),
 @Clave_vb VARCHAR(64)
