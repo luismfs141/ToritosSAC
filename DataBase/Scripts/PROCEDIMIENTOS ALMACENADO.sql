@@ -581,17 +581,20 @@ AS
 BEGIN
 	SELECT	U.IdUsuario_i AS ID,
 			U.IdRol_i, 
-			R.Nombre_v AS Rol,
 			U.Nombre_v AS Nombre,
+			R.Nombre_v AS Rol,
 			U.TipoDocumento_c AS Tipo_Documento,
 			U.NroDocumento_v AS Num_Documento,
 			U.Direccion_v AS Direccion,
 			U.Telefono_c AS Telefono,
 			U.Correo_v AS Correo,
-			U.Estado_c AS Estado
+			U.Estado_c AS Estado,
+			ES.Descripcion_VC
 	FROM Usuario AS U 
 	JOIN Rol AS R 
 		ON U.IdRol_i = R.IdRol_i
+	JOIN Estado AS ES
+		ON U.Estado_c = ES.Abreviatura_C
 	ORDER BY U.IdUsuario_i desc
 END;
 GO
@@ -659,7 +662,7 @@ CREATE OR ALTER PROCEDURE UsuarioActualizar
 	@Direccion_v VARCHAR(70),
 	@Telefono_c CHAR(9),
 	@Correo_v VARCHAR(50),
-	@Clave_vb VARBINARY(64)
+	@Clave_vb VARCHAR(64)
 AS
 BEGIN
 	IF @Clave_vb <> ''

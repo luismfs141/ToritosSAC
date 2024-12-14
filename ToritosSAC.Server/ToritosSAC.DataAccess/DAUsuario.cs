@@ -165,15 +165,15 @@ namespace ToritosSAC.DataAccess
                 SqlCon = Conexion.getInstancia().CrearConexion();
                 SqlCommand Comando = new SqlCommand("UsuarioActualizar", SqlCon);
                 Comando.CommandType = CommandType.StoredProcedure;
-                Comando.Parameters.AddWithValue("@IdUsuario", obj.IdUsuarioI);
-                Comando.Parameters.AddWithValue("@IdRol", obj.IdRolI);
-                Comando.Parameters.AddWithValue("@Nombre", obj.NombreV);
-                Comando.Parameters.AddWithValue("@TipoDocumento", obj.TipoDocumentoC);
-                Comando.Parameters.AddWithValue("@NroDocumento", obj.NroDocumentoV);
-                Comando.Parameters.AddWithValue("@Direccion", obj.DireccionV);
-                Comando.Parameters.AddWithValue("@Telefono", obj.TelefonoC);
-                Comando.Parameters.AddWithValue("@Correo", obj.CorreoV);
-                Comando.Parameters.AddWithValue("@Clave", obj.ClaveVB);
+                Comando.Parameters.AddWithValue("@IdUsuario_i", obj.IdUsuarioI);
+                Comando.Parameters.AddWithValue("@IdRol_i", obj.IdRolI);
+                Comando.Parameters.AddWithValue("@Nombre_v", obj.NombreV);
+                Comando.Parameters.AddWithValue("@TipoDocumento_c", obj.TipoDocumentoC);
+                Comando.Parameters.AddWithValue("@NroDocumento_v", obj.NroDocumentoV);
+                Comando.Parameters.AddWithValue("@Direccion_v", obj.DireccionV);
+                Comando.Parameters.AddWithValue("@Telefono_c", obj.TelefonoC);
+                Comando.Parameters.AddWithValue("@Correo_v", obj.CorreoV);
+                Comando.Parameters.AddWithValue("@Clave_vb", obj.ClaveVB);
                 SqlCon.Open();
                 Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo actualizar el registro";
             }

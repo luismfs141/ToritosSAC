@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.DirectoryServices.ActiveDirectory;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -85,29 +86,41 @@ namespace ToritosSAC.DeskTop
             dgvListado.Columns[0].Width = 50;
 
             dgvListado.Columns[1].HeaderText = "Id";
-            dgvListado.Columns[1].Width = 50;
+            dgvListado.Columns[1].Width = 40;
 
-            dgvListado.Columns[2].HeaderText = "Nombre";
-            dgvListado.Columns[2].Width = 100;
+            dgvListado.Columns[2].HeaderText = "IdRol";
+            dgvListado.Columns[2].Width = 50;
+            dgvListado.Columns[2].Visible = false;
 
-            dgvListado.Columns[3].HeaderText = "Contacto";
+            dgvListado.Columns[3].HeaderText = "Nombre";
             dgvListado.Columns[3].Width = 100;
 
-            dgvListado.Columns[4].HeaderText = "Cargo";
+            dgvListado.Columns[4].HeaderText = "Rol";
             dgvListado.Columns[4].Width = 100;
 
-            dgvListado.Columns[5].HeaderText = "Dirección";
+            dgvListado.Columns[5].HeaderText = "Abr. Tipo documento";
             dgvListado.Columns[5].Width = 150;
+            dgvListado.Columns[5].Visible = false;
 
-            dgvListado.Columns[6].HeaderText = "País";
-            dgvListado.Columns[6].Width = 100;
+            dgvListado.Columns[6].HeaderText = "Nro documento";
+            dgvListado.Columns[6].Width = 80;
 
-            dgvListado.Columns[7].HeaderText = "IdPaís";
-            dgvListado.Columns[7].Width = 50;
-            dgvListado.Columns[7].Visible = false;
+            dgvListado.Columns[7].HeaderText = "Dirección";
+            dgvListado.Columns[7].Width = 120;
 
-            dgvListado.Columns[8].HeaderText = "Estado";
-            dgvListado.Columns[8].Width = 60;
+            dgvListado.Columns[8].HeaderText = "Contacto";
+            dgvListado.Columns[8].Width = 70;
+
+            dgvListado.Columns[9].HeaderText = "Correo";
+            dgvListado.Columns[9].Width = 120;
+
+            dgvListado.Columns[10].HeaderText = "Abr. Estado";
+            dgvListado.Columns[10].Width = 40;
+            dgvListado.Columns[10].Visible = false;
+
+            dgvListado.Columns[11].HeaderText = "Estado";
+            dgvListado.Columns[11].Width = 80;
+
         }
 
 
@@ -210,37 +223,36 @@ namespace ToritosSAC.DeskTop
         {
             try
             {
-                //string Rpta = "";
-                //if (txtNombre.Text == string.Empty ||
-                //    txtNroDocumento.Text == string.Empty ||
-                //    txtDireccion.Text == string.Empty ||
-                //    txtTelefono.Text == string.Empty ||
-                //    txtCorreo.Text == string.Empty)
-                //{
-                //    this.MensajeError("Falta ingresar algunos datos, serán remarcados.");
-                //    ErrorIcono.SetError(txtNombre, "Ingrese un nombre.");
-                //    ErrorIcono.SetError(txtNroDocumento, "Ingrese un numero número de documento.");
-                //    ErrorIcono.SetError(txtDireccion, "Ingrese una dirección.");
-                //    ErrorIcono.SetError(txtTelefono, "Ingrese un teléfono válido.");
-                //    ErrorIcono.SetError(txtCorreo, "Ingrese un correo válido.");
-                //}
-                //else
-                //{
-                //    //Rpta = BLProveedor.Actualizar(Convert.ToInt32(txtId.Text), this.NombreAnt, txtNombre.Text.Trim(), txtContacto.Text.Trim(), txtCargo.Text.Trim(), txtDireccion.Text.Trim(), Convert.ToString(cboPais.SelectedValue));
-                //    Rpta = BLUsuario.Actualizar(Convert.ToInt32(txtId.Text.Trim()), Convert.ToString(cboRol.SelectedValue), txtNombre.Text.Trim(), Convert.ToString(cboTipoDocumento.SelectedValue), txtNroDocumento.Text.Trim(), txtDireccion.Text.Trim(), txtTelefono.Text.Trim(), txtCorreo.Text.Trim(), txtClave.Text.Trim());
+                string Rpta = "";
+                if (txtNombre.Text == string.Empty ||
+                    txtNroDocumento.Text == string.Empty ||
+                    txtDireccion.Text == string.Empty ||
+                    txtTelefono.Text == string.Empty ||
+                    txtCorreo.Text == string.Empty)
+                {
+                    this.MensajeError("Falta ingresar algunos datos, serán remarcados.");
+                    ErrorIcono.SetError(txtNombre, "Ingrese un nombre.");
+                    ErrorIcono.SetError(txtNroDocumento, "Ingrese un numero número de documento.");
+                    ErrorIcono.SetError(txtDireccion, "Ingrese una dirección.");
+                    ErrorIcono.SetError(txtTelefono, "Ingrese un teléfono válido.");
+                    ErrorIcono.SetError(txtCorreo, "Ingrese un correo válido.");
+                }
+                else
+                {
+                    Rpta = BLUsuario.Actualizar(Convert.ToInt32(txtId.Text.Trim()), Convert.ToInt32(cboRol.SelectedValue), txtNombre.Text.Trim(), Convert.ToString(cboTipoDocumento.SelectedValue), txtNroDocumento.Text.Trim(), txtDireccion.Text.Trim(), txtTelefono.Text.Trim(), txtCorreo.Text.Trim(), txtCorreo.Text.Trim(), txtClave.Text.Trim());
 
-                //    if (Rpta.Equals("OK"))
-                //    {
-                //        this.MensajeOk("Se actualizó de forma correcta el registro");
-                //        lblTitulo.Text = "Registrar nuevo proveedor";
-                //        this.Listar();
-                //        tabGeneral.SelectedIndex = 0;
-                //    }
-                //    else
-                //    {
-                //        this.MensajeError(Rpta);
-                //    }
-                //}
+                    if (Rpta.Equals("OK"))
+                    {
+                        this.MensajeOk("Se actualizó de forma correcta el registro");
+                        lblTitulo.Text = "Registrar nuevo proveedor";
+                        this.Listar();
+                        tabGeneral.SelectedIndex = 0;
+                    }
+                    else
+                    {
+                        this.MensajeError(Rpta);
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -250,22 +262,120 @@ namespace ToritosSAC.DeskTop
 
         private void btnEliminar_Click(object sender, EventArgs e)
         {
+            try
+            {
+                DialogResult Opcion;
+                Opcion = MessageBox.Show("Realmente deseas eliminar el(los) registro(s)?", "Eliminar", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                if (Opcion == DialogResult.OK)
+                {
+                    int Codigo;
+                    string Rpta = "";
 
+                    foreach (DataGridViewRow row in dgvListado.Rows)
+                    {
+                        if (Convert.ToBoolean(row.Cells[0].Value))
+                        {
+                            Codigo = Convert.ToInt32(row.Cells[1].Value);
+                            Rpta = BLUsuario.Eliminar(Codigo);
+
+                            if (Rpta.Equals("OK"))
+                            {
+                                this.MensajeOk("Se eliminó el registro: " + Convert.ToString(row.Cells[3].Value));
+                            }
+                            else
+                            {
+                                this.MensajeError(Rpta);
+                            }
+                        }
+                    }
+                    this.Listar();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.MensajeError(ex.Message);
+            }
         }
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
-
+            lblTitulo.Text = "Registrar nuevo usuario";
+            Limpiar();
+            tabGeneral.SelectedIndex = 0;
         }
 
         private void btnDesactivar_Click(object sender, EventArgs e)
         {
+            try
+            {
+                DialogResult Opcion;
+                Opcion = MessageBox.Show("Realmente deseas desactivar el(los) registro(s)?", "Proveedores", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                if (Opcion == DialogResult.OK)
+                {
+                    int Codigo;
+                    string Rpta = "";
 
+                    foreach (DataGridViewRow row in dgvListado.Rows)
+                    {
+                        if (Convert.ToBoolean(row.Cells[0].Value))
+                        {
+                            Codigo = Convert.ToInt32(row.Cells[1].Value);
+                            Rpta = BLUsuario.Desactivar(Codigo);
+
+                            if (Rpta.Equals("OK"))
+                            {
+                                this.MensajeOk("Se desactivó el registro: " + Convert.ToString(row.Cells[3].Value));
+                            }
+                            else
+                            {
+                                this.MensajeError(Rpta);
+                            }
+                        }
+                    }
+                    this.Listar();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.MensajeError(ex.Message);
+            }
         }
 
         private void btnActivar_Click(object sender, EventArgs e)
         {
+            try
+            {
+                DialogResult Opcion;
+                Opcion = MessageBox.Show("Realmente deseas activar el(los) registro(s)?", "Proveedores", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                if (Opcion == DialogResult.OK)
+                {
+                    int Codigo;
+                    string Rpta = "";
 
+                    foreach (DataGridViewRow row in dgvListado.Rows)
+                    {
+                        if (Convert.ToBoolean(row.Cells[0].Value))
+                        {
+                            Codigo = Convert.ToInt32(row.Cells[1].Value);
+                            Rpta = BLUsuario.Activar(Codigo);
+
+                            if (Rpta.Equals("OK"))
+                            {
+                                this.MensajeOk("Se activó el registro: " + Convert.ToString(row.Cells[3].Value));
+                            }
+                            else
+                            {
+                                this.MensajeError(Rpta);
+                            }
+                        }
+                    }
+                    this.Listar();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.MensajeError(ex.Message);
+            }
         }
 
         private void ChkSeleccionar_CheckedChanged(object sender, EventArgs e)
