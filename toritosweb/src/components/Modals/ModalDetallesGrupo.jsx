@@ -14,7 +14,6 @@ const ModalDetallesGrupo = ({ show, onClose, detallesGrupo, cliente,onRetirarGru
       setIdAdminGrupo(idAdmin);
       setIdCliente(idclnt);
       setEstadoGrupo(estado);
-      console.log(detallesGrupo);
     }
   }, [detallesGrupo,cliente]);
 

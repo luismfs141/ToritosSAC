@@ -367,16 +367,11 @@ const Grupos = () => {
   const handleAceptarIniciarGrupo = async (grupo, fechaInicio) => {
     setLoading(true);
     try {
-      // Espera a que la función de creación del cronograma termine
       const cronograma = await crearCronogramaPorGrupo(grupo.idGrupo, fechaInicio);
-      console.log(cronograma);
-      
-      // Mostrar el mensaje después de que la operación haya terminado
       alert(cronograma.mensaje);
     } catch (error) {
       console.error("Error al crear cronograma:", error);
     } finally {
-      // Siempre se ejecutará después de que la promesa se resuelva o falle
       setLoading(false);
       setShowModalInciarGrupo(false);
       window.location.reload();

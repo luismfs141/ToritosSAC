@@ -19,7 +19,7 @@ export const useEstadoCuenta = () => {
         try{
             const response = await api.get(`/EstadoCuenta/GetEstadosCuentaIdClienteGrupo?idCliente=${idCliente}&idGrupo=${idGrupo}`);
             if(response.data.exito){
-                return response.data.objeto;
+                return response.data;
             }
             else{
                 throw new Error(response.data.Mensaje);
