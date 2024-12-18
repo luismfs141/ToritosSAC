@@ -6,7 +6,7 @@ import { useGrupo } from '../hooks/useGrupo';
 
 const Cronograma = () => {
   const { ObtenerEstadosCuentaPorIdClienteGrupo} = useEstadoCuenta();
-  const { getClienteFromLocalStorage, getIdGruposAdminFromLocalStorage} = useCliente();
+  const { getClienteFromLocalStorage } = useCliente();
   const { getGruposPorCliente, getDetallesGrupo} = useGrupo();
 
   const [ clienteData, setClienteData ] = useState();
