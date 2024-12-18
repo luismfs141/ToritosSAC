@@ -39,9 +39,9 @@ const Configuracion = () => {
 
   const handlePasswordChange = () => {
     if (newPassword === confirmPassword) {
-      // Lógica para cambiar la contraseña
+
       console.log('Contraseña cambiada');
-      // Aquí podrías hacer una llamada API para actualizar la contraseña
+
       closeModal();
     } else {
       alert('Las contraseñas no coinciden');
@@ -79,7 +79,6 @@ const Configuracion = () => {
           <View style={styles.modalContainer}>
             <Text style={styles.modalTitle}>{modalContent}</Text>
 
-            {/* Mostrar todos los datos del cliente en el modal de "Cuenta" */}
             {modalContent === 'Cuenta' && clienteData ? (
               <View style={styles.formContainer}>
                 <View style={styles.formRow}>
@@ -178,7 +177,7 @@ const Configuracion = () => {
                     editable={false}
                   />
                 </View>
-                {/* Agrega el resto de los campos aquí */}
+
               </View>
             ) : modalContent === 'Cambiar Contraseña' ? (
               <View style={styles.formContainer}>
@@ -269,7 +268,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Opacidad para el fondo
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
   },
   modalContainer: {
     width: '80%',
@@ -279,7 +278,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalTitle: {
-    fontSize: 20, // Tamaño más pequeño
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 15,
   },
@@ -292,7 +291,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   label: {
-    fontSize: 14, // Tamaño de texto más pequeño
+    fontSize: 14, 
     fontWeight: 'bold',
     width: '40%',
     color: '#333',
