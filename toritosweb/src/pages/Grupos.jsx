@@ -4,6 +4,7 @@ import { useCliente } from '../hooks/useCliente';
 import { useGrupo } from '../hooks/useGrupo';
 import { useModelo } from '../hooks/useModelo';
 import { useDocumento } from '../hooks/useDocumento';
+import { useEstadoCuenta } from '../hooks/useEstadoCuenta';
 import ModalGuardarDocumento from '../components/Modals/ModalGuardarDocumento';
 import ModalDetallesGrupo from '../components/Modals/ModalDetallesGrupo';
 import ModalClientesPendientes from '../components/Modals/ModalClientesPendientes';
@@ -37,6 +38,7 @@ const Grupos = () => {
           listarClientesPendientes, admitirClienteGrupo, rechazarClienteGrupo } = useGrupo();
   const { getModelos } = useModelo();
   const { guardarDocumento, getDocumentoPorClienteGrupo } = useDocumento();
+  const {crearCronogramaPorGrupo, ObtenerEstadosCuentaPorIdClienteGrupo} = useEstadoCuenta();
   
   //Variables de control
   const [gruposCliente, setGruposCliente] = useState([]);
@@ -362,8 +364,23 @@ const Grupos = () => {
     }
   };
 
-  const handleAceptarIniciarGrupo = (grupo)=>{
-    console.log("Aceptar iniciar grupo: ",grupo);
+  const handleAceptarIniciarGrupo = async (grupo, fechaInicio) => {
+    setLoading(true);
+    try {
+      // Espera a que la función de creación del cronograma termine
+      const cronograma = await crearCronogramaPorGrupo(grupo.idGrupo, fechaInicio);
+      console.log(cronograma);
+      
+      // Mostrar el mensaje después de que la operación haya terminado
+      alert(cronograma.mensaje);
+    } catch (error) {
+      console.error("Error al crear cronograma:", error);
+    } finally {
+      // Siempre se ejecutará después de que la promesa se resuelva o falle
+      setLoading(false);
+      setShowModalInciarGrupo(false);
+      window.location.reload();
+    }
   };
 
   //Funcion de mensajes
