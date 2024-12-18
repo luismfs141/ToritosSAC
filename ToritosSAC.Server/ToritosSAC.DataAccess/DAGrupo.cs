@@ -411,5 +411,52 @@ namespace ToritosSAC.DataAccess
                 throw ex;
             }
         }
+
+        public Grupo DAGRUP_ObtenerGrupoPorId(int idGrupo)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+                Grupo grupo = ctx.Grupos.SingleOrDefault(g => g.IdGrupoI == idGrupo);
+                return grupo;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public List<DetalleGrupo> DAGRUP_ObtenerDetallesGrupoPorIdGrupo(int idGrupo)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+                List<DetalleGrupo> detalleGrupos = ctx.DetalleGrupos.Where(d => d.IdGrupoI == idGrupo && d.AdmisionC == "A").ToList();
+                return detalleGrupos;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public Grupo DAGRUP_IniciarCronogramaGrupo(int idGrupo, DateTime fechaInicio)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+                Grupo grupo = ctx.Grupos.SingleOrDefault(g => g.IdGrupoI == idGrupo);
+                grupo.EstadoC = "F";
+                grupo.FechaInicioPanderoD = fechaInicio;
+                ctx.SaveChanges();
+
+                return grupo;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

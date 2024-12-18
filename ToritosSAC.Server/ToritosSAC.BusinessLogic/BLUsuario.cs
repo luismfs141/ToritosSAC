@@ -23,10 +23,10 @@ namespace ToritosSAC.BusinessLogic
             DAUsuario Datos = new DAUsuario();
             return Datos.Buscar(Valor);
         }
-        public static DataTable Login(string Email, string Clave)
+        public static DataTable Login(string Correo, string Clave)
         {
             DAUsuario Datos = new DAUsuario();
-            return Datos.Login(Email, Clave);
+            return Datos.Login(Correo, Clave);
         }
 
         public static string Insertar(int IdRol, string Nombre, string TipoDocumento, string NroDocumento, string Direccion, string Telefono, string Correo, string Clave)

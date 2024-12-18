@@ -4,6 +4,14 @@ const Sorteos = () => {
   const [selectedOption, setSelectedOption] = useState('');
   const [showModal, setShowModal] = useState(false);
 
+  // Datos de ejemplo para la tabla
+  const sorteos = [
+    { numero: 1, ganadores: 'Juan Pérez', fecha: '2024-12-10', modalidad: 'Sorteo Regular' },
+    { numero: 2, ganadores: 'Ana Gómez', fecha: '2024-12-12', modalidad: 'Martillazo' },
+    { numero: 3, ganadores: 'Carlos López', fecha: '2024-12-15', modalidad: 'Sorteo Especial' },
+    { numero: 4, ganadores: 'Lucía García', fecha: '2024-12-17', modalidad: 'Sorteo Regular' }
+  ];
+
   const handleOptionChange = (e) => {
     setSelectedOption(e.target.value);
   };
@@ -52,9 +60,10 @@ const Sorteos = () => {
         </div>
       </div>
 
-      <div className="table-responsive text-start">
-        <table className="table table-striped table-bordered">
-          <thead>
+      {/* Tabla de sorteos */}
+      <div className="table-responsive" style={{ maxHeight: '500px', overflowY: 'auto' }}>
+      <table className="table table-bordered table table-striped">
+        <thead className="table-dark" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
             <tr>
               <th>Numero</th>
               <th>Ganadores</th>
@@ -62,9 +71,20 @@ const Sorteos = () => {
               <th>Modalidad</th>
             </tr>
           </thead>
+          <tbody>
+            {sorteos.map((sorteo, index) => (
+              <tr key={index}>
+                <td>{sorteo.numero}</td>
+                <td>{sorteo.ganadores}</td>
+                <td>{sorteo.fecha}</td>
+                <td>{sorteo.modalidad}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
 
+      {/* Modal con información importante */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">

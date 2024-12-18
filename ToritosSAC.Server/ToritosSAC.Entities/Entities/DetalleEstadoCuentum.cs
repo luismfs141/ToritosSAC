@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ToritosSAC.Entities;
 
@@ -26,6 +27,6 @@ public partial class DetalleEstadoCuentum
     public decimal MartillazoMontoM { get; set; }
 
     public DateTime? MartillazoFechaPagoD { get; set; }
-
+    [JsonIgnore]
     public virtual DetalleGrupo IdDetalleGrupoINavigation { get; set; } = null!;
 }

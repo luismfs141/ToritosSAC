@@ -13,6 +13,11 @@ namespace ToritosSAC.DeskTop
     public partial class FrmPrincipal : Form
     {
         private int childFormNumber = 0;
+        public int IdUsuario;
+        public int IdRol;
+        public string Nombre;
+        public string Rol;
+        public string Estado;
 
         public FrmPrincipal()
         {
@@ -120,7 +125,40 @@ namespace ToritosSAC.DeskTop
 
         private void FrmPrincipal_Load(object sender, EventArgs e)
         {
+            stBarraInferior.Text = "Desarrollado por R.L.H., Usuario: " + this.Nombre;
+            MessageBox.Show("Bienvenido: " + this.Nombre, "Sistema de Toitos SAC", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+            if (this.Rol.Equals("Administrador"))
+            {
+                mnuContacto.Enabled = true;
+                mnuProducto.Enabled = true;
+                mnuAcceso.Enabled = true;
+
+            }
+            else
+            {
+                if (this.Rol.Equals("Vendedor"))
+                {
+
+                    mnuProducto.Enabled = true;
+
+                }
+                else
+                {
+                    if (this.Rol.Equals("Gestor"))
+                    {
+                        mnuContacto.Enabled = true;
+                        mnuProducto.Enabled = true;
+
+                    }
+                    else
+                    {
+                        mnuContacto.Enabled = false;
+                        mnuProducto.Enabled = false;
+                        mnuAcceso.Enabled = false;
+                    }
+                }
+            }
         }
 
         private void modeloToolStripMenuItem_Click(object sender, EventArgs e)
@@ -143,5 +181,28 @@ namespace ToritosSAC.DeskTop
             frm.MdiParent = this;
             frm.Show();
         }
+
+        private void FrmPrincipal_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void mnuSalir_Click(object sender, EventArgs e)
+        {
+            DialogResult Opcion;
+            Opcion = MessageBox.Show("Deseas salir del Sistema?", "Sistema de Ventas", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+            if (Opcion == DialogResult.OK)
+            {
+                Application.Exit();
+            }
+        }
+
+        private void mnuClientes_Click(object sender, EventArgs e)
+        {
+            FrmCliente frm = new FrmCliente();
+            frm.MdiParent = this;
+            frm.Show();
+        }
+    
     }
 }

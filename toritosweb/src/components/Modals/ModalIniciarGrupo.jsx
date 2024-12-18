@@ -90,7 +90,7 @@ const ModalIniciarGrupo = ({cliente, grupo, show, onIniciarGrupo, onClose}) => {
                         )}
                     </div>
                     <div className="modal-footer d-flex justify-content-center w-100">
-                        <button type="button" className="btn btn-primary" onClick={() => onIniciarGrupo(grupo)}>Iniciar Cronograma</button>
+                        <button type="button" className="btn btn-primary" onClick={() => onIniciarGrupo(grupo,fechaInicio)}>Iniciar Cronograma</button>
                     </div>
                 </div>
             </div>

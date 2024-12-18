@@ -31,14 +31,17 @@
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmPrincipal));
             menuStrip = new MenuStrip();
-            proveedorToolStripMenuItem = new ToolStripMenuItem();
+            mnuContacto = new ToolStripMenuItem();
             proveedoresToolStripMenuItem = new ToolStripMenuItem();
-            vehículoToolStripMenuItem = new ToolStripMenuItem();
-            marcaToolStripMenuItem = new ToolStripMenuItem();
-            modeloToolStripMenuItem = new ToolStripMenuItem();
-            accesosToolStripMenuItem = new ToolStripMenuItem();
+            mnuProducto = new ToolStripMenuItem();
+            mnuMarca = new ToolStripMenuItem();
+            mnuModelo = new ToolStripMenuItem();
+            MnuVehiculo = new ToolStripMenuItem();
+            mnuAcceso = new ToolStripMenuItem();
             rolesToolStripMenuItem = new ToolStripMenuItem();
             usuariosToolStripMenuItem = new ToolStripMenuItem();
+            clienteToolStripMenuItem = new ToolStripMenuItem();
+            mnuClientes = new ToolStripMenuItem();
             viewMenu = new ToolStripMenuItem();
             toolBarToolStripMenuItem = new ToolStripMenuItem();
             statusBarToolStripMenuItem = new ToolStripMenuItem();
@@ -54,11 +57,12 @@
             searchToolStripMenuItem = new ToolStripMenuItem();
             toolStripSeparator8 = new ToolStripSeparator();
             aboutToolStripMenuItem = new ToolStripMenuItem();
+            mnuSalir = new ToolStripMenuItem();
             toolStrip = new ToolStrip();
             toolStripSeparator1 = new ToolStripSeparator();
             toolStripSeparator2 = new ToolStripSeparator();
             statusStrip = new StatusStrip();
-            toolStripStatusLabel = new ToolStripStatusLabel();
+            stBarraInferior = new ToolStripStatusLabel();
             toolTip = new ToolTip(components);
             menuStrip.SuspendLayout();
             toolStrip.SuspendLayout();
@@ -67,7 +71,7 @@
             // 
             // menuStrip
             // 
-            menuStrip.Items.AddRange(new ToolStripItem[] { proveedorToolStripMenuItem, vehículoToolStripMenuItem, accesosToolStripMenuItem, viewMenu, windowsMenu, helpMenu });
+            menuStrip.Items.AddRange(new ToolStripItem[] { mnuContacto, mnuProducto, mnuAcceso, clienteToolStripMenuItem, viewMenu, windowsMenu, helpMenu, mnuSalir });
             menuStrip.Location = new Point(0, 0);
             menuStrip.MdiWindowListItem = windowsMenu;
             menuStrip.Name = "menuStrip";
@@ -76,12 +80,12 @@
             menuStrip.TabIndex = 0;
             menuStrip.Text = "MenuStrip";
             // 
-            // proveedorToolStripMenuItem
+            // mnuContacto
             // 
-            proveedorToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { proveedoresToolStripMenuItem });
-            proveedorToolStripMenuItem.Name = "proveedorToolStripMenuItem";
-            proveedorToolStripMenuItem.Size = new Size(68, 20);
-            proveedorToolStripMenuItem.Text = "&Contacto";
+            mnuContacto.DropDownItems.AddRange(new ToolStripItem[] { proveedoresToolStripMenuItem });
+            mnuContacto.Name = "mnuContacto";
+            mnuContacto.Size = new Size(68, 20);
+            mnuContacto.Text = "&Contacto";
             // 
             // proveedoresToolStripMenuItem
             // 
@@ -90,33 +94,39 @@
             proveedoresToolStripMenuItem.Text = "&Proveedores";
             proveedoresToolStripMenuItem.Click += proveedoresToolStripMenuItem_Click;
             // 
-            // vehículoToolStripMenuItem
+            // mnuProducto
             // 
-            vehículoToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { marcaToolStripMenuItem, modeloToolStripMenuItem });
-            vehículoToolStripMenuItem.Name = "vehículoToolStripMenuItem";
-            vehículoToolStripMenuItem.Size = new Size(64, 20);
-            vehículoToolStripMenuItem.Text = "&Vehículo";
+            mnuProducto.DropDownItems.AddRange(new ToolStripItem[] { mnuMarca, mnuModelo, MnuVehiculo });
+            mnuProducto.Name = "mnuProducto";
+            mnuProducto.Size = new Size(64, 20);
+            mnuProducto.Text = "&Vehículo";
             // 
-            // marcaToolStripMenuItem
+            // mnuMarca
             // 
-            marcaToolStripMenuItem.Name = "marcaToolStripMenuItem";
-            marcaToolStripMenuItem.Size = new Size(115, 22);
-            marcaToolStripMenuItem.Text = "&Marca";
-            marcaToolStripMenuItem.Click += marcaToolStripMenuItem_Click;
+            mnuMarca.Name = "mnuMarca";
+            mnuMarca.Size = new Size(180, 22);
+            mnuMarca.Text = "&Marca";
+            mnuMarca.Click += marcaToolStripMenuItem_Click;
             // 
-            // modeloToolStripMenuItem
+            // mnuModelo
             // 
-            modeloToolStripMenuItem.Name = "modeloToolStripMenuItem";
-            modeloToolStripMenuItem.Size = new Size(115, 22);
-            modeloToolStripMenuItem.Text = "M&odelo";
-            modeloToolStripMenuItem.Click += modeloToolStripMenuItem_Click;
+            mnuModelo.Name = "mnuModelo";
+            mnuModelo.Size = new Size(180, 22);
+            mnuModelo.Text = "M&odelo";
+            mnuModelo.Click += modeloToolStripMenuItem_Click;
             // 
-            // accesosToolStripMenuItem
+            // MnuVehiculo
             // 
-            accesosToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { rolesToolStripMenuItem, usuariosToolStripMenuItem });
-            accesosToolStripMenuItem.Name = "accesosToolStripMenuItem";
-            accesosToolStripMenuItem.Size = new Size(62, 20);
-            accesosToolStripMenuItem.Text = "Accesos";
+            MnuVehiculo.Name = "MnuVehiculo";
+            MnuVehiculo.Size = new Size(180, 22);
+            MnuVehiculo.Text = "Vehículo";
+            // 
+            // mnuAcceso
+            // 
+            mnuAcceso.DropDownItems.AddRange(new ToolStripItem[] { rolesToolStripMenuItem, usuariosToolStripMenuItem });
+            mnuAcceso.Name = "mnuAcceso";
+            mnuAcceso.Size = new Size(62, 20);
+            mnuAcceso.Text = "Accesos";
             // 
             // rolesToolStripMenuItem
             // 
@@ -129,8 +139,22 @@
             // 
             usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
             usuariosToolStripMenuItem.Size = new Size(180, 22);
-            usuariosToolStripMenuItem.Text = "Usuarios";
+            usuariosToolStripMenuItem.Text = "&Usuarios";
             usuariosToolStripMenuItem.Click += usuariosToolStripMenuItem_Click;
+            // 
+            // clienteToolStripMenuItem
+            // 
+            clienteToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { mnuClientes });
+            clienteToolStripMenuItem.Name = "clienteToolStripMenuItem";
+            clienteToolStripMenuItem.Size = new Size(56, 20);
+            clienteToolStripMenuItem.Text = "Cliente";
+            // 
+            // mnuClientes
+            // 
+            mnuClientes.Name = "mnuClientes";
+            mnuClientes.Size = new Size(180, 22);
+            mnuClientes.Text = "&Clientes";
+            mnuClientes.Click += mnuClientes_Click;
             // 
             // viewMenu
             // 
@@ -242,6 +266,13 @@
             aboutToolStripMenuItem.Size = new Size(176, 22);
             aboutToolStripMenuItem.Text = "&Acerca de... ...";
             // 
+            // mnuSalir
+            // 
+            mnuSalir.Name = "mnuSalir";
+            mnuSalir.Size = new Size(41, 20);
+            mnuSalir.Text = "&Salir";
+            mnuSalir.Click += mnuSalir_Click;
+            // 
             // toolStrip
             // 
             toolStrip.Items.AddRange(new ToolStripItem[] { toolStripSeparator1, toolStripSeparator2 });
@@ -263,7 +294,7 @@
             // 
             // statusStrip
             // 
-            statusStrip.Items.AddRange(new ToolStripItem[] { toolStripStatusLabel });
+            statusStrip.Items.AddRange(new ToolStripItem[] { stBarraInferior });
             statusStrip.Location = new Point(0, 501);
             statusStrip.Name = "statusStrip";
             statusStrip.Padding = new Padding(1, 0, 16, 0);
@@ -271,11 +302,11 @@
             statusStrip.TabIndex = 2;
             statusStrip.Text = "StatusStrip";
             // 
-            // toolStripStatusLabel
+            // stBarraInferior
             // 
-            toolStripStatusLabel.Name = "toolStripStatusLabel";
-            toolStripStatusLabel.Size = new Size(42, 17);
-            toolStripStatusLabel.Text = "Estado";
+            stBarraInferior.Name = "stBarraInferior";
+            stBarraInferior.Size = new Size(42, 17);
+            stBarraInferior.Text = "Estado";
             // 
             // FrmPrincipal
             // 
@@ -291,6 +322,7 @@
             Name = "FrmPrincipal";
             Text = "Toritos SAC";
             WindowState = FormWindowState.Maximized;
+            FormClosing += FrmPrincipal_FormClosing;
             Load += FrmPrincipal_Load;
             menuStrip.ResumeLayout(false);
             menuStrip.PerformLayout();
@@ -310,7 +342,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator8;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
+        private System.Windows.Forms.ToolStripStatusLabel stBarraInferior;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tileHorizontalToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem viewMenu;
@@ -326,14 +358,18 @@
         private System.Windows.Forms.ToolStripMenuItem indexToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem searchToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTip;
-        private ToolStripMenuItem proveedorToolStripMenuItem;
+        private ToolStripMenuItem mnuContacto;
         private ToolStripMenuItem proveedoresToolStripMenuItem;
-        private ToolStripMenuItem vehículoToolStripMenuItem;
-        private ToolStripMenuItem marcaToolStripMenuItem;
-        private ToolStripMenuItem modeloToolStripMenuItem;
-        private ToolStripMenuItem accesosToolStripMenuItem;
+        private ToolStripMenuItem mnuProducto;
+        private ToolStripMenuItem mnuMarca;
+        private ToolStripMenuItem mnuModelo;
+        private ToolStripMenuItem mnuAcceso;
         private ToolStripMenuItem rolesToolStripMenuItem;
         private ToolStripMenuItem usuariosToolStripMenuItem;
+        private ToolStripMenuItem MnuVehiculo;
+        private ToolStripMenuItem mnuSalir;
+        private ToolStripMenuItem clienteToolStripMenuItem;
+        private ToolStripMenuItem mnuClientes;
     }
 }
 

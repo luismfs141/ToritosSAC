@@ -392,7 +392,7 @@
             btnActivar.Location = new Point(550, 364);
             btnActivar.Name = "btnActivar";
             btnActivar.Size = new Size(104, 23);
-            btnActivar.TabIndex = 5;
+            btnActivar.TabIndex = 4;
             btnActivar.Text = "Activar";
             btnActivar.UseVisualStyleBackColor = true;
             btnActivar.Visible = false;
@@ -403,7 +403,7 @@
             btnDesactivar.Location = new Point(440, 364);
             btnDesactivar.Name = "btnDesactivar";
             btnDesactivar.Size = new Size(104, 23);
-            btnDesactivar.TabIndex = 5;
+            btnDesactivar.TabIndex = 3;
             btnDesactivar.Text = "Desactivar";
             btnDesactivar.UseVisualStyleBackColor = true;
             btnDesactivar.Visible = false;
@@ -415,7 +415,7 @@
             ChkSeleccionar.Location = new Point(351, 367);
             ChkSeleccionar.Name = "ChkSeleccionar";
             ChkSeleccionar.Size = new Size(86, 19);
-            ChkSeleccionar.TabIndex = 4;
+            ChkSeleccionar.TabIndex = 2;
             ChkSeleccionar.Text = "Seleccionar";
             ChkSeleccionar.UseVisualStyleBackColor = true;
             ChkSeleccionar.CheckedChanged += ChkSeleccionar_CheckedChanged;
@@ -425,7 +425,8 @@
             btnBuscar.Location = new Point(395, 10);
             btnBuscar.Name = "btnBuscar";
             btnBuscar.Size = new Size(75, 23);
-            btnBuscar.TabIndex = 3;
+            btnBuscar.TabIndex = 1;
+            btnBuscar.Tag = "1";
             btnBuscar.Text = "Buscar";
             btnBuscar.UseVisualStyleBackColor = true;
             btnBuscar.Click += btnBuscar_Click;
@@ -435,7 +436,7 @@
             txtBuscar.Location = new Point(6, 10);
             txtBuscar.Name = "txtBuscar";
             txtBuscar.Size = new Size(383, 23);
-            txtBuscar.TabIndex = 2;
+            txtBuscar.TabIndex = 0;
             // 
             // FrmUsuario
             // 

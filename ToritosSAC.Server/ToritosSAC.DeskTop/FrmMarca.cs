@@ -305,6 +305,8 @@ namespace ToritosSAC.DeskTop
             }
         }
 
+        
+        
         //Eventos
         private void dgvListado_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
