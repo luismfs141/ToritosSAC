@@ -7,7 +7,9 @@ import { useDocumento } from '../hooks/useDocumento';
 import ModalGuardarDocumento from '../components/Modals/ModalGuardarDocumento';
 import ModalDetallesGrupo from '../components/Modals/ModalDetallesGrupo';
 import ModalClientesPendientes from '../components/Modals/ModalClientesPendientes';
-import ButtonAccionGrupo from '../components/Buttons/ButtonAccionGrupo'; 
+import ModalIniciarGrupo from '../components/Modals/ModalIniciarGrupo';
+import ButtonAccionGrupo from '../components/Buttons/ButtonAccionGrupo';
+
 
 const Grupos = () => {
   const [data, setData] = useState([]);
@@ -26,6 +28,7 @@ const Grupos = () => {
   const [detallesGrupo, setDetallesGrupo] = useState(null);
   const [showModalClientesPendientes, setShowModalClientesPendientes] = useState(false);
   const [clientesPendientes, setClientesPendientes] = useState(null);
+  const [showModalIniciarGrupo,setShowModalInciarGrupo] = useState(false);
 
   //Metodos Hooks
   const { getClienteFromLocalStorage, getIdGruposAdminFromLocalStorage} = useCliente();
@@ -161,6 +164,7 @@ const Grupos = () => {
     setShowModalDetalles(false);
     setShowModalClientesPendientes(false);
     limpiarCamposGrupo();
+    setShowModalInciarGrupo(false);
   };
 
   const limpiarCamposGrupo = () =>{
@@ -319,7 +323,6 @@ const Grupos = () => {
     try {
       const idGrupo = grupoSeleccionado.idGrupoI;
       const response = await admitirClienteGrupo(idCliente, idGrupo);
-      console.log(response);
       handleListaClientesPendientes(grupoSeleccionado);
     } catch (error) {
         console.error("Error al admitir el cliente", error);
@@ -333,7 +336,6 @@ const Grupos = () => {
     try {
       const idGrupo = grupoSeleccionado.idGrupoI;
       const response = await rechazarClienteGrupo(idCliente, idGrupo);
-      console.log(response);
       handleListaClientesPendientes(grupoSeleccionado);
     } catch (error) {
         console.error("Error al rechazar el cliente", error);
@@ -347,8 +349,21 @@ const Grupos = () => {
     console.log("Grupo: ",idGrupo);
   };
 
-  const handleIniciarGrupo = (grupo) =>{
-    console.log("Iniciar Grupo ", grupo.idGrupoI);
+  const handleIniciarGrupo = async (grupo) =>{
+    setLoading(true);
+    try {
+        const detallesGrupo = await getDetallesGrupo(grupo.idGrupoI);
+        setDetallesGrupo(detallesGrupo);
+        setShowModalInciarGrupo(true);
+    } catch (error) {
+        console.error("Error al cargar los detalles del grupo:", error);
+    } finally {
+        setLoading(false);
+    }
+  };
+
+  const handleAceptarIniciarGrupo = (grupo)=>{
+    console.log("Aceptar iniciar grupo: ",grupo);
   };
 
   //Funcion de mensajes
@@ -664,6 +679,14 @@ const Grupos = () => {
         clientes={clientesPendientes}
         onAccept={handleAdmitirClienteGrupo}
         onReject={handleRechazarClienteGrupo}
+      />
+      {/*Modal para iniciar grupo. */}
+      <ModalIniciarGrupo
+        show={showModalIniciarGrupo}
+        onClose={handleCloseModal}
+        cliente={clienteData}
+        grupo={detallesGrupo}
+        onIniciarGrupo={handleAceptarIniciarGrupo}
       />
     </div>
   );
