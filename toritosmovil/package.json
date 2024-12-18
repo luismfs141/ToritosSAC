@@ -30,7 +30,8 @@
     "react-native-safe-area-context": "^4.14.1",
     "react-native-screens": "^4.3.0",
     "react-native-tab-view": "^4.0.5",
-    "react-native-web": "~0.19.13"
+    "react-native-web": "~0.19.13",
+    "toritosmovil": "file:"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
