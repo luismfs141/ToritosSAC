@@ -39,10 +39,10 @@ const ButtonAccionGrupo = ({ cliente, grupo, onUnirseGrupo, onSolicitudes, onDoc
         if (estadoDocumento === 'A') {
             if (cantIntegrantes == grupo.cantMaxIntegrantesI ) {
                 if(grupo.estadoC === 'A'){
-                    return <button className="btn btn-success" onClick={() => onIniciarGrupo(grupo)}>Iniciar Grupo</button>;
+                    return <button className="btn btn-success" onClick={() => onIniciarGrupo(grupo)}>Iniciar Cronograma</button>;
                 }
                 else{
-                    return <button className="btn btn-success" disabled onClick={() => onIniciarGrupo(grupo)}>Grupo Iniciado</button>;
+                    return <button className="btn btn-success" disabled onClick={() => onIniciarGrupo(grupo)}>En Proceso</button>;
                 }
             }
             return <button className="btn btn-info" onClick={() => onSolicitudes(grupo)}>Solicitudes</button>;
