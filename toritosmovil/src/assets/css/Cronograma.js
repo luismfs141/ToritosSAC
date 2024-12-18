@@ -6,14 +6,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     padding: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
+  headerContainer: {
+    padding: 20,
+    borderRadius: 5,
     marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
     textAlign: 'center',
   },
-  row: {
+  dropdownContainer: {
     marginBottom: 20,
   },
   label: {
@@ -28,22 +34,14 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
   },
-  buttonGroup: {
+  buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
   },
-  buttonPrimary: {
+  button: {
     flex: 1,
     backgroundColor: '#50007b',
-    padding: 15,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginHorizontal: 5,
-  },
-  buttonSecondary: {
-    flex: 1,
-    backgroundColor: '#ccc',
     padding: 15,
     borderRadius: 5,
     alignItems: 'center',
@@ -61,7 +59,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
   },
-  tableRowHeader: {
+  tableHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderBottomWidth: 1,
@@ -69,7 +67,7 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     marginBottom: 10,
   },
-  tableCellHeader: {
+  tableHeaderText: {
     flex: 1,
     fontSize: 14,
     fontWeight: 'bold',

@@ -25,51 +25,26 @@ export default function Login({ navigation }) {
 
     return (
         <View style={styles.container}>
-            <LinearGradient colors={['#50007b', '#1b0030']} style={styles.logoContainer}>
-                <View style={styles.logo}>
-                    <Text style={styles.logoText}>🙂</Text>
-                </View>
-            </LinearGradient>
-
-            <Text style={styles.header}>ToritosSAC</Text>
-            <Text style={styles.subHeader}>Inicia Sesion</Text>
-
+            <Text style={styles.title}>Iniciar Sesión</Text>
+            {error && <Text style={styles.errorText}>{error}</Text>}
             <TextInput
                 style={styles.input}
-                placeholder="usuario"
-                placeholderTextColor="#aaa"
+                placeholder="Usuario"
                 value={usuario}
                 onChangeText={setUsuario}
             />
             <TextInput
                 style={styles.input}
-                placeholder="••••••"
-                placeholderTextColor="#aaa"
-                secureTextEntry={true}
+                placeholder="Contraseña"
+                secureTextEntry
                 value={password}
                 onChangeText={setPassword}
             />
-
-            <TouchableOpacity
-                style={styles.signInButton}
+            <Button
+                title={loading ? 'Cargando...' : 'Iniciar sesión'}
                 onPress={handleLogin}
-            >
-                <LinearGradient
-                    colors={['#50007b', '#1b0030']}
-                    style={styles.signInGradient}
-                >
-                    <Text style={styles.signInText}>
-                        INICIAR SESIÓN
-                    </Text>
-                </LinearGradient>
-            </TouchableOpacity>
-
-            <View style={styles.footer}>
-                <Text style={styles.footerText}>¿No tienes una cuenta? </Text>
-                <TouchableOpacity>
-                    <Text style={styles.createText}>Registrar</Text>
-                </TouchableOpacity>
-            </View>
+                disabled={loading}
+            />
         </View>
     );
 }

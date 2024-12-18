@@ -56,15 +56,13 @@ function Navbar({ onLogout }) {
 
       <div className="profile">
         <img
-          src="https://img.freepik.com/psd-premium/ilustracion-programacion-web-3d-html-css-js_394084-544.jpg?semt=ais_hybrid"
+          src="https://img.freepik.com/vector-premium/icono-perfil-avatar-predeterminado-imagen-usuario-redes-sociales-icono-avatar-gris-silueta-perfil-blanco-ilustracion-vectorial_561158-3383.jpg?w=740"
           alt="Perfil"
           onClick={toggleDropdown} // El clic en la imagen activa el dropdown
         />
 
         {/* Mostrar el dropdown solo si isDropdownVisible es true */}
         <ul className={`profile-link ${isDropdownVisible ? 'show' : 'hidden'}`}>
-          <li><a href="#"><i className='bx bxs-user-circle icon text-decoration-none'></i> Perfil</a></li>
-          <li><a href="#"><i className='bx bxs-cog text-decoration-none'></i> Configuración</a></li>
           <li><a href="#" onClick={handleLogout}><i className='bx bxs-log-out-circle text-decoration-none'></i> Cerrar sesión</a></li>
         </ul>
       </div>

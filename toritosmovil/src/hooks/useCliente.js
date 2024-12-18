@@ -1,63 +1,66 @@
 import { useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../api/apiConfig';
 
 export const useCliente = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  //prueba cambio
-  /* Función para obtener el cliente de localStorage
-  const getClienteFromLocalStorage = () => {
-    const loginCliente = JSON.parse(localStorage.getItem('usuario'));
+  // Función para obtener el cliente desde AsyncStorage
+  const getClienteFromAsyncStorage = async () => {
+    try {
+      const loginCliente = await AsyncStorage.getItem('usuario');
+      if (!loginCliente) {
+        console.warn('No se encontró ningún usuario en AsyncStorage');
+        return null;
+      }
 
-    if (!loginCliente) {
-      console.warn('No se encontró ningún usuario en localStorage');
+      const parsedCliente = JSON.parse(loginCliente);
+      const clienteData = {
+        idClienteI: parsedCliente.idClienteI,
+        codigoC: parsedCliente.codigoC,
+        nombreNv: parsedCliente.nombreNv,
+        apellidoPaternoNv: parsedCliente.apellidoPaternoNv,
+        apellidoMaternoNv: parsedCliente.apellidoMaternoNv,
+        tipoDocumentoC: parsedCliente.tipoDocumentoC,
+        nroDocumentoV: parsedCliente.nroDocumentoV,
+        sexoC: parsedCliente.sexoC,
+        fechaNacimientoD: parsedCliente.fechaNacimientoD,
+        estadoCivilC: parsedCliente.estadoCivilC,
+        nroContactoC: parsedCliente.nroContactoC,
+        correoNv: parsedCliente.correoNv,
+        correoAutenticadoBo: parsedCliente.correoAutenticadoBo,
+        direccionNv: parsedCliente.direccionNv,
+        direccionRefNv: parsedCliente.direccionRefNv,
+        idDistritoC: parsedCliente.idDistritoC,
+        passwordBi: parsedCliente.passwordBi,
+        estadoC: parsedCliente.estadoC,
+        fechaInscripcionD: parsedCliente.fechaInscripcionD
+      };
+      return clienteData;
+    } catch (error) {
+      console.error('Error al obtener el cliente desde AsyncStorage:', error);
       return null;
     }
-
-    const clienteData = {
-      idClienteI: loginCliente.idClienteI,
-      codigoC: loginCliente.codigoC,
-      nombreNv: loginCliente.nombreNv,
-      apellidoPaternoNv: loginCliente.apellidoPaternoNv,
-      apellidoMaternoNv: loginCliente.apellidoMaternoNv,
-      tipoDocumentoC: loginCliente.tipoDocumentoC,
-      nroDocumentoV: loginCliente.nroDocumentoV,
-      sexoC: loginCliente.sexoC,
-      fechaNacimientoD: loginCliente.fechaNacimientoD,
-      estadoCivilC: loginCliente.estadoCivilC,
-      nroContactoC: loginCliente.nroContactoC,
-      correoNv: loginCliente.correoNv,
-      correoAutenticadoBo: loginCliente.correoAutenticadoBo,
-      direccionNv: loginCliente.direccionNv,
-      direccionRefNv: loginCliente.direccionRefNv,
-      idDistritoC: loginCliente.idDistritoC,
-      passwordBi: loginCliente.passwordBi,
-      estadoC: loginCliente.estadoC,
-      fechaInscripcionD: loginCliente.fechaInscripcionD
-    };
-    return clienteData;
-  };*/
+  };
 
   const loginCliente = async (usuario, password) => {
     setLoading(true);
     setError('');
 
     try {
-
       console.log('Datos recibidos para login:', { usuario, password });
-
 
       const url = `http://192.168.0.107/ToritosHost/api/Cliente/LoginCliente?x_usuario=${usuario}&x_password=${password}`;
       console.log('URL de solicitud:', url);
 
       const response = await api.get(url);
-
       console.log('Respuesta del servidor:', response);
 
       if (response.data.estado === 'Exito') {
-        //localStorage.setItem('usuario', JSON.stringify(response.data.data));
-        //console.log('Datos guardados en localStorage:', localStorage.getItem('usuario'));
+        // Guardar datos en AsyncStorage
+        await AsyncStorage.setItem('usuario', JSON.stringify(response.data.data));
+        console.log('Datos guardados en AsyncStorage:', await AsyncStorage.getItem('usuario'));
         return response.data;
       } else {
         setError(response.data.mensaje);
@@ -98,16 +101,16 @@ export const useCliente = () => {
     }
   };
 
-  const logoutCliente = () => {
-    localStorage.removeItem('usuario');
-    console.log('Cliente eliminado de localStorage');
+  const logoutCliente = async () => {
+    await AsyncStorage.removeItem('usuario');
+    console.log('Cliente eliminado de AsyncStorage');
   };
 
   return {
     loginCliente,
     registrarCliente,
     logoutCliente,
-    //getClienteFromLocalStorage,
+    getClienteFromAsyncStorage,
     loading,
     error
   };
