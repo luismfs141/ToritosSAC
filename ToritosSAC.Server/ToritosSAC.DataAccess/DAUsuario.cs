@@ -63,7 +63,7 @@ namespace ToritosSAC.DataAccess
             }
         }
 
-        public DataTable Login(string Email, string Clave)
+        public DataTable Login(string Correo, string Clave)
         {
             SqlDataReader Resultado;
             DataTable Tabla = new DataTable();
@@ -73,7 +73,7 @@ namespace ToritosSAC.DataAccess
                 SqlCon = Conexion.getInstancia().CrearConexion();
                 SqlCommand Comando = new SqlCommand("UsuarioLogin", SqlCon);
                 Comando.CommandType = CommandType.StoredProcedure;
-                Comando.Parameters.Add("@Correo_v", SqlDbType.VarChar).Value = Email;
+                Comando.Parameters.Add("@Correo_v", SqlDbType.VarChar).Value = Correo;
                 Comando.Parameters.Add("@Clave_vb", SqlDbType.VarChar).Value = Clave;
                 SqlCon.Open();
                 Resultado = Comando.ExecuteReader();
@@ -173,7 +173,7 @@ namespace ToritosSAC.DataAccess
                 Comando.Parameters.AddWithValue("@Direccion_v", obj.DireccionV);
                 Comando.Parameters.AddWithValue("@Telefono_c", obj.TelefonoC);
                 Comando.Parameters.AddWithValue("@Correo_v", obj.CorreoV);
-                Comando.Parameters.AddWithValue("@Clave_vb", obj.ClaveVB);
+                Comando.Parameters.AddWithValue("@Clave_vb", obj.ClaveVb);
                 SqlCon.Open();
                 Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo actualizar el registro";
             }

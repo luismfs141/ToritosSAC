@@ -35,7 +35,7 @@ namespace ToritosSAC.DeskTop
             try
             {
                 dgvListado.DataSource = BLUsuario.Listar();
-                this.Formato();
+                //this.Formato();
                 this.Limpiar();
                 lblTotal.Text = "Total registros: " + Convert.ToString(dgvListado.Rows.Count);
             }
@@ -118,8 +118,8 @@ namespace ToritosSAC.DeskTop
             dgvListado.Columns[10].Width = 40;
             dgvListado.Columns[10].Visible = false;
 
-            dgvListado.Columns[11].HeaderText = "Estado";
-            dgvListado.Columns[11].Width = 80;
+            //dgvListado.Columns[11].HeaderText = "Estado";
+            //dgvListado.Columns[11].Width = 80;
 
         }
 
