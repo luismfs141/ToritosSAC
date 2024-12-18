@@ -173,7 +173,7 @@ namespace ToritosSAC.DataAccess
                 Comando.Parameters.AddWithValue("@Direccion_v", obj.DireccionV);
                 Comando.Parameters.AddWithValue("@Telefono_c", obj.TelefonoC);
                 Comando.Parameters.AddWithValue("@Correo_v", obj.CorreoV);
-                Comando.Parameters.AddWithValue("@Clave_vb", obj.ClaveVB);
+                Comando.Parameters.AddWithValue("@Clave_vb", obj.ClaveVb);
                 SqlCon.Open();
                 Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo actualizar el registro";
             }

@@ -58,9 +58,9 @@ public partial class ToritosDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost;Database=ToritosDB;Trusted_Connection=True;TrustServerCertificate=True;");
+        => //optionsBuilder.UseSqlServer("Server=localhost;Database=ToritosDB;Trusted_Connection=True;TrustServerCertificate=True;");
     //optionsBuilder.UseSqlServer("server=localhost; initial catalog=ToritosDB; user id=sa; password=1342; TrustServerCertificate=True");
-    //optionsBuilder.UseSqlServer("Server=DESKTOP-Q9NGHHL\\SQL2022;Initial Catalog=ToritosDB;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;");
+    optionsBuilder.UseSqlServer("Server=DESKTOP-Q9NGHHL\\SQL2022;Initial Catalog=ToritosDB;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
