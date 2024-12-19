@@ -39,10 +39,10 @@ const ButtonAccionGrupo = ({ cliente, grupo, onUnirseGrupo, onSolicitudes, onDoc
         if (estadoDocumento === 'A') {
             if (cantIntegrantes == grupo.cantMaxIntegrantesI ) {
                 if(grupo.estadoC === 'A'){
-                    return <button className="btn btn-success" onClick={() => onIniciarGrupo(grupo)}>Iniciar Grupo</button>;
+                    return <button className="btn btn-success" onClick={() => onIniciarGrupo(grupo)}>Iniciar Cronograma</button>;
                 }
                 else{
-                    return <button className="btn btn-success" disabled onClick={() => onIniciarGrupo(grupo)}>Grupo Iniciado</button>;
+                    return <button className="btn btn-success" disabled onClick={() => onIniciarGrupo(grupo)}>Cronograma Iniciado</button>;
                 }
             }
             return <button className="btn btn-info" onClick={() => onSolicitudes(grupo)}>Solicitudes</button>;
@@ -65,8 +65,15 @@ const ButtonAccionGrupo = ({ cliente, grupo, onUnirseGrupo, onSolicitudes, onDoc
             }
             return <button className="btn btn-warning" onClick={() => onDocumentos(grupo)}>Subir Documentos</button>;
         }
-
-        return <button className="btn btn-success" disabled>Solicitud Aceptada</button>;
+        else{
+            if(grupo.estadoC == 'A'){
+                return <button className="btn btn-success" disabled>Solicitud Aceptada</button>;
+            }
+            if(grupo.estadoC == 'F'){
+                return <button className="btn btn-success" disabled>Cronograma Iniciado</button>;
+            }
+        }
+        
     };
 
     return (

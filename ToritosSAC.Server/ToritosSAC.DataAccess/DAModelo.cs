@@ -321,5 +321,20 @@ namespace ToritosSAC.DataAccess
                 throw new Exception("Ocurrió un error al obtener el modelo de vehículos.", ex);
             }
         }
+
+        public Modelo DAMODE_ObtenerModeloVehiculoPorId(int idModelo)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+                Modelo modelo = ctx.Modelos.SingleOrDefault(m => m.IdModeloVehiculoI == idModelo);
+                return modelo;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

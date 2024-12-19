@@ -4,10 +4,13 @@ import { useCliente } from '../hooks/useCliente';
 import { useGrupo } from '../hooks/useGrupo';
 import { useModelo } from '../hooks/useModelo';
 import { useDocumento } from '../hooks/useDocumento';
+import { useEstadoCuenta } from '../hooks/useEstadoCuenta';
 import ModalGuardarDocumento from '../components/Modals/ModalGuardarDocumento';
 import ModalDetallesGrupo from '../components/Modals/ModalDetallesGrupo';
 import ModalClientesPendientes from '../components/Modals/ModalClientesPendientes';
-import ButtonAccionGrupo from '../components/Buttons/ButtonAccionGrupo'; 
+import ModalIniciarGrupo from '../components/Modals/ModalIniciarGrupo';
+import ButtonAccionGrupo from '../components/Buttons/ButtonAccionGrupo';
+
 
 const Grupos = () => {
   const [data, setData] = useState([]);
@@ -26,6 +29,7 @@ const Grupos = () => {
   const [detallesGrupo, setDetallesGrupo] = useState(null);
   const [showModalClientesPendientes, setShowModalClientesPendientes] = useState(false);
   const [clientesPendientes, setClientesPendientes] = useState(null);
+  const [showModalIniciarGrupo,setShowModalInciarGrupo] = useState(false);
 
   //Metodos Hooks
   const { getClienteFromLocalStorage, getIdGruposAdminFromLocalStorage} = useCliente();
@@ -34,6 +38,7 @@ const Grupos = () => {
           listarClientesPendientes, admitirClienteGrupo, rechazarClienteGrupo } = useGrupo();
   const { getModelos } = useModelo();
   const { guardarDocumento, getDocumentoPorClienteGrupo } = useDocumento();
+  const {crearCronogramaPorGrupo, ObtenerEstadosCuentaPorIdClienteGrupo} = useEstadoCuenta();
   
   //Variables de control
   const [gruposCliente, setGruposCliente] = useState([]);
@@ -161,6 +166,7 @@ const Grupos = () => {
     setShowModalDetalles(false);
     setShowModalClientesPendientes(false);
     limpiarCamposGrupo();
+    setShowModalInciarGrupo(false);
   };
 
   const limpiarCamposGrupo = () =>{
@@ -319,7 +325,6 @@ const Grupos = () => {
     try {
       const idGrupo = grupoSeleccionado.idGrupoI;
       const response = await admitirClienteGrupo(idCliente, idGrupo);
-      console.log(response);
       handleListaClientesPendientes(grupoSeleccionado);
     } catch (error) {
         console.error("Error al admitir el cliente", error);
@@ -333,7 +338,6 @@ const Grupos = () => {
     try {
       const idGrupo = grupoSeleccionado.idGrupoI;
       const response = await rechazarClienteGrupo(idCliente, idGrupo);
-      console.log(response);
       handleListaClientesPendientes(grupoSeleccionado);
     } catch (error) {
         console.error("Error al rechazar el cliente", error);
@@ -347,8 +351,31 @@ const Grupos = () => {
     console.log("Grupo: ",idGrupo);
   };
 
-  const handleIniciarGrupo = (grupo) =>{
-    console.log("Iniciar Grupo ", grupo.idGrupoI);
+  const handleIniciarGrupo = async (grupo) =>{
+    setLoading(true);
+    try {
+        const detallesGrupo = await getDetallesGrupo(grupo.idGrupoI);
+        setDetallesGrupo(detallesGrupo);
+        setShowModalInciarGrupo(true);
+    } catch (error) {
+        console.error("Error al cargar los detalles del grupo:", error);
+    } finally {
+        setLoading(false);
+    }
+  };
+
+  const handleAceptarIniciarGrupo = async (grupo, fechaInicio) => {
+    setLoading(true);
+    try {
+      const cronograma = await crearCronogramaPorGrupo(grupo.idGrupo, fechaInicio);
+      alert(cronograma.mensaje);
+    } catch (error) {
+      console.error("Error al crear cronograma:", error);
+    } finally {
+      setLoading(false);
+      setShowModalInciarGrupo(false);
+      window.location.reload();
+    }
   };
 
   //Funcion de mensajes
@@ -413,6 +440,7 @@ const Grupos = () => {
           Buscar
         </button>
       </div>
+      {/**Añadir modal */}
 
       {/* Botones Crear y Unirse a Grupo */}
       <div className="mb-3 d-flex flex-column flex-sm-row">
@@ -664,6 +692,14 @@ const Grupos = () => {
         clientes={clientesPendientes}
         onAccept={handleAdmitirClienteGrupo}
         onReject={handleRechazarClienteGrupo}
+      />
+      {/*Modal para iniciar grupo. */}
+      <ModalIniciarGrupo
+        show={showModalIniciarGrupo}
+        onClose={handleCloseModal}
+        cliente={clienteData}
+        grupo={detallesGrupo}
+        onIniciarGrupo={handleAceptarIniciarGrupo}
       />
     </div>
   );
