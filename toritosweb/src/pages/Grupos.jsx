@@ -440,6 +440,7 @@ const Grupos = () => {
           Buscar
         </button>
       </div>
+      {/**Añadir modal */}
 
       {/* Botones Crear y Unirse a Grupo */}
       <div className="mb-3 d-flex flex-column flex-sm-row">
