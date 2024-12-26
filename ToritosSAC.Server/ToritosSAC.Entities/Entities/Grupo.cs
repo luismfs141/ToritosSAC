@@ -23,11 +23,14 @@ public partial class Grupo
     public string EstadoC { get; set; } = null!;
 
     public int CantidadCuotasI { get; set; }
-    public decimal? MontoCuotaN { get; set; }
 
     public decimal PenalidadDc { get; set; }
 
     public string TipoPeriodoPagoC { get; set; } = null!;
+
+    public decimal? MontoCuotaN { get; set; }
+
+    public virtual ICollection<CronogramaGrupo> CronogramaGrupos { get; } = new List<CronogramaGrupo>();
 
     public virtual ICollection<DetalleGrupo> DetalleGrupos { get; } = new List<DetalleGrupo>();
     [JsonIgnore]

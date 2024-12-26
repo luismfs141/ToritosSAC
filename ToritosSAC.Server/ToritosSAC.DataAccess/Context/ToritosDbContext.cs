@@ -22,6 +22,10 @@ public partial class ToritosDbContext : DbContext
 
     public virtual DbSet<Color> Colors { get; set; }
 
+    public virtual DbSet<CronogramaGrupo> CronogramaGrupos { get; set; }
+
+    public virtual DbSet<Cuotum> Cuota { get; set; }
+
     public virtual DbSet<Departamento> Departamentos { get; set; }
 
     public virtual DbSet<DetalleEstadoCuentum> DetalleEstadoCuenta { get; set; }
@@ -34,11 +38,15 @@ public partial class ToritosDbContext : DbContext
 
     public virtual DbSet<Estado> Estados { get; set; }
 
+    public virtual DbSet<EstadoCuentum> EstadoCuenta { get; set; }
+
     public virtual DbSet<Grupo> Grupos { get; set; }
 
     public virtual DbSet<Marca> Marcas { get; set; }
 
     public virtual DbSet<Modelo> Modelos { get; set; }
+
+    public virtual DbSet<Pago> Pagos { get; set; }
 
     public virtual DbSet<Pai> Pais { get; set; }
 
@@ -47,6 +55,8 @@ public partial class ToritosDbContext : DbContext
     public virtual DbSet<Provincium> Provincia { get; set; }
 
     public virtual DbSet<Rol> Rols { get; set; }
+
+    public virtual DbSet<Sorteo> Sorteos { get; set; }
 
     public virtual DbSet<TipoModelo> TipoModelos { get; set; }
 
@@ -58,7 +68,7 @@ public partial class ToritosDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=localhost;Database=ToritosDB;Trusted_Connection=True;TrustServerCertificate=True;");
+          => optionsBuilder.UseSqlServer("Server=localhost;Database=ToritosDB;Trusted_Connection=True;TrustServerCertificate=True;");
     //optionsBuilder.UseSqlServer("server=10.10.20.250:80; initial catalog=ToritosDB; user id=sa; password=1342; TrustServerCertificate=True");
     //optionsBuilder.UseSqlServer("Server=10.10.20.250:80;Initial Catalog=ToritosDB;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;");
 
@@ -77,12 +87,18 @@ public partial class ToritosDbContext : DbContext
             entity.Property(e => e.FechaEntregaVehiculoD)
                 .HasColumnType("datetime")
                 .HasColumnName("FechaEntregaVehiculo_d");
+            entity.Property(e => e.IdSorteoI).HasColumnName("IdSorteo_i");
             entity.Property(e => e.IdVehiculoI).HasColumnName("IdVehiculo_i");
             entity.Property(e => e.TipoAsignacionC)
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("TipoAsignacion_c");
+
+            entity.HasOne(d => d.IdSorteoINavigation).WithMany(p => p.Asignacions)
+                .HasForeignKey(d => d.IdSorteoI)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Asignacion_Sorteo");
 
             entity.HasOne(d => d.IdVehiculoINavigation).WithMany(p => p.Asignacions)
                 .HasForeignKey(d => d.IdVehiculoI)
@@ -191,6 +207,62 @@ public partial class ToritosDbContext : DbContext
                 .HasColumnName("Descripcion_vc");
         });
 
+        modelBuilder.Entity<CronogramaGrupo>(entity =>
+        {
+            entity.HasKey(e => e.IdCronogramaGrupoI).HasName("PK__Cronogra__2236C3C84FAD5B4E");
+
+            entity.ToTable("CronogramaGrupo");
+
+            entity.Property(e => e.IdCronogramaGrupoI).HasColumnName("IdCronogramaGrupo_i");
+            entity.Property(e => e.CuotaGrupalN)
+                .HasColumnType("numeric(18, 2)")
+                .HasColumnName("CuotaGrupal_n");
+            entity.Property(e => e.CuotaIndividualN)
+                .HasColumnType("numeric(18, 2)")
+                .HasColumnName("CuotaIndividual_n");
+            entity.Property(e => e.FechaD)
+                .HasColumnType("date")
+                .HasColumnName("Fecha_d");
+            entity.Property(e => e.HabilitarMartillazoB).HasColumnName("HabilitarMartillazo_b");
+            entity.Property(e => e.HabilitarSorteoB).HasColumnName("HabilitarSorteo_b");
+            entity.Property(e => e.IdGrupoI).HasColumnName("IdGrupo_i");
+
+            entity.HasOne(d => d.IdGrupoINavigation).WithMany(p => p.CronogramaGrupos)
+                .HasForeignKey(d => d.IdGrupoI)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CronogramaGrupo_Grupo");
+        });
+
+        modelBuilder.Entity<Cuotum>(entity =>
+        {
+            entity.HasKey(e => e.IdCuotaI).HasName("PK__Cuota__A9D43B16C7FEF799");
+
+            entity.Property(e => e.IdCuotaI).HasColumnName("IdCuota_i");
+            entity.Property(e => e.EstadoCuotaC)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("EstadoCuota_c");
+            entity.Property(e => e.FechaFinD)
+                .HasColumnType("date")
+                .HasColumnName("FechaFin_d");
+            entity.Property(e => e.FechaInicioD)
+                .HasColumnType("date")
+                .HasColumnName("FechaInicio_d");
+            entity.Property(e => e.MontoCuotaN)
+                .HasColumnType("numeric(18, 2)")
+                .HasColumnName("MontoCuota_n");
+            entity.Property(e => e.NumCuotaI).HasColumnName("NumCuota_i");
+            entity.Property(e => e.PenalidadN)
+                .HasColumnType("numeric(18, 2)")
+                .HasColumnName("Penalidad_n");
+
+            entity.HasOne(d => d.IdDetalleGrupoNavigation).WithMany(p => p.Cuota)
+                .HasForeignKey(d => d.IdDetalleGrupo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Cuota_DetalleGrupo");
+        });
+
         modelBuilder.Entity<Departamento>(entity =>
         {
             entity.HasKey(e => e.IdDepartamentoC).HasName("PK__Departam__71D43214E82991BA");
@@ -209,42 +281,29 @@ public partial class ToritosDbContext : DbContext
 
         modelBuilder.Entity<DetalleEstadoCuentum>(entity =>
         {
-            entity.HasKey(e => e.IdDetalleEstadoCuentaI).HasName("PK__DetalleE__35DC8DEB2ED090DC");
+            entity.HasKey(e => e.IdDetalleEstadoCuentaI).HasName("PK__DetalleE__35DC8DEB5E5BDD27");
 
             entity.Property(e => e.IdDetalleEstadoCuentaI).HasColumnName("IdDetalleEstadoCuenta_i");
-            entity.Property(e => e.EstadoCuotaC)
+            entity.Property(e => e.CodigoPagoV)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("CodigoPago_v");
+            entity.Property(e => e.FechaPagoDt)
+                .HasColumnType("datetime")
+                .HasColumnName("FechaPago_dt");
+            entity.Property(e => e.IdEstadoCuentaI).HasColumnName("IdEstadoCuenta_i");
+            entity.Property(e => e.Monto).HasColumnType("numeric(18, 2)");
+            entity.Property(e => e.ReferenciaOperacionI).HasColumnName("ReferenciaOperacion_i");
+            entity.Property(e => e.TipoOperacionC)
                 .HasMaxLength(1)
                 .IsUnicode(false)
                 .IsFixedLength()
-                .HasColumnName("EstadoCuota_c");
-            entity.Property(e => e.FechaPagoProgramadaD)
-                .HasColumnType("datetime")
-                .HasColumnName("FechaPagoProgramada_d");
-            entity.Property(e => e.FechaPagoRealD)
-                .HasColumnType("datetime")
-                .HasColumnName("FechaPagoReal_d");
-            entity.Property(e => e.IdDetalleGrupoI).HasColumnName("IdDetalleGrupo_i");
-            entity.Property(e => e.MartillazoFechaPagoD)
-                .HasColumnType("datetime")
-                .HasColumnName("MartillazoFechaPago_d");
-            entity.Property(e => e.MartillazoMontoM)
-                .HasColumnType("money")
-                .HasColumnName("MartillazoMonto_m");
-            entity.Property(e => e.MontoCuotaM)
-                .HasColumnType("money")
-                .HasColumnName("MontoCuota_m");
-            entity.Property(e => e.NroCuotaI).HasColumnName("NroCuota_i");
-            entity.Property(e => e.PenalidadFechaPagoD)
-                .HasColumnType("datetime")
-                .HasColumnName("PenalidadFechaPago_d");
-            entity.Property(e => e.PenalidadMontoM)
-                .HasColumnType("money")
-                .HasColumnName("PenalidadMonto_m");
+                .HasColumnName("TipoOperacion_c");
 
-            entity.HasOne(d => d.IdDetalleGrupoINavigation).WithMany(p => p.DetalleEstadoCuenta)
-                .HasForeignKey(d => d.IdDetalleGrupoI)
+            entity.HasOne(d => d.IdEstadoCuentaINavigation).WithMany(p => p.DetalleEstadoCuenta)
+                .HasForeignKey(d => d.IdEstadoCuentaI)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_DetalleEstadoCuenta_DetalleGrupo");
+                .HasConstraintName("FK_DetalleEstadoCuenta_EstadoCuenta");
         });
 
         modelBuilder.Entity<DetalleGrupo>(entity =>
@@ -260,14 +319,11 @@ public partial class ToritosDbContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("Admision_C");
             entity.Property(e => e.ClienteAdminBo).HasColumnName("ClienteAdmin_bo");
-            entity.Property(e => e.IdAsignacionI).HasColumnName("IdAsignacion_i");
+            entity.Property(e => e.EsGanadorB).HasColumnName("EsGanador_b");
+            entity.Property(e => e.EstadoPropietarioB).HasColumnName("EstadoPropietario_b");
             entity.Property(e => e.IdClienteI).HasColumnName("IdCliente_i");
             entity.Property(e => e.IdDocumentosI).HasColumnName("IdDocumentos_i");
             entity.Property(e => e.IdGrupoI).HasColumnName("IdGrupo_i");
-
-            entity.HasOne(d => d.IdAsignacionINavigation).WithMany(p => p.DetalleGrupos)
-                .HasForeignKey(d => d.IdAsignacionI)
-                .HasConstraintName("FK_DetalleGrupo_Asignacion");
 
             entity.HasOne(d => d.IdClienteINavigation).WithMany(p => p.DetalleGrupos)
                 .HasForeignKey(d => d.IdClienteI)
@@ -346,6 +402,33 @@ public partial class ToritosDbContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("Descripcion_VC");
+        });
+
+        modelBuilder.Entity<EstadoCuentum>(entity =>
+        {
+            entity.HasKey(e => e.IdEstadoCuentaI).HasName("PK__EstadoCu__DA416928E8EB731F");
+
+            entity.Property(e => e.IdEstadoCuentaI).HasColumnName("IdEstadoCuenta_i");
+            entity.Property(e => e.FechaAperturaD)
+                .HasColumnType("date")
+                .HasColumnName("FechaApertura_d");
+            entity.Property(e => e.FechaCierreD)
+                .HasColumnType("date")
+                .HasColumnName("FechaCierre_d");
+            entity.Property(e => e.IdDetalleGrupoI).HasColumnName("IdDetalleGrupo_i");
+            entity.Property(e => e.MontoRecaudadoN)
+                .HasColumnType("numeric(18, 2)")
+                .HasColumnName("MontoRecaudado_n");
+            entity.Property(e => e.MotivoCierreC)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("MotivoCierre_c");
+
+            entity.HasOne(d => d.IdDetalleGrupoINavigation).WithMany(p => p.EstadoCuenta)
+                .HasForeignKey(d => d.IdDetalleGrupoI)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_EstadoCuenta_DetalleGrupo");
         });
 
         modelBuilder.Entity<Grupo>(entity =>
@@ -454,6 +537,41 @@ public partial class ToritosDbContext : DbContext
                 .HasConstraintName("FK_Modelo_Marca");
         });
 
+        modelBuilder.Entity<Pago>(entity =>
+        {
+            entity.HasKey(e => e.IdPagoI).HasName("PK__Pago__1B4B62311777EFE3");
+
+            entity.ToTable("Pago");
+
+            entity.Property(e => e.IdPagoI).HasColumnName("IdPago_i");
+            entity.Property(e => e.CodigoPagoV)
+                .HasMaxLength(15)
+                .IsUnicode(false)
+                .HasColumnName("CodigoPago_v");
+            entity.Property(e => e.ConceptoC)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("Concepto_c");
+            entity.Property(e => e.FechaPagoD)
+                .HasColumnType("datetime")
+                .HasColumnName("FechaPago_d");
+            entity.Property(e => e.IdClienteI).HasColumnName("IdCliente_i");
+            entity.Property(e => e.MontoPagoN)
+                .HasColumnType("numeric(18, 2)")
+                .HasColumnName("MontoPago_n");
+            entity.Property(e => e.OpcionPagoC)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("OpcionPago_c");
+
+            entity.HasOne(d => d.IdClienteINavigation).WithMany(p => p.Pagos)
+                .HasForeignKey(d => d.IdClienteI)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Pago_Cliente");
+        });
+
         modelBuilder.Entity<Pai>(entity =>
         {
             entity.HasKey(e => e.IdPaisI).HasName("PK__Pais__2A47731C0E23ADBB");
@@ -551,6 +669,29 @@ public partial class ToritosDbContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("Nombre_v");
+        });
+
+        modelBuilder.Entity<Sorteo>(entity =>
+        {
+            entity.HasKey(e => e.IdSorteoI).HasName("PK__Sorteo__CE4D811F65524198");
+
+            entity.ToTable("Sorteo");
+
+            entity.Property(e => e.IdSorteoI).HasColumnName("IdSorteo_i");
+            entity.Property(e => e.FechaD)
+                .HasColumnType("date")
+                .HasColumnName("Fecha_d");
+            entity.Property(e => e.IdDetalleGrupoI).HasColumnName("IdDetalleGrupo_i");
+            entity.Property(e => e.TipoSorteoC)
+                .HasMaxLength(1)
+                .IsUnicode(false)
+                .IsFixedLength()
+                .HasColumnName("TipoSorteo_c");
+
+            entity.HasOne(d => d.IdDetalleGrupoINavigation).WithMany(p => p.Sorteos)
+                .HasForeignKey(d => d.IdDetalleGrupoI)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Sorteo_DetalleGrupo");
         });
 
         modelBuilder.Entity<TipoModelo>(entity =>

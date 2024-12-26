@@ -46,4 +46,6 @@ public partial class Cliente
     public virtual ICollection<DetalleGrupo> DetalleGrupos { get; } = new List<DetalleGrupo>();
 
     public virtual Distrito? IdDistritoCNavigation { get; set; } = null!;
+
+    public virtual ICollection<Pago> Pagos { get; } = new List<Pago>();
 }

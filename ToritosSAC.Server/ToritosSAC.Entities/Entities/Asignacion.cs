@@ -15,7 +15,9 @@ public partial class Asignacion
 
     public int IdVehiculoI { get; set; }
 
-    public virtual ICollection<DetalleGrupo> DetalleGrupos { get; } = new List<DetalleGrupo>();
+    public int IdSorteoI { get; set; }
+
+    public virtual Sorteo IdSorteoINavigation { get; set; } = null!;
 
     public virtual Vehiculo IdVehiculoINavigation { get; set; } = null!;
 }
