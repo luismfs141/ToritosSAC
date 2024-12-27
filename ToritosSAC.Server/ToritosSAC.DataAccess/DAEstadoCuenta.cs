@@ -13,6 +13,49 @@ namespace ToritosSAC.DataAccess
 {
     public class DAEstadoCuenta
     {
+        public void DAESCU_GuardarListaEstadoCuentaPorGrupo(List<EstadoCuentum> estadosCuenta)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+                ctx.EstadoCuenta.AddRange(estadosCuenta);
+                ctx.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public DetalleEstadoCuentum DAESCU_GuardarDetalleEstadoCuenta(DetalleEstadoCuentum detalleEstadoCuenta)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+                ctx.DetalleEstadoCuenta.Add(detalleEstadoCuenta);
+                ctx.SaveChanges();
+
+                return detalleEstadoCuenta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public List<DetalleEstadoCuentum> DAESCU_ObtenerDetallesCuentaPorEstadoCuenta(int idEstadoCuenta)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+                List<DetalleEstadoCuentum> detallesEstadoCuenta = ctx.DetalleEstadoCuenta.Where(d => d.IdEstadoCuentaI == idEstadoCuenta).ToList();
+                return detallesEstadoCuenta;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public EstadoCuentum DAESCU_OtenerEstadoCuentaCliente(int idCliente, int idGrupo)
         {
             ToritosDbContext ctx = new ToritosDbContext();
@@ -23,24 +66,6 @@ namespace ToritosSAC.DataAccess
 
             return estadoCuenta;
         }
-
-        //public void DAESCU_GuardarEstadoCuenta(List<DetalleEstadoCuentum> detallesEstado, ToritosDbContext ctx, IDbContextTransaction transaction)
-        //{
-        //    try
-        //    {
-        //        if (transaction != null)
-        //        {
-        //            ctx.Database.UseTransaction(transaction.GetDbTransaction());
-        //        }
-
-        //        ctx.DetalleEstadoCuenta.AddRange(detallesEstado);
-        //        ctx.SaveChanges();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new ApplicationException("Error al guardar los detalles de estado de cuenta.", ex);
-        //    }
-        //}
 
         public EstadoCuentum DAESCU_GuardarEstadoCuenta(EstadoCuentum estadoCuentum)
         {
@@ -66,21 +91,5 @@ namespace ToritosSAC.DataAccess
                 throw new ApplicationException("Error al guardar el estado de cuenta.", ex);
             }
         }
-
-        //public List<DetalleEstadoCuentum> DAESCU_ObtenerEstadoCuentaPorIdClienteGrupo(int idCliente,int idGrupo)
-        //{
-        //    try
-        //    {
-        //        ToritosDbContext ctx = new ToritosDbContext();
-        //        DetalleGrupo detalleGrupo = ctx.DetalleGrupos.SingleOrDefault(d => d.IdClienteI == idCliente && d.IdGrupoI == idGrupo);
-        //        List<DetalleEstadoCuentum> detalleEstados = ctx.DetalleEstadoCuenta.Where(d => d.IdDetalleGrupoI == detalleGrupo.IdDetalleGrupoI).ToList();
-
-        //        return detalleEstados;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new ApplicationException("Error al obtener los estados de cuenta.", ex);
-        //    }
-        //}
     }
 }

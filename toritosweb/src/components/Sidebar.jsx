@@ -18,7 +18,7 @@ function Sidebar() {
 
         <li className="divider " data-text="Principal">Principal</li>
         <li><Link to="/grupos"><i className='bx bxs-widget icon'></i> Grupos</Link></li>
-        <li><Link to="/estado"><i className='bx bxs-widget icon'></i> Estado de cuenta</Link></li>
+        <li><Link to="/operaciones"><i className='bx bxs-widget icon'></i> Operaciones</Link></li>
         <li><Link to="/sorteos"><i className='bx bxs-widget icon'></i> Sorteos</Link></li>
         <li><Link to="/cronograma"><i className='bx bxs-widget icon'></i> Cronograma</Link></li>
 

@@ -3,8 +3,6 @@ import { useGrupo } from '../../hooks/useGrupo';
 import { useDocumento } from '../../hooks/useDocumento';
 
 const ButtonAccionGrupo = ({ cliente, grupo, onUnirseGrupo, onSolicitudes, onDocumentos, onIniciarGrupo }) => {
-    const [estadoCliente, setEstadoCliente] = useState('');
-    const [estadoGrupo, setEstadoGrupo] = useState('');
     const [estadoDocumento, setEstadoDocumento] = useState('');
     const [cantIntegrantes, setCantidadIntegrantes] = useState(0);
     const [esAdministrador, setEsAdministrador] = useState(false);
@@ -22,9 +20,6 @@ const ButtonAccionGrupo = ({ cliente, grupo, onUnirseGrupo, onSolicitudes, onDoc
                     getEsAdministradorGrupo(cliente.idClienteI, grupo.idGrupoI),
                     getEsMiembroGrupo(cliente.idClienteI, grupo.idGrupoI)
                 ]);
-
-                setEstadoCliente(cliente.estadoC);
-                setEstadoGrupo(grupo.estadoC);
                 setCantidadIntegrantes(numIntegrantesGrupo);
                 setEstadoDocumento(estDocumento);
                 setEsAdministrador(esAdmin);
