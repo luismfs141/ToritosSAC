@@ -6,6 +6,7 @@ import { useModelo } from '../hooks/useModelo';
 import { useDocumento } from '../hooks/useDocumento';
 import { useCronograma } from '../hooks/useCronograma';
 import { useCuota } from '../hooks/useCuota';
+import { useEstadoCuenta } from '../hooks/useEstadoCuenta';
 import ModalGuardarDocumento from '../components/Modals/ModalGuardarDocumento';
 import ModalDetallesGrupo from '../components/Modals/ModalDetallesGrupo';
 import ModalClientesPendientes from '../components/Modals/ModalClientesPendientes';
@@ -41,6 +42,7 @@ const Grupos = () => {
   const { guardarDocumento, getDocumentoPorClienteGrupo } = useDocumento();
   const { crearCronogramaGrupo } = useCronograma();
   const { generarCuotasClienteGrupo } = useCuota();
+  const { crearEstadoCuentaGrupo } = useEstadoCuenta();
   
   //Variables de control
   const [gruposCliente, setGruposCliente] = useState([]);
@@ -371,7 +373,8 @@ const Grupos = () => {
     try {
       const cronograma = await crearCronogramaGrupo(grupo.idGrupo, fechaInicio);
       const cuotas = await generarCuotasClienteGrupo(grupo.idGrupo);
-      if(cronograma && cuotas){
+      const estadosCuentas = await crearEstadoCuentaGrupo(grupo.idGrupo);
+      if(cronograma && cuotas && estadosCuentas){
         alert(cronograma.mensaje);
       }
     } catch (error) {

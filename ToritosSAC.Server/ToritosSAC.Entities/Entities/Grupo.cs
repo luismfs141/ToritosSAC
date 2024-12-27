@@ -35,4 +35,5 @@ public partial class Grupo
     public virtual ICollection<DetalleGrupo> DetalleGrupos { get; } = new List<DetalleGrupo>();
     [JsonIgnore]
     public virtual Modelo? IdModeloVehiculoINavigation { get; set; } = null!;
+    public virtual ICollection<Sorteo> Sorteos { get; } = new List<Sorteo>();
 }

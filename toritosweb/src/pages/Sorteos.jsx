@@ -1,24 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useCliente } from '../hooks/useCliente';
+import { useGrupo } from '../hooks/useGrupo';
 
 const Sorteos = () => {
-  const [selectedOption, setSelectedOption] = useState('');
-  const [showModal, setShowModal] = useState(false);
+  const { getClienteFromLocalStorage } = useCliente();
+  const { getGruposPorCliente } = useGrupo();
 
-  // Datos de ejemplo para la tabla
-  const sorteos = [
-    { numero: 1, ganadores: 'Juan Pérez', fecha: '2024-12-10', modalidad: 'Sorteo Regular' },
-    { numero: 2, ganadores: 'Ana Gómez', fecha: '2024-12-12', modalidad: 'Martillazo' },
-    { numero: 3, ganadores: 'Carlos López', fecha: '2024-12-15', modalidad: 'Sorteo Especial' },
-    { numero: 4, ganadores: 'Lucía García', fecha: '2024-12-17', modalidad: 'Sorteo Regular' }
-  ];
+  const [ clienteData, setClienteData ] = useState();
+  const [ gruposCliente, setGruposCliente ] = useState([]);
+  const [ grupoSeleccionado, setGrupoSeleccionado] = useState('');
+  const [ sorteo, setSorteo] = useState([]);
+  const [ isInitialized, setIsInitialized ] = useState(false);
 
-  const handleOptionChange = (e) => {
-    setSelectedOption(e.target.value);
-  };
-
-  const toggleModal = () => {
-    setShowModal(!showModal);
-  };
+  useEffect(() => {
+      if (!isInitialized) {
+        const clienteLogin = getClienteFromLocalStorage();
+        if (clienteLogin) {
+          setClienteData(clienteLogin);
+          const listaGrupo = getGruposPorCliente(clienteLogin);
+          listaGrupo.then(grupos => {
+            setGruposCliente(grupos); 
+          });
+        }
+        setIsInitialized(true);
+      }
+    }, [isInitialized, getClienteFromLocalStorage,getGruposPorCliente]);
 
   return (
     <div className="container mt-4 mb-4">
@@ -38,25 +44,16 @@ const Sorteos = () => {
           <select
             id="searchDropdown"
             className="form-select"
-            value={selectedOption}
-            onChange={handleOptionChange}
+            value={grupoSeleccionado}
+            onChange={(e) => setGrupoSeleccionado(e.target.value)}
           >
             <option value="">Seleccione un Grupo</option>
-            <option value="nombre1">Nombre 1</option>
-            <option value="nombre2">Nombre 2</option>
-            <option value="nombre3">Nombre 3</option>
+            {gruposCliente.map(grupo => (
+              <option key={grupo.idGrupoI} value={grupo.codigoC}>
+                {grupo.codigoC}
+              </option>
+            ))}
           </select>
-        </div>
-        <div className="col-12 col-md-5 text-start mt-2 mt-md-0 d-flex align-items-center">
-          <button className="btn btn-primary me-2">Buscar</button>
-          <button className="btn btn-secondary me-2">Realizar Martillazo!</button>
-          <button
-            className="btn btn-secondary rounded-circle"
-            onClick={toggleModal}
-            style={{ fontSize: '18px', width: '35px', height: '35px' }}
-          >
-            !
-          </button>
         </div>
       </div>
 
@@ -72,7 +69,7 @@ const Sorteos = () => {
             </tr>
           </thead>
           <tbody>
-            {sorteos.map((sorteo, index) => (
+            {sorteo.map((sorteo, index) => (
               <tr key={index}>
                 <td>{sorteo.numero}</td>
                 <td>{sorteo.ganadores}</td>
@@ -83,22 +80,6 @@ const Sorteos = () => {
           </tbody>
         </table>
       </div>
-
-      {/* Modal con información importante */}
-      {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h5 className="text-start">Información Importante</h5>
-            <p className="text-start">
-              Instrucciones importantes relacionadas
-              con el sorteo o la acción de martillazo.
-            </p>
-            <button className="btn btn-secondary mt-2" onClick={toggleModal}>
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

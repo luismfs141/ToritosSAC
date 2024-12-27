@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace ToritosSAC.Entities;
 
@@ -20,6 +21,6 @@ public partial class Cuotum
     public string EstadoCuotaC { get; set; } = null!;
 
     public decimal PenalidadN { get; set; }
-
+    [JsonIgnore]
     public virtual DetalleGrupo IdDetalleGrupoNavigation { get; set; } = null!;
 }
