@@ -1,18 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { LinearGradient } from 'expo-linear-gradient';
 import styles from '../assets/css/Cronograma';
+import { useEstadoCuenta } from '../hooks/useEstadoCuenta';
+import { useCliente } from '../hooks/useCliente';
+import { useGrupo } from '../hooks/useGrupo';
 
 export default function Cronograma() {
-  const [selectedOption, setSelectedOption] = useState('');
+  const { ObtenerEstadosCuentaPorIdClienteGrupo } = useEstadoCuenta();
+  const { getClienteFromAsyncStorage } = useCliente();
+  const { getGruposPorCliente, getDetallesGrupo } = useGrupo();
 
-  const handleOptionChange = (itemValue) => {
-    setSelectedOption(itemValue);
-  };
+  const [clienteData, setClienteData] = useState(null);
+  const [estadosCuenta, setEstadosCuenta] = useState([]);
+  const [gruposCliente, setGruposCliente] = useState([]);
+  const [grupoSeleccionado, setGrupoSeleccionado] = useState('');
+  const [detallesGrupo, setDetallesGrupo] = useState(null);
+  const [montoSorteo, setMontoSorteo] = useState(0);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const [numIntegrantes, setNumIntegrantes] = useState(0);
+
+  useEffect(() => {
+    const initializeCliente = async () => {
+      if (!isInitialized) {
+        const clienteLogin = await getClienteFromAsyncStorage();
+        if (clienteLogin) {
+          setClienteData(clienteLogin);
+          const listaGrupo = await getGruposPorCliente(clienteLogin.idClienteI);
+          setGruposCliente(listaGrupo);
+        }
+        setIsInitialized(true);
+      }
+    };
+
+    initializeCliente();
+  }, [isInitialized, getClienteFromAsyncStorage, getGruposPorCliente]);
+
+  useEffect(() => {
+    const fetchEstadosCuenta = async () => {
+      setEstadosCuenta([]);
+      if (grupoSeleccionado && clienteData) {
+        const datosGrupo = gruposCliente.find(
+          (grupo) => grupo.codigoC === grupoSeleccionado
+        );
+        if (datosGrupo) {
+          const listaEstadosCuentas = await ObtenerEstadosCuentaPorIdClienteGrupo(
+            clienteData.idClienteI,
+            datosGrupo.idGrupoI
+          );
+          const detallesGrupo = await getDetallesGrupo(datosGrupo.idGrupoI);
+          setDetallesGrupo(detallesGrupo);
+          if (listaEstadosCuentas && listaEstadosCuentas.exito) {
+            setEstadosCuenta(listaEstadosCuentas.objeto);
+          }
+        }
+      }
+    };
+
+    if (grupoSeleccionado && clienteData) {
+      fetchEstadosCuenta();
+    }
+  }, [grupoSeleccionado]);
+
+  useEffect(() => {
+    if (detallesGrupo) {
+      setMontoSorteo(detallesGrupo.modeloVehiculo.precioUnidadVehiculoM);
+      setNumIntegrantes(detallesGrupo.numeroIntegrantes);
+    }
+  }, [detallesGrupo]);
+
+  let periodo = 1;
+  let montoPeriodo = 0;
 
   const handleSearch = () => {
-    Alert.alert('Buscar', `Grupo seleccionado: ${selectedOption}`);
+    Alert.alert('Buscar', `Grupo seleccionado: ${grupoSeleccionado}`);
   };
 
   const handleExportPDF = () => {
@@ -28,14 +90,18 @@ export default function Cronograma() {
       <View style={styles.dropdownContainer}>
         <Text style={styles.label}>Grupo:</Text>
         <Picker
-          selectedValue={selectedOption}
+          selectedValue={grupoSeleccionado}
           style={styles.picker}
-          onValueChange={handleOptionChange}
+          onValueChange={(itemValue) => setGrupoSeleccionado(itemValue)}
         >
           <Picker.Item label="Seleccione un Grupo" value="" />
-          <Picker.Item label="Nombre 1" value="nombre1" />
-          <Picker.Item label="Nombre 2" value="nombre2" />
-          <Picker.Item label="Nombre 3" value="nombre3" />
+          {gruposCliente.map((grupo) => (
+            <Picker.Item
+              key={grupo.idGrupoI}
+              label={grupo.codigoC}
+              value={grupo.codigoC}
+            />
+          ))}
         </Picker>
       </View>
 
@@ -48,15 +114,62 @@ export default function Cronograma() {
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.tableContainer} horizontal>
+      <ScrollView style={styles.tableContainer}>
         <View style={styles.tableHeader}>
           <Text style={styles.tableHeaderText}>Nro Cuota</Text>
           <Text style={styles.tableHeaderText}>Fecha de Pago</Text>
           <Text style={styles.tableHeaderText}>Monto</Text>
+          <Text style={styles.tableHeaderText}>Cuota Grupal</Text>
           <Text style={styles.tableHeaderText}>Sorteo</Text>
           <Text style={styles.tableHeaderText}>Martillazo</Text>
         </View>
-        {/* Aquí mapear las filas de la tabla */}
+        {estadosCuenta && estadosCuenta.length > 0 ? (
+          estadosCuenta.map((estado, index) => {
+            const montoAcumulativo = estado.nroCuotaI * estado.montoCuotaM * numIntegrantes;
+            const esSorteoExitoso = montoAcumulativo % montoSorteo === 0;
+
+            if (esSorteoExitoso) {
+              periodo = periodo + 1;
+              montoPeriodo = montoAcumulativo + montoSorteo / 2;
+            }
+
+            let activarMartillazo =
+              montoPeriodo > 0 && montoPeriodo < montoAcumulativo ? 'SI' : 'NO';
+
+            return (
+              <View
+                key={index}
+                style={[
+                  styles.tableRow,
+                  esSorteoExitoso && styles.tableRowSuccess,
+                ]}
+              >
+                <Text style={styles.tableRowText}>{estado.nroCuotaI}</Text>
+                <Text style={styles.tableRowText}>
+                  {estado.fechaPagoProgramadaD
+                    ? new Date(estado.fechaPagoProgramadaD).toLocaleDateString()
+                    : 'No Disponible'}
+                </Text>
+                <Text style={styles.tableRowText}>
+                  {estado.montoCuotaM
+                    ? `S/.${estado.montoCuotaM.toFixed(2)}`
+                    : 'No Disponible'}
+                </Text>
+                <Text style={styles.tableRowText}>
+                  {estado.montoCuotaM
+                    ? `S/.${montoAcumulativo.toFixed(2)}`
+                    : 'No Disponible'}
+                </Text>
+                <Text style={styles.tableRowText}>
+                  {esSorteoExitoso ? 'SI' : 'NO'}
+                </Text>
+                <Text style={styles.tableRowText}>{activarMartillazo}</Text>
+              </View>
+            );
+          })
+        ) : (
+          <Text style={styles.noDataText}>No hay datos disponibles</Text>
+        )}
       </ScrollView>
     </View>
   );
