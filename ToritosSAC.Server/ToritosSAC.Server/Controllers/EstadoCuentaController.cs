@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ToritosSAC.BusinessLogic;
-using ToritosSAC.DataAccess;
 using ToritosSAC.Entities;
 using ToritosSAC.Entities.Structures;
 
@@ -10,29 +9,34 @@ namespace ToritosSAC.Server.Controllers
     [Route("api/[controller]")]
     public class EstadoCuentaController
     {
-        [HttpGet("GetEstadoCuentaCliente")]
-        public List<DetalleEstadoCuentum> GetEstadoCuentaCliente(int idCliente, int idGrupo)
+        [HttpGet("ObtenerEstadoCuentaCliente")]
+        public Resultado<EstadoCuentum> ObtenerEstadoCuentaCliente(int idCliente, int idGrupo)
         {
-            DAEstadoCuenta dAEstadoCuenta = new DAEstadoCuenta();
-
-            return dAEstadoCuenta.DAESCU_OtenerEstadoCuentaCliente(idCliente,idGrupo);
+            BLEstadoCuenta bLEstadoCuenta = new BLEstadoCuenta();
+            return bLEstadoCuenta.BLESCU_ObtenerEstadoCuentaClienteGrupo(idCliente, idGrupo);
         }
 
-        [Route("CrearCronograma")]
+        [HttpGet("ObtenerDetallesEstadoCuentaCliente")]
+        public Resultado<List<DetalleEstadoCuentum>> ObtenerDetallesEstadoCuentaCliente(int idEstadoCuenta)
+        {
+            BLEstadoCuenta bLEstadoCuenta = new BLEstadoCuenta();
+            return bLEstadoCuenta.BLESCU_ObtenerDetallesCuentaPorIdEstadoCuenta(idEstadoCuenta);
+        }
+
+        [Route("GenerarEstadosCuentaClienteGrupo")]
         [HttpPost]
-        public Resultado<bool> CrearCronogramaPorGrupo(int idGrupo, DateTime fechaInicio)
+        public Resultado<int> GenerarEstadosCuentaClienteGrupo(int idGrupo)
         {
-
             BLEstadoCuenta bLEstadoCuenta = new BLEstadoCuenta();
-            return bLEstadoCuenta.BLESCU_CrearCronogramaPorGrupo(idGrupo, fechaInicio);
+            return bLEstadoCuenta.BLESCU_GenerarEstadosCuentaClienteGrupo(idGrupo);
         }
 
-        [HttpGet("GetEstadosCuentaIdClienteGrupo")]
-        public Resultado<List<DetalleEstadoCuentum>> ObtenerDetallesCuentaPorIdClienteGrupo(int idCliente, int idGrupo)
+        [Route("RegistrarPagoDetallesEstadoCuenta")]
+        [HttpPost]
+        public Resultado<DetalleEstadoCuentum> RegistrarPagoDetallesEstadoCuenta(int idEstadoCuenta, int idPago)
         {
             BLEstadoCuenta bLEstadoCuenta = new BLEstadoCuenta();
-
-            return bLEstadoCuenta.BLESCU_ObtenerDetallesCuentaPorIdClienteGrupo(idCliente, idGrupo);
+            return bLEstadoCuenta.BLESCU_RegistrarPagoDetallesEstadoCuenta(idEstadoCuenta, idPago);
         }
     }
 }

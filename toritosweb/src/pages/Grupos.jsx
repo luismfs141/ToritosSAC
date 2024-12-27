@@ -4,7 +4,8 @@ import { useCliente } from '../hooks/useCliente';
 import { useGrupo } from '../hooks/useGrupo';
 import { useModelo } from '../hooks/useModelo';
 import { useDocumento } from '../hooks/useDocumento';
-import { useEstadoCuenta } from '../hooks/useEstadoCuenta';
+import { useCronograma } from '../hooks/useCronograma';
+import { useCuota } from '../hooks/useCuota';
 import ModalGuardarDocumento from '../components/Modals/ModalGuardarDocumento';
 import ModalDetallesGrupo from '../components/Modals/ModalDetallesGrupo';
 import ModalClientesPendientes from '../components/Modals/ModalClientesPendientes';
@@ -38,7 +39,8 @@ const Grupos = () => {
           listarClientesPendientes, admitirClienteGrupo, rechazarClienteGrupo } = useGrupo();
   const { getModelos } = useModelo();
   const { guardarDocumento, getDocumentoPorClienteGrupo } = useDocumento();
-  const {crearCronogramaPorGrupo, ObtenerEstadosCuentaPorIdClienteGrupo} = useEstadoCuenta();
+  const { crearCronogramaGrupo } = useCronograma();
+  const { generarCuotasClienteGrupo } = useCuota();
   
   //Variables de control
   const [gruposCliente, setGruposCliente] = useState([]);
@@ -367,8 +369,11 @@ const Grupos = () => {
   const handleAceptarIniciarGrupo = async (grupo, fechaInicio) => {
     setLoading(true);
     try {
-      const cronograma = await crearCronogramaPorGrupo(grupo.idGrupo, fechaInicio);
-      alert(cronograma.mensaje);
+      const cronograma = await crearCronogramaGrupo(grupo.idGrupo, fechaInicio);
+      const cuotas = await generarCuotasClienteGrupo(grupo.idGrupo);
+      if(cronograma && cuotas){
+        alert(cronograma.mensaje);
+      }
     } catch (error) {
       console.error("Error al crear cronograma:", error);
     } finally {
@@ -440,6 +445,7 @@ const Grupos = () => {
           Buscar
         </button>
       </div>
+      {/**Añadir modal */}
 
       {/* Botones Crear y Unirse a Grupo */}
       <div className="mb-3 d-flex flex-column flex-sm-row">

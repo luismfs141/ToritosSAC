@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 const baseURL = 'http://localhost/ToritosHost/api/'; 
+//const baseURL = '10.10.20.250:80/ToritosHost/api/'; 
 //const baseURL = 'http://localhost:5158/api/'; 
 
 const api = axios.create({
