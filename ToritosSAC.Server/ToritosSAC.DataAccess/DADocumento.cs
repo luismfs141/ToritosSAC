@@ -17,6 +17,7 @@ namespace ToritosSAC.DataAccess
         {
             try
             {
+                //Res
                 ToritosDbContext ctx = new ToritosDbContext();
                 byte[] docInden = null;
                 byte[] docPenales = null;
