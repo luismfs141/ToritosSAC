@@ -10,6 +10,21 @@ namespace ToritosSAC.DataAccess
 {
     public class DACuota
     {
+        public Cuotum DACUOT_ObtenerCuotaPorID(int idCuota)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+                Cuotum cuota = ctx.Cuota.SingleOrDefault(c => c.IdCuotaI == idCuota);
+
+                return cuota;
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
         public int DACUOT_GuardarCuotas(List<Cuotum> cuotas)
         {
             try

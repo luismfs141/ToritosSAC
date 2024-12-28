@@ -6,6 +6,9 @@ import { useCliente } from '../hooks/useCliente';
 import { useGrupo } from '../hooks/useGrupo';
 import { useEstadoCuenta } from '../hooks/useEstadoCuenta';
 import { useCuota } from '../hooks/useCuota';
+import { useSorteo } from '../hooks/useSorteo';
+import { usePago } from '../hooks/usePago';
+import ModalPagoCuota from '../components/Modals/ModalPagoCuota';
 
 const Operaciones = () => {
 
@@ -13,6 +16,8 @@ const Operaciones = () => {
   const { getGruposPorCliente } = useGrupo();
   const { obtenerEstadoCuentaCliente, obtenerDetallesEstadoCuentaCliente} = useEstadoCuenta();
   const { listarCuotasClienteGrupo } = useCuota();
+  const { ObtenerMartillazoPeriodo } = useSorteo();
+  const { realizarPago } = usePago();
 
   const [tabIndex, setTabIndex] = useState(0);
   const [grupoSeleccionado, setGrupoSeleccionado] = useState('');
@@ -24,10 +29,10 @@ const Operaciones = () => {
   const [ cuotas, setCuotas] = useState([]);
   const [ fechaFinalizacion, setFechaFinalizacion] = useState();
   const [ montoFaltante, setMontoFaltante ] = useState();
-  const [ fechaInicioMartillazo, setFechaInicioMartillazo ] = useState();
-  const [ fechaCierreMartillazo, setFechaCierreMartillazo ] = useState();
-  const [ montoMartillazo, setMontoMartillazo ] = useState();
-  const [ habilitarMartillazo, setHabilitarMartillazo] = useState(false);
+  const [ datosMartillazo, setDatosMartillazo ] = useState();
+  const [ datosGrupo, setDatosGrupo] = useState();
+  const [ cuotaSeleccionada, setCuotaSeleccionada ] = useState();
+  const [showModalPagarCuota, setShowModalPagarCuota] = useState(false);
 
   useEffect(() => {
     if (!isInitialized) {
@@ -43,34 +48,78 @@ const Operaciones = () => {
     }
   }, [isInitialized, getClienteFromLocalStorage,getGruposPorCliente]);
 
-  useEffect(()=>{
-    const fecthEstados = async() =>{
-      const datosGrupo = gruposCliente.find(grupo => grupo.codigoC === grupoSeleccionado);
-      if(datosGrupo){
-        const x_estCuenta = await obtenerEstadoCuentaCliente(clienteData.idClienteI, datosGrupo.idGrupoI);
-        const x_cuotas = await listarCuotasClienteGrupo(clienteData.idClienteI, datosGrupo.idGrupoI);
-        if(x_estCuenta && x_cuotas){
+  useEffect(() => {
+    const fecthEstados = async () => {
+      setEstadoCuenta(null);
+      setCuotas([]);
+      setDatosMartillazo(null);
+      setDatosGrupo(null);
+      setDetalleEstadoCuenta([]);
+      const x_datosGrupo = gruposCliente.find(grupo => grupo.codigoC === grupoSeleccionado);
+      setDatosGrupo(x_datosGrupo);
+
+      if (x_datosGrupo) {
+        const x_estCuenta = await obtenerEstadoCuentaCliente(clienteData.idClienteI, x_datosGrupo.idGrupoI);
+        const x_cuotas = await listarCuotasClienteGrupo(clienteData.idClienteI, x_datosGrupo.idGrupoI);
+        const x_datosMartillazo = await ObtenerMartillazoPeriodo(x_datosGrupo.idGrupoI);
+
+        if (x_estCuenta && x_cuotas && x_datosMartillazo) {
           setEstadoCuenta(x_estCuenta.objeto);
           setCuotas(x_cuotas.objeto);
+          setDatosMartillazo(x_datosMartillazo.objeto);
+        }
+      }
+    };
+
+    if (grupoSeleccionado && clienteData) {
+      fecthEstados();
+    }
+  }, [grupoSeleccionado, clienteData, gruposCliente]);
+
+  useEffect(()=>{
+    const fecthEstados = async() =>{
+
+      if(datosGrupo && estadoCuenta && cuotas){
+        let ultimaCuota = cuotas[cuotas.length-1]; 
+        let montoFal = datosGrupo.precioUnidadVehiculoM - estadoCuenta.montoRecaudadoN;
+        let detEstados = await obtenerDetallesEstadoCuentaCliente(estadoCuenta.idEstadoCuentaI);
+        if(ultimaCuota && montoFal){
+          setFechaFinalizacion(ultimaCuota.fechaFinD);
+          setMontoFaltante(montoFal);
+          setDetalleEstadoCuenta(detEstados.objeto);
         }
       }
     }
-    if(grupoSeleccionado && clienteData){
+    if(grupoSeleccionado && estadoCuenta && cuotas ){
       fecthEstados();
     }
-  },[grupoSeleccionado]);
+  },[estadoCuenta,cuotas]);
+
 
   useEffect(()=>{
-    if(cuotas && estadoCuenta && grupoSeleccionado ){
-      const datosGrupo = gruposCliente.find(grupo => grupo.codigoC === grupoSeleccionado);
-      let ultimaCuota = cuotas[cuotas.length-1]; 
-      let montoFal = datosGrupo.precioUnidadVehiculoM - estadoCuenta.montoRecaudadoN;
-      if(ultimaCuota && montoFal){
-        setFechaFinalizacion(ultimaCuota.fechaFinD);
-        setMontoFaltante(montoFal);
-      }  
+    console.log(detalleEstadoCuenta);
+  },[detalleEstadoCuenta]);
+
+  const handleCargarDatosPago =(cuota)=>{
+    if(cuota){
+      setCuotaSeleccionada(cuota);
     }
-  },[cuotas, estadoCuenta, grupoSeleccionado]);
+    setShowModalPagarCuota(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModalPagarCuota(false);
+  };
+
+  const handlePagarCuota = async (datosPago, cuota) =>{
+    console.log(datosPago);
+    console.log(cuota);
+    console.log(estadoCuenta);
+    const pago = await realizarPago(datosPago, estadoCuenta.idEstadoCuentaI, cuota.idCuotaI);
+    if(pago){
+      alert(pago.mensaje);
+    }
+  };
 
   return (
     <div className="container mt-4 mb-4">
@@ -132,8 +181,8 @@ const Operaciones = () => {
                     </thead>
                     <tbody>
                       {/* Mapea los detalles para mostrar en las filas de la tabla */}
-                      {estadoCuenta && estadoCuenta.detalleEstadoCuenta && estadoCuenta.detalleEstadoCuenta.length > 0 ? (
-                        estadoCuenta.detalleEstadoCuenta.length.map((detalle, index) => (
+                      {detalleEstadoCuenta && detalleEstadoCuenta.length > 0 ? (
+                        detalleEstadoCuenta.map((detalle, index) => (
                           <tr key={detalle.idDetalleEstadoCuentaI}>
                             <td>{index+1}</td>
                             <td>{detalle.tipoOperacionC}</td>
@@ -181,7 +230,10 @@ const Operaciones = () => {
                         <td>{cuota.estadoCuotaC === 'P' ? 'Pendiente' : 'Abonado'}</td>
                         <td>
                           {/* Aquí puedes agregar botones o enlaces para realizar acciones */}
-                          <button className="btn btn-warning btn-sm">Pagar Cuota</button>
+                          <button className="btn btn-warning btn-sm" 
+                            onClick={()=>handleCargarDatosPago(cuota)}
+                            disabled={cuota.estadoCuotaC==='A'?true:false}
+                          >Pagar Cuota</button>
                         </td>
                       </tr>
                     ))
@@ -193,6 +245,15 @@ const Operaciones = () => {
                 </tbody>
               </table>
             </div>
+            {/*Modal para iniciar grupo. */}
+            <ModalPagoCuota
+              show={showModalPagarCuota}
+              onClose={handleCloseModal}
+              cliente={clienteData}
+              grupo={datosGrupo}
+              cuota={cuotaSeleccionada}
+              onSave={handlePagarCuota}
+            />
           </TabPanel>
           <TabPanel>
             <br />
@@ -207,8 +268,7 @@ const Operaciones = () => {
                       <input
                         id="fechaInicioMartillazo"
                         type="date"
-                        value={fechaInicioMartillazo}
-                        onChange={(e) => setFechaInicioMartillazo(e.target.value)}
+                        value={datosMartillazo ? datosMartillazo.fechaApertura.split('T')[0] : ''}
                         required
                         className="form-control"
                         readOnly
@@ -221,8 +281,7 @@ const Operaciones = () => {
                       <input
                         id="fechaCierreMartillazo"
                         type="date"
-                        value={fechaCierreMartillazo}
-                        onChange={(e) => setFechaCierreMartillazo(e.target.value)}
+                        value={datosMartillazo ? datosMartillazo.fechaCierre.split('T')[0] : ''}
                         required
                         className="form-control"
                         readOnly
@@ -235,8 +294,7 @@ const Operaciones = () => {
                       <input
                         id="montoMartillazo"
                         type="number"
-                        value={montoMartillazo}
-                        onChange={(e) => setMontoMartillazo(e.target.value)}
+                        value={datosMartillazo?datosMartillazo.montoMartillazo:0}
                         required
                         className="form-control"
                         readOnly
@@ -244,13 +302,12 @@ const Operaciones = () => {
                     </div>
                   </div>
                   <div className="col-md-12 text-center">
-                    <button className="btn btn-warning btn-sm" disabled>Pagar Monto</button>
+                    <button className="btn btn-warning btn-sm" disabled={datosMartillazo?datosMartillazo.estado?false:true:true}>Pagar Monto</button>
                   </div>
                 </div>
               </div>
             </div>
           </TabPanel>
-          
         </Tabs>
       </div>
     </div>

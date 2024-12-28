@@ -29,8 +29,36 @@ export const useSorteo = () => {
         }
     };
 
+    const ObtenerProximoFechaSorteo = async(idGrupo) =>{
+        try {
+            const response = await api.get(`/Sorteo/ObtenerProximoFechaSorteo?idGrupo=${idGrupo}`);
+            if (response.data.exito) {
+                return response.data;
+              } else {
+                throw new Error(response.data.mensaje);
+              }
+        } catch (error) {
+            console.error("Error al obtener los sorteos", error);
+        }
+    };
+
+    const ObtenerMartillazoPeriodo = async(idGrupo) =>{
+        try {
+            const response = await api.get(`/Sorteo/ObtenerMartillazoPeriodo?idGrupo=${idGrupo}`);
+            if (response.data.exito) {
+                return response.data;
+              } else {
+                throw new Error(response.data.mensaje);
+              }
+        } catch (error) {
+            console.error("Error al obtener los sorteos", error);
+        }
+    };
+
     return{
         obtenerSorteosGrupo,
-        guardarSorteo
+        guardarSorteo,
+        ObtenerProximoFechaSorteo,
+        ObtenerMartillazoPeriodo
     };
 }

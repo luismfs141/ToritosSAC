@@ -19,5 +19,5 @@ public partial class Pago
 
     public string OpcionPagoC { get; set; } = null!;
 
-    public virtual Cliente IdClienteINavigation { get; set; } = null!;
+    public virtual Cliente? IdClienteINavigation { get; set; }
 }

@@ -91,5 +91,27 @@ namespace ToritosSAC.DataAccess
                 throw new ApplicationException("Error al guardar el estado de cuenta.", ex);
             }
         }
+
+        public EstadoCuentum DAESCU_RecalcularMontoAportado(int idEstadoCuenta)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+                EstadoCuentum estadoCuentaOriginal = ctx.EstadoCuenta.SingleOrDefault(d => d.IdEstadoCuentaI == idEstadoCuenta);
+                List<DetalleEstadoCuentum> listaDetalles = ctx.DetalleEstadoCuenta.Where(dt => dt.IdEstadoCuentaI == idEstadoCuenta && (dt.TipoOperacionC =="C" || dt.TipoOperacionC == "M")).ToList();
+
+                decimal montoAportado = listaDetalles.Sum(ld => ld.Monto);
+                estadoCuentaOriginal.MontoRecaudadoN = montoAportado;
+
+                ctx.SaveChanges();
+
+                return estadoCuentaOriginal;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

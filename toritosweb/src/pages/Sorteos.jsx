@@ -6,12 +6,14 @@ import { useSorteo } from '../hooks/useSorteo';
 const Sorteos = () => {
   const { getClienteFromLocalStorage } = useCliente();
   const { getGruposPorCliente } = useGrupo();
-  const { obtenerSorteosGrupo } = useSorteo();
+  const { obtenerSorteosGrupo, ObtenerProximoFechaSorteo } = useSorteo();
 
   const [ clienteData, setClienteData ] = useState();
   const [ gruposCliente, setGruposCliente ] = useState([]);
   const [ grupoSeleccionado, setGrupoSeleccionado] = useState('');
   const [ sorteos, setSorteos] = useState([]);
+  const [ fechaSorteo, setFechaSorteo ] = useState();
+  const formatoFecha = { day: '2-digit', month: 'long', year: 'numeric' };
   const [ isInitialized, setIsInitialized ] = useState(false);
 
   useEffect(() => {
@@ -33,8 +35,10 @@ const Sorteos = () => {
         const datosGrupo = gruposCliente.find(grupo => grupo.codigoC === grupoSeleccionado);
         if(datosGrupo){
           const x_sorteos = await obtenerSorteosGrupo(datosGrupo.idGrupoI);
-          if(x_sorteos){
+          const x_fechaSorteo = await ObtenerProximoFechaSorteo(datosGrupo.idGrupoI);
+          if(x_sorteos && x_fechaSorteo){
             setSorteos(x_sorteos.objeto);
+            setFechaSorteo(x_fechaSorteo.objeto);
           }
         }
       }
@@ -47,7 +51,7 @@ const Sorteos = () => {
     <div className="container mt-4 mb-4">
       <h3 className="mb-4 text-start">Sorteos</h3>
       <h5 htmlFor="searchDropdown" className="form-label text-start">
-        Próximo Sorteo: 10 de Diciembre de 2024!
+        Próximo Sorteo: {fechaSorteo? new Date(fechaSorteo).toLocaleDateString('es-ES', formatoFecha):"-----"}
       </h5>
 
       {/* Sección de búsqueda */}

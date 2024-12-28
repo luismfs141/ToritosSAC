@@ -25,5 +25,28 @@ namespace ToritosSAC.DataAccess
                 throw ex;
             }
         }
+
+        public Pago DAPAGO_RealizarPago(Pago x_pago)
+        {
+            try
+            {
+                ToritosDbContext ctx = new ToritosDbContext();
+
+                string codigoPago ="P"+x_pago.ConceptoC + DateTime.Now.Ticks.ToString().Substring(0,13);
+
+                Pago pago = x_pago;
+                pago.FechaPagoD = DateTime.Now;
+                pago.CodigoPagoV = codigoPago;
+                ctx.Pagos.Add(pago);
+                ctx.SaveChanges();
+
+                return pago;
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }
