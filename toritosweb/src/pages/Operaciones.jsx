@@ -115,6 +115,8 @@ const Operaciones = () => {
     const pago = await realizarPago(datosPago, estadoCuenta.idEstadoCuentaI, cuota.idCuotaI);
     if(pago){
       alert(pago.mensaje);
+      setShowModalPagarCuota(false);
+      window.location.reload();
     }
   };
 
