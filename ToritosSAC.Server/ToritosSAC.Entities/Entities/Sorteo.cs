@@ -13,7 +13,11 @@ public partial class Sorteo
 
     public string TipoSorteoC { get; set; } = null!;
 
+    public int? IdGrupoI { get; set; }
+
     public virtual ICollection<Asignacion> Asignacions { get; } = new List<Asignacion>();
 
     public virtual DetalleGrupo IdDetalleGrupoINavigation { get; set; } = null!;
+
+    public virtual Grupo? IdGrupoINavigation { get; set; }
 }

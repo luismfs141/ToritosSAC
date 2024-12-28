@@ -4,3 +4,4 @@ where IdGrupo_i = 56
 
 Delete from Cuota
 Delete from CronogramaGrupo
+Delete from EstadoCuenta

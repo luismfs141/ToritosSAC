@@ -68,10 +68,9 @@ public partial class ToritosDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-
-        => //optionsBuilder.UseSqlServer("Server=localhost;Database=ToritosDB;Trusted_Connection=True;TrustServerCertificate=True;");
-    //optionsBuilder.UseSqlServer("server=localhost; initial catalog=ToritosDB; user id=sa; password=1342; TrustServerCertificate=True");
-    optionsBuilder.UseSqlServer("Server=DESKTOP-Q9NGHHL\\SQL2022;Initial Catalog=ToritosDB;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;");
+        => optionsBuilder.UseSqlServer("Server=localhost;Database=ToritosDB;Trusted_Connection=True;TrustServerCertificate=True;");
+    //optionsBuilder.UseSqlServer("server=10.10.20.250:80; initial catalog=ToritosDB; user id=sa; password=1342; TrustServerCertificate=True");
+    //optionsBuilder.UseSqlServer("Server=10.10.20.250:80;Initial Catalog=ToritosDB;Integrated Security=True;Encrypt=True;Trust Server Certificate=True;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -683,6 +682,7 @@ public partial class ToritosDbContext : DbContext
                 .HasColumnType("date")
                 .HasColumnName("Fecha_d");
             entity.Property(e => e.IdDetalleGrupoI).HasColumnName("IdDetalleGrupo_i");
+            entity.Property(e => e.IdGrupoI).HasColumnName("IdGrupo_i");
             entity.Property(e => e.TipoSorteoC)
                 .HasMaxLength(1)
                 .IsUnicode(false)
@@ -693,6 +693,10 @@ public partial class ToritosDbContext : DbContext
                 .HasForeignKey(d => d.IdDetalleGrupoI)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Sorteo_DetalleGrupo");
+
+            entity.HasOne(d => d.IdGrupoINavigation).WithMany(p => p.Sorteos)
+                .HasForeignKey(d => d.IdGrupoI)
+                .HasConstraintName("FK_Sorteo_Grupo");
         });
 
         modelBuilder.Entity<TipoModelo>(entity =>

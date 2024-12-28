@@ -31,7 +31,7 @@ namespace ToritosSAC.BusinessLogic
                 {
                     EstadoCuentum estadoCuentum = new EstadoCuentum
                     {
-                        IdDetalleGrupoI = detalleGrupo.IdGrupoI,
+                        IdDetalleGrupoI = detalleGrupo.IdDetalleGrupoI,
                         MontoRecaudadoN = 0,
                         FechaAperturaD = grupo.FechaInicioPanderoD,
                         FechaCierreD = null,

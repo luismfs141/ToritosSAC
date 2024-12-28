@@ -11,9 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToritosSAC.Entities", "Tori
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Servidor", "Servidor", "{2458352C-3B85-411D-AD8B-071E47E883C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToritosSAC.BusinessLogic", "ToritosSAC.BusinessLogic\ToritosSAC.BusinessLogic.csproj", "{0C3D22D9-5597-46AC-95F6-B481D38AAE06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToritosSAC.BusinessLogic", "ToritosSAC.BusinessLogic\ToritosSAC.BusinessLogic.csproj", "{0C3D22D9-5597-46AC-95F6-B481D38AAE06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToritosSAC.DeskTop", "ToritosSAC.DeskTop\ToritosSAC.DeskTop.csproj", "{E38431AD-199A-4EC6-9E67-F535939913EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToritosSAC.DeskTop", "ToritosSAC.DeskTop\ToritosSAC.DeskTop.csproj", "{E38431AD-199A-4EC6-9E67-F535939913EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

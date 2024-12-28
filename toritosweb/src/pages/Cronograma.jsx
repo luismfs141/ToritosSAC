@@ -74,9 +74,6 @@ const Cronograma = () => {
           </select>
         </div>
         <div className="col-12 col-md-3 text-start mt-2 mt-md-0 d-flex align-items-center">
-          <button className="btn btn-primary me-2">
-            Buscar
-          </button>
           <button className="btn btn-secondary me-2">
             Exportar PDF
           </button>
