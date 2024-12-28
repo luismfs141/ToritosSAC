@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using ToritosSAC.Entities;
 using ToritosSAC.DataAccess.Context;
 using ToritosSAC.Entities.Structures;
+using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace ToritosSAC.DataAccess
 {
@@ -21,7 +23,7 @@ namespace ToritosSAC.DataAccess
                 byte[] docAguaLuz = null;
                 byte[] docFax = null;
 
-                if(x_documento.DocumentoIdentidad != "")
+                if (x_documento.DocumentoIdentidad != "")
                 {
                     docInden = ConvertBase64ToByteArray(x_documento.DocumentoIdentidad);
                 }
@@ -138,7 +140,7 @@ namespace ToritosSAC.DataAccess
 
                 Documento documento = ctx.Documentos.SingleOrDefault(d => d.IdDocumentoI == detalleGrupo.IdDocumentosI);
 
-                if(documento != null)
+                if (documento != null)
                 {
                     return documento.EstadoC;
                 }
@@ -151,6 +153,258 @@ namespace ToritosSAC.DataAccess
             {
                 throw ex;
             }
+        }
+
+        public string AprobarDNI(int Id)
+        {
+            string Rpta = "";
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon = Conexion.getInstancia().CrearConexion();
+                SqlCommand Comando = new SqlCommand("DocumentoAprobarDNI", SqlCon);
+                Comando.CommandType = CommandType.StoredProcedure;
+                Comando.Parameters.Add("@IdDocumento_i", SqlDbType.Int).Value = Id;
+                SqlCon.Open();
+                Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo aprobar el registro";
+            }
+            catch (Exception ex)
+            {
+                Rpta = "No se pudo aprobar el registro en la base de datos, contactar con el administrador.";
+                //instertar error  db 
+                throw new Exception(Rpta);
+            }
+            finally
+            {
+                if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
+            }
+            return Rpta;
+        }
+        public string RechazarDNI(int Id)
+        {
+            string Rpta = "";
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon = Conexion.getInstancia().CrearConexion();
+                SqlCommand Comando = new SqlCommand("DocumentoRechazarDNI", SqlCon);
+                Comando.CommandType = CommandType.StoredProcedure;
+                Comando.Parameters.Add("@IdDocumento_i", SqlDbType.Int).Value = Id;
+                SqlCon.Open();
+                Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo rechazar el registro";
+            }
+            catch (Exception ex)
+            {
+                Rpta = "No se pudo rechazar el registro en la base de datos, contactar con el administrador.";
+                //instertar error  db 
+                throw new Exception(Rpta);
+            }
+            finally
+            {
+                if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
+            }
+            return Rpta;
+        }
+        public string ObservarDNI(int Id)
+        {
+            string Rpta = "";
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon = Conexion.getInstancia().CrearConexion();
+                SqlCommand Comando = new SqlCommand("DocumentoObservarDNI", SqlCon);
+                Comando.CommandType = CommandType.StoredProcedure;
+                Comando.Parameters.Add("@IdDocumento_i", SqlDbType.Int).Value = Id;
+                SqlCon.Open();
+                Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo observar el registro";
+            }
+            catch (Exception ex)
+            {
+                Rpta = "No se pudo observar el registro en la base de datos, contactar con el administrador.";
+                //instertar error  db 
+                throw new Exception(Rpta);
+            }
+            finally
+            {
+                if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
+            }
+            return Rpta;
+        }
+        public string AprobarRecibo(int Id)
+        {
+            string Rpta = "";
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon = Conexion.getInstancia().CrearConexion();
+                SqlCommand Comando = new SqlCommand("DocumentoAprobarRecibo", SqlCon);
+                Comando.CommandType = CommandType.StoredProcedure;
+                Comando.Parameters.Add("@IdDocumento_i", SqlDbType.Int).Value = Id;
+                SqlCon.Open();
+                Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo aprobar el registro";
+            }
+            catch (Exception ex)
+            {
+                Rpta = "No se pudo aprobar el registro en la base de datos, contactar con el administrador.";
+                //instertar error  db 
+                throw new Exception(Rpta);
+            }
+            finally
+            {
+                if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
+            }
+            return Rpta;
+        }
+        public string RechazarRecibo(int Id)
+        {
+            string Rpta = "";
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon = Conexion.getInstancia().CrearConexion();
+                SqlCommand Comando = new SqlCommand("DocumentoRechazarRecibo", SqlCon);
+                Comando.CommandType = CommandType.StoredProcedure;
+                Comando.Parameters.Add("@IdDocumento_i", SqlDbType.Int).Value = Id;
+                SqlCon.Open();
+                Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo rechazar el registro";
+            }
+            catch (Exception ex)
+            {
+                Rpta = "No se pudo rechazar el registro en la base de datos, contactar con el administrador.";
+                //instertar error  db 
+                throw new Exception(Rpta);
+            }
+            finally
+            {
+                if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
+            }
+            return Rpta;
+        }
+        public string ObservarRecibo(int Id)
+        {
+            string Rpta = "";
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon = Conexion.getInstancia().CrearConexion();
+                SqlCommand Comando = new SqlCommand("DocumentoObservarRecibo", SqlCon);
+                Comando.CommandType = CommandType.StoredProcedure;
+                Comando.Parameters.Add("@IdDocumento_i", SqlDbType.Int).Value = Id;
+                SqlCon.Open();
+                Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo observar el registro";
+            }
+            catch (Exception ex)
+            {
+                Rpta = "No se pudo observar el registro en la base de datos, contactar con el administrador.";
+                //instertar error  db 
+                throw new Exception(Rpta);
+            }
+            finally
+            {
+                if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
+            }
+            return Rpta;
+        }
+        public string AprobarAntecedentes(int Id)
+        {
+            string Rpta = "";
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon = Conexion.getInstancia().CrearConexion();
+                SqlCommand Comando = new SqlCommand("DocumentoAprobarAntecedentes", SqlCon);
+                Comando.CommandType = CommandType.StoredProcedure;
+                Comando.Parameters.Add("@IdDocumento_i", SqlDbType.Int).Value = Id;
+                SqlCon.Open();
+                Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo aprobar el registro";
+            }
+            catch (Exception ex)
+            {
+                Rpta = "No se pudo aprobar el registro en la base de datos, contactar con el administrador.";
+                //instertar error  db 
+                throw new Exception(Rpta);
+            }
+            finally
+            {
+                if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
+            }
+            return Rpta;
+        }
+        public string RechazarAntecedentes(int Id)
+        {
+            string Rpta = "";
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon = Conexion.getInstancia().CrearConexion();
+                SqlCommand Comando = new SqlCommand("DocumentoRechazarAntecedentes", SqlCon);
+                Comando.CommandType = CommandType.StoredProcedure;
+                Comando.Parameters.Add("@IdDocumento_i", SqlDbType.Int).Value = Id;
+                SqlCon.Open();
+                Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo rechazar el registro";
+            }
+            catch (Exception ex)
+            {
+                Rpta = "No se pudo rechazar el registro en la base de datos, contactar con el administrador.";
+                //instertar error  db 
+                throw new Exception(Rpta);
+            }
+            finally
+            {
+                if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
+            }
+            return Rpta;
+        }
+        public string ObservarAntecedentes(int Id)
+        {
+            string Rpta = "";
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon = Conexion.getInstancia().CrearConexion();
+                SqlCommand Comando = new SqlCommand("DocumentoObservarAntecedentes", SqlCon);
+                Comando.CommandType = CommandType.StoredProcedure;
+                Comando.Parameters.Add("@IdDocumento_i", SqlDbType.Int).Value = Id;
+                SqlCon.Open();
+                Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo observar el registro";
+            }
+            catch (Exception ex)
+            {
+                Rpta = "No se pudo observar el registro en la base de datos, contactar con el administrador.";
+                //instertar error  db 
+                throw new Exception(Rpta);
+            }
+            finally
+            {
+                if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
+            }
+            return Rpta;
+        }
+
+        public string Aprobar(int Id)
+        {
+            string Rpta = "";
+            SqlConnection SqlCon = new SqlConnection();
+            try
+            {
+                SqlCon = Conexion.getInstancia().CrearConexion();
+                SqlCommand Comando = new SqlCommand("DocumentoAprobar", SqlCon);
+                Comando.CommandType = CommandType.StoredProcedure;
+                Comando.Parameters.Add("@IdDocumento_i", SqlDbType.Int).Value = Id;
+                SqlCon.Open();
+                Rpta = Comando.ExecuteNonQuery() == 1 ? "OK" : "No se pudo aprobar el registro";
+            }
+            catch (Exception ex)
+            {
+                Rpta = "No se pudo aprobar el registro en la base de datos, contactar con el administrador.";
+                //instertar error  db 
+                throw new Exception(Rpta);
+            }
+            finally
+            {
+                if (SqlCon.State == ConnectionState.Open) SqlCon.Close();
+            }
+            return Rpta;
         }
     }
 }

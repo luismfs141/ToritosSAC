@@ -90,5 +90,131 @@ namespace ToritosSAC.BusinessLogic
                 return new Resultado<string>(null, $"Error al obtener el estado del documento: {ex.Message}", false);
             }
         }
+
+
+        public static string AprobarDNI(int Id)
+        {
+            DADocumento Datos = new DADocumento();
+            try
+            {
+                return Datos.AprobarDNI(Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public static string RechazarDNI(int Id)
+        {
+            DADocumento Datos = new DADocumento();
+            try
+            {
+                return Datos.RechazarDNI(Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public static string ObservarDNI(int Id)
+        {
+            DADocumento Datos = new DADocumento();
+            try
+            {
+                return Datos.ObservarDNI(Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public static string AprobarRecibo(int Id)
+        {
+            DADocumento Datos = new DADocumento();
+            try
+            {
+                return Datos.AprobarRecibo(Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public static string RechazarRecibo(int Id)
+        {
+            DADocumento Datos = new DADocumento();
+            try
+            {
+                return Datos.RechazarRecibo(Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public static string ObservarRecibo(int Id)
+        {
+            DADocumento Datos = new DADocumento();
+            try
+            {
+                return Datos.ObservarRecibo(Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public static string AprobarAntecedentes(int Id)
+        {
+            DADocumento Datos = new DADocumento();
+            try
+            {
+                return Datos.AprobarAntecedentes(Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public static string RechazarAntecedentes(int Id)
+        {
+            DADocumento Datos = new DADocumento();
+            try
+            {
+                return Datos.RechazarAntecedentes(Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public static string ObservarAntecedentes(int Id)
+        {
+            DADocumento Datos = new DADocumento();
+            try
+            {
+                return Datos.ObservarAntecedentes(Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public static string Aprobar(int Id)
+        {
+            DADocumento Datos = new DADocumento();
+            try
+            {
+                return Datos.Aprobar(Id);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }

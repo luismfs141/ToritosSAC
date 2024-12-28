@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ToritosSAC.DeskTop.Reportes;
 
 namespace ToritosSAC.DeskTop
 {
@@ -203,6 +204,19 @@ namespace ToritosSAC.DeskTop
             frm.MdiParent = this;
             frm.Show();
         }
-    
+
+        private void mnuGrupo_Click(object sender, EventArgs e)
+        {
+            FrmGrupo frm = new FrmGrupo();
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        private void mnuReporteMarca_Click(object sender, EventArgs e)
+        {
+            FrmReporteMarca frm = new FrmReporteMarca();
+            frm.MdiParent = this;
+            frm.Show();
+        }
     }
 }

@@ -42,6 +42,7 @@
             usuariosToolStripMenuItem = new ToolStripMenuItem();
             clienteToolStripMenuItem = new ToolStripMenuItem();
             mnuClientes = new ToolStripMenuItem();
+            mnuGrupo = new ToolStripMenuItem();
             viewMenu = new ToolStripMenuItem();
             toolBarToolStripMenuItem = new ToolStripMenuItem();
             statusBarToolStripMenuItem = new ToolStripMenuItem();
@@ -131,20 +132,20 @@
             // rolesToolStripMenuItem
             // 
             rolesToolStripMenuItem.Name = "rolesToolStripMenuItem";
-            rolesToolStripMenuItem.Size = new Size(180, 22);
+            rolesToolStripMenuItem.Size = new Size(119, 22);
             rolesToolStripMenuItem.Text = "Roles";
             rolesToolStripMenuItem.Click += rolesToolStripMenuItem_Click;
             // 
             // usuariosToolStripMenuItem
             // 
             usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
-            usuariosToolStripMenuItem.Size = new Size(180, 22);
+            usuariosToolStripMenuItem.Size = new Size(119, 22);
             usuariosToolStripMenuItem.Text = "&Usuarios";
             usuariosToolStripMenuItem.Click += usuariosToolStripMenuItem_Click;
             // 
             // clienteToolStripMenuItem
             // 
-            clienteToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { mnuClientes });
+            clienteToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { mnuClientes, mnuGrupo });
             clienteToolStripMenuItem.Name = "clienteToolStripMenuItem";
             clienteToolStripMenuItem.Size = new Size(56, 20);
             clienteToolStripMenuItem.Text = "Cliente";
@@ -152,9 +153,16 @@
             // mnuClientes
             // 
             mnuClientes.Name = "mnuClientes";
-            mnuClientes.Size = new Size(180, 22);
+            mnuClientes.Size = new Size(116, 22);
             mnuClientes.Text = "&Clientes";
             mnuClientes.Click += mnuClientes_Click;
+            // 
+            // mnuGrupo
+            // 
+            mnuGrupo.Name = "mnuGrupo";
+            mnuGrupo.Size = new Size(116, 22);
+            mnuGrupo.Text = "&Grupo";
+            mnuGrupo.Click += mnuGrupo_Click;
             // 
             // viewMenu
             // 
@@ -370,6 +378,7 @@
         private ToolStripMenuItem mnuSalir;
         private ToolStripMenuItem clienteToolStripMenuItem;
         private ToolStripMenuItem mnuClientes;
+        private ToolStripMenuItem mnuGrupo;
     }
 }
 
