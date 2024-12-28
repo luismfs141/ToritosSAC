@@ -2,8 +2,8 @@ import axios from 'axios';
 
 //const baseURL = 'http://localhost/ToritosHost/api/'; 
 //const baseURL = 'http://localhost:5158/api/'; 
-//const baseURL = 'http://192.168.0.107/ToritosHost/api/'; 
-const baseURL = 'http://10.10.20.251/ToritosHost/api/'; 
+const baseURL = 'http://192.168.0.107/ToritosHost/api/'; 
+//const baseURL = 'http://10.10.20.251/ToritosHost/api/'; 
 
 
 

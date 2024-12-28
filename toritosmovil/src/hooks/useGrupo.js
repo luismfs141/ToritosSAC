@@ -8,7 +8,7 @@ export const useGrupo = () => {
             // Aseguramos que 'response.data.objeto' siempre sea un arreglo
             return Array.isArray(response.data.objeto) ? response.data.objeto : [];
         } catch (error) {
-            console.error("Error al obtener los grupos por cliente:", error);
+            console.error("Error al obtener los grupos:", error);
             return [];
         }
     };
@@ -24,7 +24,7 @@ export const useGrupo = () => {
                 throw new Error(response.data.Mensaje);
               }
         } catch (error) {
-            console.error("Error al obtener los grupos guardar:", error);
+            console.error("Error al obtener los grupos:", error);
         }
     };
 
@@ -39,7 +39,7 @@ export const useGrupo = () => {
             }
         }
         catch (error){
-            console.error("Error al obtener los grupos buscar por codigo:", error);
+            console.error("Error al obtener los grupos:", error);
         }
     };
 
@@ -55,7 +55,7 @@ export const useGrupo = () => {
             }
         }
         catch (error){
-            console.error("Error al obtener los grupos agregar lista:", error);
+            console.error("Error al obtener los grupos:", error);
         }
     };
 
