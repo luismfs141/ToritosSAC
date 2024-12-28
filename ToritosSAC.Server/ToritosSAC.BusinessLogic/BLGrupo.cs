@@ -4,6 +4,7 @@ using ToritosSAC.DataAccess;
 using ToritosSAC.Entities;
 using Microsoft.Extensions.Logging;
 using ToritosSAC.Entities.Structures;
+using System.Data;
 
 namespace ToritosSAC.BusinessLogic
 {
@@ -280,5 +281,21 @@ namespace ToritosSAC.BusinessLogic
                 throw ex;
             }
         }
+
+
+        public static DataTable Listar()
+        {
+            DAGrupo Datos = new DAGrupo();
+            return Datos.Listar();
+        }
+
+        public static DataTable Buscar(string Valor)
+        {
+            DAGrupo Datos = new DAGrupo();
+            return Datos.Buscar(Valor);
+        }
+
+        
     }
+
 }
