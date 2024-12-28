@@ -6,7 +6,7 @@ import Sidebar from './components/Sidebar';
 import Navbar from './components/Navbar';
 import Grupos from './pages/Grupos';
 import Menu from './pages/Menu';
-import Estado from './pages/Estado';
+import Operaciones from './pages/Operaciones';
 import Sorteos from './pages/Sorteos';
 import Cronograma from './pages/Cronograma';
 import Soporte from './pages/Soporte';
@@ -55,7 +55,7 @@ function App() {
             <Routes>
               <Route path="/Menu" element={<Menu />} />
               <Route path="/Grupos" element={<Grupos />} />
-              <Route path="/Estado" element={<Estado />} />
+              <Route path="/Operaciones" element={<Operaciones />} />
               <Route path="/Sorteos" element={<Sorteos />} />
               <Route path="/Cronograma" element={<Cronograma />} />
               <Route path="/Soporte" element={<Soporte />} />

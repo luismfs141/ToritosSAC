@@ -4,6 +4,8 @@ import { useCliente } from '../hooks/useCliente';
 import { useGrupo } from '../hooks/useGrupo';
 import { useModelo } from '../hooks/useModelo';
 import { useDocumento } from '../hooks/useDocumento';
+import { useCronograma } from '../hooks/useCronograma';
+import { useCuota } from '../hooks/useCuota';
 import { useEstadoCuenta } from '../hooks/useEstadoCuenta';
 import ModalGuardarDocumento from '../components/Modals/ModalGuardarDocumento';
 import ModalDetallesGrupo from '../components/Modals/ModalDetallesGrupo';
@@ -38,7 +40,9 @@ const Grupos = () => {
           listarClientesPendientes, admitirClienteGrupo, rechazarClienteGrupo } = useGrupo();
   const { getModelos } = useModelo();
   const { guardarDocumento, getDocumentoPorClienteGrupo } = useDocumento();
-  const {crearCronogramaPorGrupo, ObtenerEstadosCuentaPorIdClienteGrupo} = useEstadoCuenta();
+  const { crearCronogramaGrupo } = useCronograma();
+  const { generarCuotasClienteGrupo } = useCuota();
+  const { crearEstadoCuentaGrupo } = useEstadoCuenta();
   
   //Variables de control
   const [gruposCliente, setGruposCliente] = useState([]);
@@ -367,8 +371,12 @@ const Grupos = () => {
   const handleAceptarIniciarGrupo = async (grupo, fechaInicio) => {
     setLoading(true);
     try {
-      const cronograma = await crearCronogramaPorGrupo(grupo.idGrupo, fechaInicio);
-      alert(cronograma.mensaje);
+      const cronograma = await crearCronogramaGrupo(grupo.idGrupo, fechaInicio);
+      const cuotas = await generarCuotasClienteGrupo(grupo.idGrupo);
+      const estadosCuentas = await crearEstadoCuentaGrupo(grupo.idGrupo);
+      if(cronograma && cuotas && estadosCuentas){
+        alert(cronograma.mensaje);
+      }
     } catch (error) {
       console.error("Error al crear cronograma:", error);
     } finally {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.Json.Serialization;
 
 namespace ToritosSAC.Entities;
 
@@ -8,25 +7,17 @@ public partial class DetalleEstadoCuentum
 {
     public int IdDetalleEstadoCuentaI { get; set; }
 
-    public int IdDetalleGrupoI { get; set; }
+    public int IdEstadoCuentaI { get; set; }
 
-    public int NroCuotaI { get; set; }
+    public int? ReferenciaOperacionI { get; set; }
 
-    public decimal MontoCuotaM { get; set; }
+    public string TipoOperacionC { get; set; } = null!;
 
-    public DateTime FechaPagoProgramadaD { get; set; }
+    public decimal Monto { get; set; }
 
-    public DateTime? FechaPagoRealD { get; set; }
+    public DateTime FechaPagoDt { get; set; }
 
-    public string EstadoCuotaC { get; set; } = null!;
+    public string CodigoPagoV { get; set; } = null!;
 
-    public decimal? PenalidadMontoM { get; set; }
-
-    public DateTime? PenalidadFechaPagoD { get; set; }
-
-    public decimal MartillazoMontoM { get; set; }
-
-    public DateTime? MartillazoFechaPagoD { get; set; }
-    [JsonIgnore]
-    public virtual DetalleGrupo IdDetalleGrupoINavigation { get; set; } = null!;
+    public virtual EstadoCuentum IdEstadoCuentaINavigation { get; set; } = null!;
 }

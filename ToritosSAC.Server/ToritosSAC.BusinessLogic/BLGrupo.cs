@@ -262,5 +262,23 @@ namespace ToritosSAC.BusinessLogic
                 return new Resultado<bool>(false, $"Error comprobar cliente: {ex.Message}", false);
             }
         }
+
+        public Resultado<DetalleGrupo> BLGRUP_ObtenerDetalleGrupoPorClienteGrupo(int idCliente, int idGrupo)
+        {
+            try
+            {
+                DAGrupo dAGrupo = new DAGrupo();
+                List<DetalleGrupo> lista = dAGrupo.DAGRUP_ObtenerDetallesGrupoPorIdGrupo(idGrupo);
+
+                DetalleGrupo detalleGrupo = lista.Where(d => d.IdClienteI == idCliente).FirstOrDefault();
+
+                return new Resultado<DetalleGrupo>(detalleGrupo, "Detalle obtenido correctamente.", true);
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
     }
 }

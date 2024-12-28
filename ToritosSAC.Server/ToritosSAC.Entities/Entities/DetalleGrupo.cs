@@ -14,19 +14,23 @@ public partial class DetalleGrupo
 
     public int? IdDocumentosI { get; set; }
 
-    public int? IdAsignacionI { get; set; }
-
     public bool ClienteAdminBo { get; set; }
 
     public string? AdmisionC { get; set; }
 
-    public virtual ICollection<DetalleEstadoCuentum> DetalleEstadoCuenta { get; } = new List<DetalleEstadoCuentum>();
-    [JsonIgnore]
-    public virtual Asignacion? IdAsignacionINavigation { get; set; }
+    public bool EsGanadorB { get; set; }
+
+    public bool EstadoPropietarioB { get; set; }
+
+    public virtual ICollection<Cuotum> Cuota { get; } = new List<Cuotum>();
+
+    public virtual ICollection<EstadoCuentum> EstadoCuenta { get; } = new List<EstadoCuentum>();
     [JsonIgnore]
     public virtual Cliente? IdClienteINavigation { get; set; } = null!;
     [JsonIgnore]
     public virtual Documento? IdDocumentosINavigation { get; set; }
     [JsonIgnore]
     public virtual Grupo? IdGrupoINavigation { get; set; } = null!;
+
+    public virtual ICollection<Sorteo> Sorteos { get; } = new List<Sorteo>();
 }

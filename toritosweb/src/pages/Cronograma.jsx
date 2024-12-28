@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import '../assetss/css/Modal.css';
-import {useEstadoCuenta} from '../hooks/useEstadoCuenta';
 import { useCliente } from '../hooks/useCliente';
 import { useGrupo } from '../hooks/useGrupo';
+import { useCronograma } from '../hooks/useCronograma';
 
 const Cronograma = () => {
-  const { ObtenerEstadosCuentaPorIdClienteGrupo} = useEstadoCuenta();
   const { getClienteFromLocalStorage } = useCliente();
-  const { getGruposPorCliente, getDetallesGrupo} = useGrupo();
+  const { getGruposPorCliente } = useGrupo();
+  const { obtenerCronogramaGrupo } = useCronograma();
 
   const [ clienteData, setClienteData ] = useState();
-  const [ estadosCuenta, setEstadosCuenta ] = useState([]);
   const [ gruposCliente, setGruposCliente ] = useState([]);
   const [ grupoSeleccionado, setGrupoSeleccionado] = useState('');
-  const [ detallesGrupo, setDetallesGrupo ] = useState(null);
-  const [ montoSorteo, setMontoSorteo ] = useState(0);
+  const [ cronograma, setCronograma] = useState([]);
   const [ isInitialized, setIsInitialized ] = useState(false);
-  const [ numIntegrantes, setNumIntegrantes] = useState(0);
 
   useEffect(() => {
     if (!isInitialized) {
@@ -35,15 +32,13 @@ const Cronograma = () => {
   //useEffect para la seleccion de grupo.
   useEffect(() => {
     const fetchEstadosCuenta = async () => {
-      setEstadosCuenta([]);
+      setCronograma([]);
       if (grupoSeleccionado && clienteData) {
         const datosGrupo = gruposCliente.find(grupo => grupo.codigoC === grupoSeleccionado);
         if (datosGrupo) {
-          const listaEstadosCuentas = await ObtenerEstadosCuentaPorIdClienteGrupo(clienteData.idClienteI, datosGrupo.idGrupoI);
-          const detallesGrupo = await getDetallesGrupo(datosGrupo.idGrupoI);
-          setDetallesGrupo(detallesGrupo);
-          if (listaEstadosCuentas && listaEstadosCuentas.exito) {
-            setEstadosCuenta(listaEstadosCuentas.objeto);
+          const listaCronograma = await obtenerCronogramaGrupo(datosGrupo.idGrupoI);
+          if (listaCronograma && listaCronograma.exito) {
+            setCronograma(listaCronograma.objeto);
           }
         }
       }
@@ -52,16 +47,6 @@ const Cronograma = () => {
       fetchEstadosCuenta();
     }
   }, [grupoSeleccionado]);
-
-  useEffect(() => {
-    if(detallesGrupo){
-      setMontoSorteo(detallesGrupo.modeloVehiculo.precioUnidadVehiculoM);
-      setNumIntegrantes(detallesGrupo.numeroIntegrantes);
-    }
-  }, [detallesGrupo]);
-
-  let periodo = 1;
-  let montoPeriodo = 0;
 
   return (
     <div className="container mt-4 mb-4">
@@ -89,9 +74,6 @@ const Cronograma = () => {
           </select>
         </div>
         <div className="col-12 col-md-3 text-start mt-2 mt-md-0 d-flex align-items-center">
-          <button className="btn btn-primary me-2">
-            Buscar
-          </button>
           <button className="btn btn-secondary me-2">
             Exportar PDF
           </button>
@@ -99,46 +81,34 @@ const Cronograma = () => {
       </div>
 
       <div className="table-responsive" style={{ maxHeight: '500px', overflowY: 'auto' }}>
-      <table className="table table-bordered table table-striped">
+      <table className="table table-bordered table table-striped table-auto">
         <thead className="table-dark" style={{ position: 'sticky', top: 0, zIndex: 1 }}>
             <tr>
-              <th>Nro Cuota</th>
-              <th>Fecha de Pago</th>
-              <th>Cuota</th>
-              <th>CuotaGrupal</th>
+              <th>Nro</th>
+              <th>Fecha</th>
+              <th>Cuota Personal</th>
+              <th>Cuota Grupal</th>
               <th>Sorteo</th>
               <th>Martillazo</th>
             </tr>
           </thead>
           <tbody>
-            {estadosCuenta && estadosCuenta.length > 0 ? (
-              estadosCuenta.map((estado, index) => {
-                // Calculamos el monto acumulativo solo una vez
-                const montoAcumulativo = estado.nroCuotaI * estado.montoCuotaM * numIntegrantes;
-
-                // Verificamos si el resultado del módulo es "SI"
-                const esSorteoExitoso = montoAcumulativo % montoSorteo == 0;
-                if(esSorteoExitoso){
-                  periodo = periodo +1;
-                  montoPeriodo = montoAcumulativo+ (montoSorteo/2);
-                }
-                let activarMartillazo = montoPeriodo >0 && montoPeriodo < montoAcumulativo? "SI":"NO";
-
-                return (
-                  <tr className= {esSorteoExitoso?'table-success':''} >
-                    <td>{estado.nroCuotaI}</td>
-                    <td>{estado.fechaPagoProgramadaD ? new Date(estado.fechaPagoProgramadaD).toLocaleDateString() : 'No Disponible'}</td>
-                    <td>{estado.montoCuotaM ? `S/.${estado.montoCuotaM.toFixed(2)}` : 'No Disponible'}</td>
-                    <td>{estado.montoCuotaM ? `S/.${montoAcumulativo.toFixed(2)}` : 'No Disponible'}</td>
-                    <td>{esSorteoExitoso ? "SI" : "NO"}</td>
-                    <td>{activarMartillazo}</td>
-                  </tr>
-                );
-              })
-            ) : (
-              <tr>
-                <td colSpan="6" className="text-center">No hay datos disponibles</td>
-              </tr>
+            {cronograma.map((cronograma, index) => (
+              <tr 
+                key={cronograma.idCronogramaI}  
+                className={
+                  cronograma.habilitarMartillazoB && cronograma.habilitarSorteoB === false
+                  ?'table-warning'
+                    :cronograma.habilitarSorteoB
+                  ?'table-success'
+                    :''}>
+                <td>{index +1}</td>
+                <td>{cronograma.fechaD? new Date(cronograma.fechaD).toLocaleDateString() : 'No Disponible'}</td>
+                <td>{cronograma.cuotaIndividualN? `S/.${cronograma.cuotaIndividualN.toFixed(2)}`: 'No Disponible'}</td>
+                <td>{cronograma.cuotaGrupalN? `S/.${cronograma.cuotaGrupalN.toFixed(2)}`: 'No Disponible'}</td>
+                <td>{cronograma.habilitarSorteoB ? "SI" : "NO"}</td>
+                <td>{cronograma.habilitarMartillazoB? "SI":"NO"}</td>
+              </tr>)
             )}
           </tbody>
         </table>
