@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   header: {
       fontSize: 20,
       fontWeight: 'bold',
-      color: '#fff',
+      color: '#50007b',
   },
   subHeader: {
       fontSize: 18,

@@ -55,7 +55,7 @@ export default function Login({ navigation }) {
                 onPress={handleLogin}
             >
                 <LinearGradient
-                    colors={['#50007b', '#1b0030']}
+                    colors={['#50007b', '#50007b']}
                     style={styles.signInGradient}
                 >
                     <Text style={styles.signInText}>
@@ -63,13 +63,6 @@ export default function Login({ navigation }) {
                     </Text>
                 </LinearGradient>
             </TouchableOpacity>
-
-            <View style={styles.footer}>
-                <Text style={styles.footerText}>¿No tienes una cuenta? </Text>
-                <TouchableOpacity>
-                    <Text style={styles.createText}>Registrar</Text>
-                </TouchableOpacity>
-            </View>
         </View>
     );
 }
