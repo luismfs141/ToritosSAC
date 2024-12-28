@@ -282,7 +282,7 @@ namespace ToritosSAC.BusinessLogic
             }
         }
 
-
+        //aa
         public static DataTable Listar()
         {
             DAGrupo Datos = new DAGrupo();
