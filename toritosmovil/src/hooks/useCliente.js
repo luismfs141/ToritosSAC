@@ -51,10 +51,10 @@ export const useCliente = () => {
     try {
       console.log('Datos recibidos para login:', { usuario, password });
 
-      const url = `http://192.168.0.107/ToritosHost/api/Cliente/LoginCliente?x_usuario=${usuario}&x_password=${password}`;
-      console.log('URL de solicitud:', url);
+      // const url = `http://192.168.0.107/ToritosHost/api/Cliente/LoginCliente?x_usuario=${usuario}&x_password=${password}`;
+      // console.log('URL de solicitud:', url);
 
-      const response = await api.get(url);
+      const response = await api.get(`/Cliente/LoginCliente?x_usuario=${usuario}&x_password=${password}`);
       console.log('Respuesta del servidor:', response);
 
       if (response.data.estado === 'Exito') {
