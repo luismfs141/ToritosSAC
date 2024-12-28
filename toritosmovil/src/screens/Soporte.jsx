@@ -6,7 +6,7 @@ import styles from '../assets/css/Soporte';
 const Soporte = () => {
     return (
         <ScrollView contentContainerStyle={styles.container}>
-            <LinearGradient colors={['#50007b', '#50007b']} style={styles.headerContainer}>
+            <LinearGradient colors={['#fff', '#fff']} style={styles.headerContainer}>
                 <Text style={styles.header}>Soporte de Toritos SAC</Text>
             </LinearGradient>
 
