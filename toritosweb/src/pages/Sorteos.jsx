@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useCliente } from '../hooks/useCliente';
 import { useGrupo } from '../hooks/useGrupo';
+import { useSorteo } from '../hooks/useSorteo';
 
 const Sorteos = () => {
   const { getClienteFromLocalStorage } = useCliente();
   const { getGruposPorCliente } = useGrupo();
+  const { obtenerSorteosGrupo } = useSorteo();
 
   const [ clienteData, setClienteData ] = useState();
   const [ gruposCliente, setGruposCliente ] = useState([]);
   const [ grupoSeleccionado, setGrupoSeleccionado] = useState('');
-  const [ sorteo, setSorteo] = useState([]);
+  const [ sorteos, setSorteos] = useState([]);
   const [ isInitialized, setIsInitialized ] = useState(false);
 
   useEffect(() => {
@@ -25,6 +27,21 @@ const Sorteos = () => {
         setIsInitialized(true);
       }
     }, [isInitialized, getClienteFromLocalStorage,getGruposPorCliente]);
+
+    useEffect(()=>{
+      const fecthSorteos = async() =>{
+        const datosGrupo = gruposCliente.find(grupo => grupo.codigoC === grupoSeleccionado);
+        if(datosGrupo){
+          const x_sorteos = await obtenerSorteosGrupo(datosGrupo.idGrupoI);
+          if(x_sorteos){
+            setSorteos(x_sorteos.objeto);
+          }
+        }
+      }
+      if(grupoSeleccionado && clienteData){
+        fecthSorteos();
+      }
+    },[grupoSeleccionado]);
 
   return (
     <div className="container mt-4 mb-4">
@@ -69,14 +86,23 @@ const Sorteos = () => {
             </tr>
           </thead>
           <tbody>
-            {sorteo.map((sorteo, index) => (
-              <tr key={index}>
-                <td>{sorteo.numero}</td>
-                <td>{sorteo.ganadores}</td>
-                <td>{sorteo.fecha}</td>
-                <td>{sorteo.modalidad}</td>
+            {sorteos && sorteos.length > 0 ? (
+              sorteos.map((sorteo, index) => (
+                <tr key={index}>
+                  <td>{index +1}</td>
+                  <td>{sorteo.nombreCliente}</td>
+                  <td>{sorteo.fechaSorteo}</td>
+                  <td>{sorteo.modalidad}</td>
+                </tr>
+              ))
+            )
+            :
+            (
+              <tr>
+                <td colSpan="7" className="text-center">El grupo no tiene sorteos.</td>
               </tr>
-            ))}
+            ) 
+            }
           </tbody>
         </table>
       </div>

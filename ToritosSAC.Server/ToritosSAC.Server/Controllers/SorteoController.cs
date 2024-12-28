@@ -10,10 +10,24 @@ namespace ToritosSAC.Server.Controllers
     public class SorteoController : Controller
     {
         [HttpGet("ObtenerSorteosPorGrupo")]
-        public Resultado<List<Sorteo>> ObtenerSorteosPorGrupo(int idGrupo)
+        public Resultado<List<SorteoStruct>> ObtenerSorteosPorGrupo(int idGrupo)
         {
             BLSorteo bLSorteo = new BLSorteo();
             return bLSorteo.BLSORT_ObtenerSorteosPorGrupo(idGrupo);
+        }
+
+        [HttpGet("ObtenerProximoFechaSorteo")]
+        public Resultado<DateTime> ObtenerProximoFechaSorteo(int idGrupo)
+        {
+            BLSorteo bLSorteo = new BLSorteo();
+            return bLSorteo.BLSORT_ObtenerProximoFechaSorteo(idGrupo);
+        }
+
+        [HttpGet("ObtenerMartillazoPeriodo")]
+        public Resultado<MartillazoStruct> ObtenerMartillazoPeriodo(int idGrupo)
+        {
+            BLSorteo bLSorteo = new BLSorteo();
+            return bLSorteo.BLSORT_ObtenerMartillazoPeriodo(idGrupo);
         }
 
         [Route("GuardarSorteo")]
