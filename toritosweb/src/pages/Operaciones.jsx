@@ -112,9 +112,6 @@ const Operaciones = () => {
   };
 
   const handlePagarCuota = async (datosPago, cuota) =>{
-    console.log(datosPago);
-    console.log(cuota);
-    console.log(estadoCuenta);
     const pago = await realizarPago(datosPago, estadoCuenta.idEstadoCuentaI, cuota.idCuotaI);
     if(pago){
       alert(pago.mensaje);

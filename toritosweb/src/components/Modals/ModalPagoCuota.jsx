@@ -9,7 +9,7 @@ const ModalPagoCuota = ({cliente, grupo, cuota, show, onClose, onSave }) => {
         codigoPagoV :'',
         montoPagoN : 0,
         penalidadN : 0,
-        fechaPagoD : new Date().toISOString(),
+        fechaPagoD : new Date(),
         opcionPagoC: 'D',
         conceptoC: 'C'
     });
